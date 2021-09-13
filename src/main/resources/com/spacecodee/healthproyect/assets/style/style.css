@@ -1,0 +1,292 @@
+.main-color {
+    -fx-background-color: #232426;
+}
+
+.lateral-color {
+    -fx-background-color: #1c1c1c;
+}
+
+@font-face {
+    font-family: "OpenSans bold";
+    font-style: bold;
+    font-weight: 900;
+    src: url("com/spacecodee/healthproyect/assets/fonts/OpenSans-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Gilroy normal";
+    font-style: normal;
+    font-weight: 400;
+    src: url("com/spacecodee/healthproyect/assets/fonts/OpenSans-Regular.ttf");
+}
+
+.font-normal {
+    -fx-font-family: "Gilroy normal";
+    -fx-font-weight: 400;
+}
+
+.font-bold {
+    -fx-font-family: "OpenSans bold";
+    -fx-font-weight: 900;
+}
+
+/*Text*/
+.text-title,
+.text-h1,
+.text-h2,
+.text-h3,
+.text-h4 {
+    -fx-text-fill: #fefefe;
+    -fx-font-size: 20px;
+}
+
+.text-h1 {
+    -fx-font-size: 40px;
+}
+
+.text-h2,
+.text-h2-2 {
+    -fx-font-size: 30px;
+}
+
+.text-h2-2 {
+    -fx-text-fill: #8c62d9;
+}
+
+.text-h3,
+.text-h3-2 {
+    -fx-font-size: 20px;
+}
+
+.text-h3-2 {
+    -fx-text-fill: #7c7f87;
+}
+
+.text-h3-2-1 {
+    -fx-font-size: 20px;
+    -fx-text-fill: #8c62d9;
+}
+
+.text-h4 {
+    -fx-font-size: 15px;
+}
+
+/*Buttons*/
+.custom-button,
+.custom-button-bar-user {
+    -fx-background-color: #333333;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 10px;
+}
+
+.custom-button-menu-shop {
+    -fx-background-color: #8c62d9;
+    -fx-padding: 15px 20px;
+    -fx-background-radius: 5px;
+}
+
+.button-add-card {
+    -fx-background-color: #8c62d9;
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 15px;
+}
+
+.custom-button-bar-user:hover {
+    -fx-background-color: #8c62d9;
+}
+
+.custom-button-bar-user:pressed {
+    -fx-background-color: #333333;
+}
+
+.custom-button-menu {
+    -fx-background-color: #232426;
+    -fx-border-width: 0;
+}
+
+.principal-game-card {
+    -fx-background-color: #282b30;
+    -fx-background-radius: 10px;
+}
+
+/*Box custom*/
+.box-price {
+    -fx-background-color: #333333;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 10px;
+}
+
+.box-genre,
+.box-order-by,
+.box-product-card {
+    -fx-padding: 5px 10px;
+    -fx-border-color: #333333;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+}
+
+.box-order-by {
+    -fx-background-color: #2a292f;
+}
+
+.box-genre-new {
+    -fx-background-color: #333333;
+    -fx-background-radius: 10px;
+}
+
+.box-not-notification {
+    -fx-background-color: #1c1c1c;
+}
+
+.box-product-card {
+    -fx-background-color: #333333;
+    -fx-background-radius: 30px;
+}
+
+.box-notification {
+    -fx-padding: 5px;
+    -fx-background-color: #8c62d9;
+    -fx-background-radius: 100%;
+}
+
+.box-card-section-user {
+    -fx-background-color: #1c1c1c;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 10px;
+}
+
+.box-card-section-user:hover {
+    -fx-background-color: #333333;
+}
+
+.box-card-section-user:pressed {
+    -fx-background-color: #8c62d9;
+}
+
+.content-box {
+    -fx-padding: 10px 15px;
+    -fx-background-color: #282b30;
+    -fx-background-radius: 10px;
+}
+
+/*Custom slide*/
+#custom-slider .thumb {
+    /*-fx-background-image: url("https://i.imgur.com/SwDjIg7.png");
+    -fx-background-color: transparent;*/
+
+    -fx-padding: 10px;
+}
+
+#custom-slider .track {
+    -fx-background-color: #8c62d9;
+}
+
+/*Custom checkbox*/
+.check-box .box {
+    -fx-background-color: #333333;
+    -fx-border-color: #333333;
+    -fx-border-radius: 5px;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #333333;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #8c62d9;
+    -fx-border-width: 0;
+}
+
+/*Custom text-field*/
+.custom-text-field {
+    -fx-background-color: #505050;
+    -fx-background-radius: 15px;
+    -fx-padding: 5px 15px;
+    -fx-text-fill: #2a2a2a;
+}
+
+/*text*/
+.text-normal,
+.text-money {
+    -fx-text-fill: #fefefe;
+    -fx-font-size: 16px;
+}
+
+.text-money {
+    -fx-text-fill: #8c62d9;
+}
+
+/*center menu*/
+.center-menu {
+    -fx-background-image: url("com/spacecodee/healthproyect/assets/img");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: auto;
+    -fx-background-position: center center;
+}
+
+/*Scroll pane transparent*/
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.container-scroll {
+    -fx-background-color: #333333;
+    -fx-background-radius: 15px;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: #1c1c1c;
+    -fx-border-color: #1c1c1c;
+    -fx-background-radius: 0.0em;
+    -fx-border-radius: 50px;
+}
+
+
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color: #1c1c1c;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: #1c1c1c;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.12em 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.12em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: derive(#1c1c1c, 90.0%);
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 50px;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: derive(#333333, 10.0%);
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 50px;
+}
+
+/**/

@@ -9,15 +9,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApp extends Application {
+    private static final String URL = "/com/spacecodee/healthproyect/view/dashboard/";
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(MainApp.class.getResource("/com/spacecodee/healthproyect/view/dashboard/dashboard" +
-                ".fxml"));
+        fxmlLoader.setLocation(MainApp.class.getResource(URL + "dashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+
         Dashboard dashboard = fxmlLoader.getController();
         dashboard.setStage(stage);
+
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

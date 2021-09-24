@@ -1,9 +1,9 @@
 .main-color {
-    -fx-background-color: #232426;
+    -fx-background-color: #f4f4f8;
 }
 
-.lateral-color {
-    -fx-background-color: #1c1c1c;
+.center-color {
+    -fx-background-color: #ffffff;
 }
 
 @font-face {

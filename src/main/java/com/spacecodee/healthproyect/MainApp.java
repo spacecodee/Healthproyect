@@ -4,12 +4,15 @@ import com.spacecodee.healthproyect.controllers.dashboard.Dashboard;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainApp extends Application {
     private static final String URL = "/com/spacecodee/healthproyect/view/dashboard/";
+    private static final String URL_IMG = "src/main/resources/com/spacecodee/healthproyect/assets/icons/asteroid.png";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -20,7 +23,10 @@ public class MainApp extends Application {
         Dashboard dashboard = fxmlLoader.getController();
         dashboard.setStage(stage);
 
-        stage.setTitle("Hello!");
+        File img = new File(MainApp.URL_IMG);
+        Image icon = new Image(img.toURI().toString());
+        stage.getIcons().add(icon);
+        stage.setTitle("Health Dashboard");
         stage.setScene(scene);
         stage.show();
     }

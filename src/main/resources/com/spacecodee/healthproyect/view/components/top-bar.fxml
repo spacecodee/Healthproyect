@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-      minWidth="-Infinity" styleClass="main-color" stylesheets="@../../assets/style/style.css"
-      xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.spacecodee.healthproyect.controllers.components.TopBar">
+<HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="main-color" stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.spacecodee.healthproyect.controllers.components.TopBar">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
     </padding>
-    <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-          minWidth="-Infinity" HBox.hgrow="ALWAYS"/>
-    <HBox alignment="CENTER" layoutX="470.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity"
-          minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="ALWAYS">
-        <ImageView fx:id="imgProfile" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true"
-                   HBox.hgrow="ALWAYS">
-            <Image url="@../../assets/img/profile.jpg"/>
+   <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
+      <children>
+         <ImageView fx:id="imgLogo" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+            <image>
+               <Image url="@../../assets/icons/asteroid.png" />
+            </image>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </ImageView>
+      </children>
+   </HBox>
+   <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+    <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="65.0" HBox.hgrow="ALWAYS">
+      <children>
+         <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="btn__icon" HBox.hgrow="ALWAYS">
+            <graphic>
+               <ImageView fx:id="imgBell" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../../assets/icons/bell.png" />
+                  </image>
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </ImageView>
+            </graphic>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
+      </children></HBox>
+    <HBox alignment="CENTER" layoutX="470.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="10.0" HBox.hgrow="ALWAYS">
+        <ImageView fx:id="imgProfile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+            <Image url="@../../assets/img/profile.jpg" />
         </ImageView>
+      <Label maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Scarlett Johansson" HBox.hgrow="ALWAYS">
+         <styleClass>
+            <String fx:value="font-bold" />
+            <String fx:value="text-h3" />
+         </styleClass>
+      </Label>
+      <padding>
+         <Insets left="20.0" right="20.0" />
+      </padding>
     </HBox>
 </HBox>

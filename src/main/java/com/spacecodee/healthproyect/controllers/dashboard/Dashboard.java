@@ -39,7 +39,5 @@ public class Dashboard implements Initializable {
             e.printStackTrace(System.out);
         }
         this.bpContainer.setTop(hBox);
-        GridPane.setHgrow(hBox, Priority.ALWAYS);
-
     }
 }

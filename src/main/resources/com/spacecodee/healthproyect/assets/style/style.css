@@ -36,7 +36,7 @@
 .text-h2,
 .text-h3,
 .text-h4 {
-    -fx-text-fill: #fefefe;
+    -fx-text-fill: #4e535c;
     -fx-font-size: 20px;
 }
 
@@ -107,6 +107,12 @@
 .principal-game-card {
     -fx-background-color: #282b30;
     -fx-background-radius: 10px;
+}
+
+.btn__icon {
+    -fx-background-color: #fcfcfd;
+    -fx-padding: 15px;
+    -fx-background-radius: 100%;
 }
 
 /*Box custom*/

@@ -11,9 +11,20 @@ import java.util.ResourceBundle;
 public class TopBar implements Initializable {
     @FXML
     private ImageView imgProfile;
+    @FXML
+    private ImageView imgBell;
+    @FXML
+    private ImageView imgLogo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.initComponents();
+    }
+
+    private void initComponents() {
         Images.addImg("img/profile.jpg", this.imgProfile);
+        Images.addImg("icons/bell.png", this.imgBell);
+        Images.addImg("icons/asteroid.png", this.imgLogo);
+        Images.borderRadiusImgProfile(this.imgProfile, 100);
     }
 }

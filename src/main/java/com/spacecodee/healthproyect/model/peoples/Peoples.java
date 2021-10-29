@@ -12,7 +12,7 @@ import java.util.Date;
 public class Peoples {
 
     @Getter
-    private Integer id;
+    private Integer idPeople;
     @Setter
     @Getter
     private String dni;
@@ -30,7 +30,7 @@ public class Peoples {
     private String phone;
     @Setter
     @Getter
-    private String url_img_profile;
+    private String urlImgProfile;
     @Setter
     @Getter
     private Date birthDate;

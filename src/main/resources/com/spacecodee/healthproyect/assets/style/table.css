@@ -1,0 +1,95 @@
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .corner {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f2f2f2;
+    -fx-background-insets: 0 12px 0 0;
+    -fx-padding: 10px;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background .label {
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a2a2a;
+    -fx-font-size: 18;
+    -fx-background-radius: 10px;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 5px;
+    -fx-font-family: "Gilroy ExtraBold";
+    -fx-font-weight: 900;
+    -fx-font-size: 16;
+    -fx-alignment: CENTER;
+}
+
+.table-row-cell {
+    -fx-background-color: #b7b7b7;
+}
+
+.table-row-cell:pressed {
+    -fx-text-background-color: #5138ee;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(81, 56, 238, 0.8);
+    -fx-text-background-color: #2a2a2a;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fbfbfd;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #f2f2f2;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgb(81, 56, 238);
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #fbfbfd;
+    -fx-text-alignment: center;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 2;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical .thumb {
+    -fx-background-color: #C4C4C4;
+}
+
+.table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color: #C4C4C4;
+}

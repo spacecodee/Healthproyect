@@ -7,8 +7,10 @@ module com.spacecodee.healthproyect {
     requires lombok;
 
     opens com.spacecodee.healthproyect to javafx.fxml;
-    opens com.spacecodee.healthproyect.controllers.dashboard;
-    opens com.spacecodee.healthproyect.controllers.components;
+    opens com.spacecodee.healthproyect.controllers.dashboard to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.components to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.userroles to javafx.fxml;
     exports com.spacecodee.healthproyect;
     exports com.spacecodee.healthproyect.controllers.dashboard;
+    exports com.spacecodee.healthproyect.controllers.userroles;
 }

@@ -8,9 +8,9 @@ public interface ICrudGeneric<T> {
 
     ObservableList<T> findByName(String name);
 
-    ObservableList<T> findById(String id);
-
     boolean add(T value);
+
+    boolean update(T value);
 
     boolean delete(T value);
 }

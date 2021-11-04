@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 public class Conexion {
     private static final String JDBC_BD = "health_dashboard";
-
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "spacecodee";
     private static final String JDBC_REQUERIMIENTOS = "?useSSL=false&useTimezone=true&serverTimezone=UTC" +

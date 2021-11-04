@@ -63,7 +63,8 @@
     -fx-padding: 10px;
 }
 
-.btn:hover {
+.btn:hover,
+.btn__dashboard {
     -fx-background-color: #e7e7e7;
 }
 

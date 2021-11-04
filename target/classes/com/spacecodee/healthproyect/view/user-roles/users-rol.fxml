@@ -19,7 +19,7 @@
     </padding>
     <top>
         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="Sección de roles de usuarios" HBox.hgrow="ALWAYS">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="Sección de Roles de Usuarios" HBox.hgrow="ALWAYS">
                 <font>
                     <Font name="Segoe UI Bold" size="36.0" />
                 </font>
@@ -38,8 +38,8 @@
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <HBox alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
-                <TextField fx:id="txtSearchRol" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Buscar por nombre" HBox.hgrow="ALWAYS">
+            <HBox alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+                <TextField fx:id="txtSearchRol" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#findByRolKeyTyped" promptText="Buscar por Rol" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI" size="15.0" />
                     </font>
@@ -83,7 +83,7 @@
                         <String fx:value="h1" />
                     </styleClass>
                 </Label>
-                <TextField fx:id="txtRol" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Ingresa el rol del usuario" VBox.vgrow="ALWAYS">
+                <TextField fx:id="txtRol" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="Ingresa el Rol del Usuario" VBox.vgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI" size="15.0" />
                     </font>
@@ -96,7 +96,7 @@
                         <String fx:value="h3" />
                     </styleClass>
                 </TextField>
-                <Button fx:id="btnAddRol" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Agregar Rol" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnAddRol" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRolOnAction" text="Agregar Rol" VBox.vgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI Bold" size="15.0" />
                     </font>
@@ -110,7 +110,7 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
-                <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Cancelar" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelOnAction" text="Cancelar" VBox.vgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI Bold" size="15.0" />
                     </font>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="250.0" prefWidth="650.0" spacing="20.0" styleClass="modal"
+      stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.spacecodee.healthproyect.controllers.modals.ModalConfirmation">
+    <ImageView fx:id="iconType" fitHeight="98.0" fitWidth="98.0" pickOnBounds="true" preserveRatio="true"
+               VBox.vgrow="ALWAYS">
+        <Image url="@../../assets/icons/modals/success.png"/>
+    </ImageView>
+    <Label fx:id="lblMessage" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity"
+           maxWidth="1.7976931348623157E308" text="Mensaje de prueba" wrapText="true" VBox.vgrow="ALWAYS">
+        <styleClass>
+            <String fx:value="font-bold"/>
+            <String fx:value="h2"/>
+        </styleClass>
+    </Label>
+    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+          minWidth="-Infinity" spacing="20.0" VBox.vgrow="ALWAYS">
+        <styleClass>
+            <String fx:value="center-color"/>
+            <String fx:value="modal__bottom"/>
+        </styleClass>
+        <Button fx:id="btnCancel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                mnemonicParsing="false" onAction="#cancelOnAction" text="Cancelar" HBox.hgrow="ALWAYS">
+            <styleClass>
+                <String fx:value="btn"/>
+                <String fx:value="btn__danger"/>
+                <String fx:value="font-bold"/>
+                <String fx:value="h3"/>
+            </styleClass>
+        </Button>
+        <Button fx:id="btnOk" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                mnemonicParsing="false" onAction="#okOnAction" text="Aceptar" HBox.hgrow="ALWAYS">
+            <styleClass>
+                <String fx:value="btn"/>
+                <String fx:value="btn__success"/>
+                <String fx:value="font-bold"/>
+                <String fx:value="h3"/>
+            </styleClass>
+        </Button>
+    </HBox>
+</VBox>

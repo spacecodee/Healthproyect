@@ -9,145 +9,154 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="bpContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="main-color" stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.spacecodee.healthproyect.controllers.dashboard.Dashboard">
-   <left>
-      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" BorderPane.alignment="CENTER">
-         <children>
-            <VBox fx:id="vbUsers" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <Button fx:id="btnDashboard" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Dashboard" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconDashboard" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/dashboard.png" />
-                           </image>
+<BorderPane fx:id="bpContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            minHeight="-Infinity" minWidth="-Infinity" styleClass="main-color"
+            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.spacecodee.healthproyect.controllers.dashboard.Dashboard">
+    <left>
+        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <VBox fx:id="vbUsers" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
+                  minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnDashboard" alignment="TOP_LEFT" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Dashboard" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconDashboard" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/dashboard.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-                  <Button fx:id="btnUsers" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Usuarios" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconUsers" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/users.png" />
-                           </image>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="btnUsers" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Usuarios" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconUsers" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/users.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-                  <Button fx:id="btnUserRoles" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#userRolesOnAction" text="Roles de usuario" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconUserRoles" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/user-roles.png" />
-                           </image>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="btnUserRoles" alignment="TOP_LEFT" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" onAction="#userRolesOnAction" text="Roles de usuario"
+                        VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconUserRoles" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/user-roles.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-               </children>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
             </VBox>
-            <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <Button fx:id="btnReservationAppoiments" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Reservas de citas" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconReservationA" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/reservations.png" />
-                           </image>
+            <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="20.0" maxHeight="-Infinity"
+                  maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0"
+                  VBox.vgrow="ALWAYS">
+                <Button fx:id="btnReservationAppoiments" alignment="TOP_LEFT" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Reservas de citas" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconReservationA" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/reservations.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-                  <Button fx:id="btnAddres" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Direcciones" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconAddres" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/address.png" />
-                           </image>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="btnAddres" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Direcciones" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconAddres" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/address.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-               </children>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <Button fx:id="btnSettings" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Configuración" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconSettings" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/settings.png" />
-                           </image>
+            <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                  minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnSettings" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Configuración"
+                        VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconSettings" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/settings.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-                  <Button fx:id="btnLogout" alignment="TOP_LEFT" layoutX="10.0" layoutY="418.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Cerrar Sesión" VBox.vgrow="ALWAYS">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <graphic>
-                        <ImageView fx:id="iconLogout" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../assets/icons/logout.png" />
-                           </image>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="btnLogout" alignment="TOP_LEFT" layoutX="10.0" layoutY="418.0" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Cerrar Sesión" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconLogout" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../assets/icons/logout.png"/>
                         </ImageView>
-                     </graphic>
-                     <styleClass>
-                        <String fx:value="btn__dashboard" />
-                        <String fx:value="font-bold" />
-                        <String fx:value="h2" />
-                     </styleClass>
-                  </Button>
-               </children>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h2"/>
+                    </styleClass>
+                </Button>
             </VBox>
-         </children>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </VBox>
-   </left>
+        </VBox>
+    </left>
 </BorderPane>

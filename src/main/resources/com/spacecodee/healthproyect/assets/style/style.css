@@ -1,8 +1,10 @@
-.main-color {
+.main-color,
+.modal__bottom {
     -fx-background-color: #f4f4f8;
 }
 
-.center-color {
+.center-color,
+.modal {
     -fx-background-color: #ffffff;
 }
 
@@ -28,6 +30,17 @@
 .font-bold {
     -fx-font-family: "OpenSans bold";
     -fx-font-weight: 900;
+}
+
+/*Modals*/
+.modal,
+.modal__bottom {
+    -fx-padding: 20px;
+}
+
+.modal__bottom {
+    -fx-padding: 15px;
+    -fx-background-radius: 15px;
 }
 
 /*Text*/
@@ -64,7 +77,7 @@
 }
 
 .btn:hover,
-.btn__dashboard {
+.btn__dashboard:hover {
     -fx-background-color: #e7e7e7;
 }
 
@@ -77,16 +90,29 @@
 .btn__danger,
 .btn__success,
 .btn__dark {
+    -fx-padding: 5px 10px;
     -fx-text-fill: #fcfcfd;
     -fx-background-color: #ec1313;
+}
+
+.btn__danger:hover {
+    -fx-background-color: #e01111;
 }
 
 .btn__success {
     -fx-background-color: #198754;
 }
 
+.btn__success:hover {
+    -fx-background-color: #157347;
+}
+
 .btn__dark {
     -fx-background-color: #333333;
+}
+
+.btn__dark:hover {
+    -fx-background-color: #262626;
 }
 
 /*Custom text-field*/

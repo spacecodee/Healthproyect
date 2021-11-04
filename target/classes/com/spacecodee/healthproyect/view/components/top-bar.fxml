@@ -18,39 +18,31 @@
     </padding>
     <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
           minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
-        <children>
-            <ImageView fx:id="imgLogo" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true"
-                       HBox.hgrow="ALWAYS">
-                <image>
-                    <Image url="@../../assets/icons/asteroid.png"/>
-                </image>
-                <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </ImageView>
-        </children>
+        <ImageView fx:id="imgLogo" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true"
+                   HBox.hgrow="ALWAYS">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <Image url="@../../assets/icons/asteroid.png"/>
+        </ImageView>
     </HBox>
     <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity"
           minWidth="-Infinity" prefWidth="35.0" HBox.hgrow="ALWAYS">
-        <children>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                    minWidth="-Infinity" mnemonicParsing="false" styleClass="btn__icon" HBox.hgrow="ALWAYS">
-                <graphic>
-                    <ImageView fx:id="imgBell" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
-                               preserveRatio="true">
-                        <image>
-                            <Image url="@../../assets/icons/bell.png"/>
-                        </image>
-                        <cursor>
-                            <Cursor fx:constant="HAND"/>
-                        </cursor>
-                    </ImageView>
-                </graphic>
-                <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </Button>
-        </children>
+        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                minWidth="-Infinity" mnemonicParsing="false" styleClass="btn__icon" HBox.hgrow="ALWAYS">
+            <graphic>
+                <ImageView fx:id="imgBell" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                           preserveRatio="true">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <Image url="@../../assets/icons/bell.png"/>
+                </ImageView>
+            </graphic>
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+        </Button>
     </HBox>
     <HBox alignment="CENTER" layoutX="470.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity"
           minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="10.0" HBox.hgrow="ALWAYS">

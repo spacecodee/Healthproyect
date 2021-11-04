@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.controllers.dashboard;
 
-import com.spacecodee.healthproyect.controllers.userroles.UserRoles;
+import com.spacecodee.healthproyect.controllers.user_roles.UserRoles;
+import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -82,15 +83,12 @@ public class Dashboard implements Initializable {
         if (event.getSource().equals(this.btnUserRoles)) {
             this.bpContainer.setCenter(null);
 
-            var URL = "/com/spacecodee/healthproyect/view/user-roles/users-rol.fxml";
             FXMLLoader fxmlLoader = new FXMLLoader();
-            BorderPane borderPane = null;
+            BorderPane borderPane;
 
             try {
-                fxmlLoader.setLocation(this.getClass().getResource(URL));
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL + "user-roles/users-rol.fxml"));
                 borderPane = fxmlLoader.load();
-
-                UserRoles userRolesController = fxmlLoader.getController();
 
                 this.bpContainer.setCenter(borderPane);
             } catch (IOException e) {

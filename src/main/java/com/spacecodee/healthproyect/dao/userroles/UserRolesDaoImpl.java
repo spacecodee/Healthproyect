@@ -1,6 +1,6 @@
 package com.spacecodee.healthproyect.dao.userroles;
 
-import com.spacecodee.healthproyect.dao.Conexion;
+import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +27,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         ObservableList<UserRolesModel> roles = FXCollections.observableArrayList();
 
         try {
-            conn = Conexion.getConnection();
+            conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_LOAD_ROLES);
             rs = pst.executeQuery();
 
@@ -45,9 +45,9 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             ex.printStackTrace(System.out);
         } finally {
             assert rs != null;
-            Conexion.close(rs);
-            Conexion.close(pst);
-            Conexion.close(conn);
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
 
         return roles;
@@ -61,7 +61,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         ObservableList<UserRolesModel> roles = FXCollections.observableArrayList();
 
         try {
-            conn = Conexion.getConnection();
+            conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_FIND_ROLES_BY_NAME);
             pst.setString(1, name);
             rs = pst.executeQuery();
@@ -80,9 +80,9 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             ex.printStackTrace(System.out);
         } finally {
             assert rs != null;
-            Conexion.close(rs);
-            Conexion.close(pst);
-            Conexion.close(conn);
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
 
         return roles;
@@ -94,7 +94,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         PreparedStatement pst = null;
 
         try {
-            conn = Conexion.getConnection();
+            conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_ADD_ROLES);
             pst.setString(1, value.getRoleName());
             pst.executeUpdate();
@@ -105,8 +105,8 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             return false;
         } finally {
             assert pst != null;
-            Conexion.close(pst);
-            Conexion.close(conn);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
     }
 
@@ -116,7 +116,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         PreparedStatement pst = null;
 
         try {
-            conn = Conexion.getConnection();
+            conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_UPDATE_ROLES);
             pst.setString(1, value.getRoleName());
             pst.setInt(2, value.getIdRolUser());
@@ -128,8 +128,8 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             return false;
         } finally {
             assert pst != null;
-            Conexion.close(pst);
-            Conexion.close(conn);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
     }
 
@@ -139,7 +139,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         PreparedStatement pst = null;
 
         try {
-            conn = Conexion.getConnection();
+            conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_DELETE_ROLES);
             pst.setInt(1, value.getIdRolUser());
             pst.executeUpdate();
@@ -150,8 +150,8 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             return false;
         } finally {
             assert pst != null;
-            Conexion.close(pst);
-            Conexion.close(conn);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
     }
 }

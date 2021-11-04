@@ -8,30 +8,31 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Conexion {
+public class Connexion {
+
     private static final String JDBC_BD = "health_dashboard";
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "spacecodee";
-    private static final String JDBC_REQUERIMIENTOS = "?useSSL=false&useTimezone=true&serverTimezone=UTC" +
+    private static final String JDBC_REQUIREMENTS = "?useSSL=false&useTimezone=true&serverTimezone=UTC" +
             "&allowPublicKeyRetrieval=true";
     private static final String JDBC_URL =
-            "jdbc:mysql://localhost:3306/" + Conexion.JDBC_BD + Conexion.JDBC_REQUERIMIENTOS;
+            "jdbc:mysql://localhost:3306/" + Connexion.JDBC_BD + Connexion.JDBC_REQUIREMENTS;
     private static BasicDataSource dataSource;
 
     public static DataSource getDataSource() {
         if (dataSource == null) {
             dataSource = new BasicDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl(Conexion.JDBC_URL);
-            dataSource.setUsername(Conexion.JDBC_USER);
-            dataSource.setPassword(Conexion.JDBC_PASSWORD);
+            dataSource.setUrl(Connexion.JDBC_URL);
+            dataSource.setUsername(Connexion.JDBC_USER);
+            dataSource.setPassword(Connexion.JDBC_PASSWORD);
             dataSource.setInitialSize(50);
         }
         return dataSource;
     }
 
     public static Connection getConnection() throws SQLException {
-        return Conexion.getDataSource().getConnection();
+        return Connexion.getDataSource().getConnection();
     }
 
     public static void close(ResultSet rs) {

@@ -1,15 +1,15 @@
 package com.spacecodee.healthproyect.model.peoples;
 
-import com.spacecodee.healthproyect.model.countries.Countries;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
-
 @ToString
-public class Peoples {
+@AllArgsConstructor
+@NoArgsConstructor
+public class PeopleModel implements Serializable {
 
     @Getter
     private Integer idPeople;
@@ -36,10 +36,13 @@ public class Peoples {
     private Date birthDate;
     @Setter
     @Getter
-    private Countries countries;
+    private CountryModel countryModel;
 
-    @Override
-    public int hashCode() {
-        return 0;
+    public PeopleModel(String dni, String name, String lastname, String mail, String phone) {
+        this.dni = dni;
+        this.name = name;
+        this.lastname = lastname;
+        this.mail = mail;
+        this.phone = phone;
     }
 }

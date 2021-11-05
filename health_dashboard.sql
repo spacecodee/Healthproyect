@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `peoples` (
 
 -- Volcando datos para la tabla health_dashboard.peoples: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `peoples` DISABLE KEYS */;
-INSERT INTO `peoples` (`id_people`, `dni`, `name`, `last_name`, `mail`, `phone`, `url_img_profile`, `birth-date`, `id_country`) VALUES
+INSERT INTO `peoples` (`id_people`, `dni`, `name`, `last_name`, `mail`, `phone`, `url_img_profile`, birth_date, `id_country`) VALUES
 	(1, '77777777', 'Juan', 'Pérez', 'juanp@mail.com', '965412354', NULL, '2000-01-01', 1),
 	(3, '88888888', 'María', 'Pérez', 'mariap@mail.com', '965412555', NULL, '2000-02-01', 1),
 	(4, '94271656', 'Raul', 'Rivas', 'raulr@mail.com', '935478427', NULL, '1950-02-01', 1),

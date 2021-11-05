@@ -11,7 +11,7 @@
 
 <BorderPane fx:id="bpContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" styleClass="main-color"
-            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
+            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.spacecodee.healthproyect.controllers.dashboard.Dashboard">
     <left>
@@ -37,7 +37,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
                 <Button fx:id="btnUsers" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
@@ -55,7 +55,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
                 <Button fx:id="btnUserRoles" alignment="TOP_LEFT" maxHeight="-Infinity"
@@ -74,13 +74,33 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
             </VBox>
             <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="20.0" maxHeight="-Infinity"
                   maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0"
                   VBox.vgrow="ALWAYS">
+                <Button fx:id="btnCustomers" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                        mnemonicParsing="false" text="Clientes" VBox.vgrow="ALWAYS">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <ImageView fx:id="iconCustomer" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../../assets/icons/customer.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <styleClass>
+                        <String fx:value="btn__dashboard"/>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h3"/>
+                    </styleClass>
+                </Button>
                 <Button fx:id="btnReservationAppoiments" alignment="TOP_LEFT" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
                         mnemonicParsing="false" text="Reservas de citas" VBox.vgrow="ALWAYS">
@@ -96,7 +116,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
                 <Button fx:id="btnAddres" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
@@ -106,7 +126,7 @@
                         <Cursor fx:constant="HAND"/>
                     </cursor>
                     <graphic>
-                        <ImageView fx:id="iconAddres" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                        <ImageView fx:id="iconAddress" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <Image url="@../../assets/icons/address.png"/>
                         </ImageView>
@@ -114,7 +134,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
             </VBox>
@@ -135,7 +155,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
                 <Button fx:id="btnLogout" alignment="TOP_LEFT" layoutX="10.0" layoutY="418.0" maxHeight="-Infinity"
@@ -153,7 +173,7 @@
                     <styleClass>
                         <String fx:value="btn__dashboard"/>
                         <String fx:value="font-bold"/>
-                        <String fx:value="h2"/>
+                        <String fx:value="h3"/>
                     </styleClass>
                 </Button>
             </VBox>

@@ -1,6 +1,5 @@
 package com.spacecodee.healthproyect.controllers.dashboard;
 
-import com.spacecodee.healthproyect.controllers.user_roles.UserRoles;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
@@ -45,7 +44,10 @@ public class Dashboard implements Initializable {
     private Button btnUsers;
 
     @FXML
-    private ImageView iconAddres;
+    private Button btnCustomers;
+
+    @FXML
+    private ImageView iconAddress;
 
     @FXML
     private ImageView iconDashboard;
@@ -64,6 +66,9 @@ public class Dashboard implements Initializable {
 
     @FXML
     private ImageView iconUsers;
+
+    @FXML
+    private ImageView iconCustomer;
 
     @FXML
     private VBox vbUsers;
@@ -100,18 +105,21 @@ public class Dashboard implements Initializable {
     private void loadIcons() {
         ImageView[] imageViews = {
                 this.iconDashboard, this.iconUsers, this.iconUserRoles,
-                this.iconReservationA, this.iconAddres, this.iconSettings, this.iconLogout
+                this.iconCustomer, this.iconReservationA, this.iconAddress,
+                this.iconSettings, this.iconLogout
         };
 
         final String[] iconsUrl = {
                 "icons/dashboard.png",
                 "icons/users.png",
                 "icons/user-roles.png",
+                "icons/customer.png",
                 "icons/reservations.png",
                 "icons/address.png",
                 "icons/settings.png",
                 "icons/logout.png"
         };
+
         for (int i = 0; i < imageViews.length; i++) {
             Images.addImg(iconsUrl[i], imageViews[i]);
         }

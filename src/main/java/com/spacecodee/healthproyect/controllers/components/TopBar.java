@@ -3,7 +3,10 @@ package com.spacecodee.healthproyect.controllers.components;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +18,10 @@ public class TopBar implements Initializable {
     private ImageView imgBell;
     @FXML
     private ImageView imgLogo;
+    @Getter
+    @Setter
+    @FXML
+    private Label lblNmeUser;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

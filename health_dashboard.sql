@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
 
 -- Volcando datos para la tabla health_dashboard.countries: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
-INSERT INTO `countries` (`id_country`, `name`, `id_city`) VALUES
+INSERT INTO `countries` (`id_country`, country_name, `id_city`) VALUES
 	(1, 'Perú', 1);
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 

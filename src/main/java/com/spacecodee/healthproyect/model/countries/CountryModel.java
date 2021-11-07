@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class CountryModel implements Serializable {
 
     @Getter
-    private Integer id;
+    private Integer idCountry;
     @Getter
     @Setter
     private String country;

@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.model.cities;
 
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import com.spacecodee.healthproyect.model.postal_codes.PostalCode;
+import com.spacecodee.healthproyect.model.postal_codes.PostalCodeModel;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class CityModel implements Serializable {
     private String name;
     @Getter
     @Setter
-    private PostalCode postalCode;
+    private PostalCodeModel postalCodeModel;
     @Getter
     @Setter
     private DistrictModel districtModel;

@@ -7,7 +7,7 @@ import java.io.Serializable;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostalCode implements Serializable {
+public class PostalCodeModel implements Serializable {
 
     @Getter
     private int idPostalCode;

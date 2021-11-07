@@ -11,7 +11,7 @@
 
 <BorderPane fx:id="bpContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" styleClass="main-color"
-            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/17"
+            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.spacecodee.healthproyect.controllers.dashboard.Dashboard">
     <left>
@@ -90,9 +90,7 @@
                     <graphic>
                         <ImageView fx:id="iconCustomer" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
                                    preserveRatio="true">
-                            <image>
-                                <Image url="@../../assets/icons/customer.png"/>
-                            </image>
+                            <Image url="@../../assets/icons/customer.png"/>
                         </ImageView>
                     </graphic>
                     <styleClass>

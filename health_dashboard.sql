@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `cities` (
 
 -- Volcando datos para la tabla health_dashboard.cities: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `cities` DISABLE KEYS */;
-INSERT INTO `cities` (`id_city`, `name`, `id_postal_code`, `id_district`) VALUES
+INSERT INTO `cities` (`id_city`, city_name, `id_postal_code`, `id_district`) VALUES
 	(1, 'Tumbes', 1, 1),
 	(3, 'Tumbes', 1, 2),
 	(4, 'Tumbes', 1, 3),
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `districts` (
 
 -- Volcando datos para la tabla health_dashboard.districts: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `districts` DISABLE KEYS */;
-INSERT INTO `districts` (`id_district`, `name`) VALUES
+INSERT INTO `districts` (`id_district`, district_name) VALUES
 	(1, 'San Jacinto'),
 	(2, 'Corrales'),
 	(3, 'Tumbes'),

@@ -12,12 +12,12 @@ import java.sql.SQLException;
 
 public class DistrictDaoImpl implements IDistrictDao {
 
-    private static final String SQL_LOAD_DISTRICTS = "SELECT id_district, name FROM districts";
-    private static final String SQL_ADD_DISTRICT = "INSERT INTO districts (name) VALUES (?)";
-    private static final String SQL_UPDATE_DISTRICT = "UPDATE districts SET name = ? WHERE id_district = ?";
+    private static final String SQL_LOAD_DISTRICTS = "SELECT id_district, district_name FROM districts";
+    private static final String SQL_ADD_DISTRICT = "INSERT INTO districts (district_name) VALUES (?)";
+    private static final String SQL_UPDATE_DISTRICT = "UPDATE districts SET district_name = ? WHERE id_district = ?";
     private static final String SQL_DELETE_DISTRICT = "DELETE FROM districts WHERE id_district = ?";
-    private static final String SQL_FIND_DISTRICT_BY_NAME = "SELECT id_district, name FROM districts " +
-            "WHERE name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_DISTRICT_BY_NAME = "SELECT id_district, district_name FROM districts " +
+            "WHERE district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
     public ObservableList<DistrictModel> load() {
@@ -96,7 +96,7 @@ public class DistrictDaoImpl implements IDistrictDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_ADD_DISTRICT);
-            pst.setString(1, value.getName());
+            pst.setString(1, value.getDistrict_name());
             pst.executeUpdate();
 
             return true;
@@ -118,7 +118,7 @@ public class DistrictDaoImpl implements IDistrictDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_UPDATE_DISTRICT);
-            pst.setString(1, value.getName());
+            pst.setString(1, value.getDistrict_name());
             pst.setInt(2, value.getIdDistrict());
             pst.executeUpdate();
 

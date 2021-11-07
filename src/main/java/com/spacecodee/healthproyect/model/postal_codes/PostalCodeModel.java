@@ -14,4 +14,8 @@ public class PostalCodeModel implements Serializable {
     @Getter
     @Setter
     private String postalCode;
+
+    public PostalCodeModel(String postalCode) {
+        this.postalCode = postalCode;
+    }
 }

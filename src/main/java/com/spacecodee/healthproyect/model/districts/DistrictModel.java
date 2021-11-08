@@ -13,9 +13,9 @@ public class DistrictModel implements Serializable {
     private int idDistrict;
     @Getter
     @Setter
-    private String district_name;
+    private String districtName;
 
-    public DistrictModel(String district_name) {
-        this.district_name = district_name;
+    public DistrictModel(String districtName) {
+        this.districtName = districtName;
     }
 }

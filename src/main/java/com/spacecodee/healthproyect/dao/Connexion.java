@@ -17,12 +17,13 @@ public class Connexion {
             "&allowPublicKeyRetrieval=true";
     private static final String JDBC_URL =
             "jdbc:mysql://localhost:3306/" + Connexion.JDBC_BD + Connexion.JDBC_REQUIREMENTS;
+    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static BasicDataSource dataSource;
 
-    public static DataSource getDataSource() {
+    private static DataSource getDataSource() {
         if (dataSource == null) {
             dataSource = new BasicDataSource();
-            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setDriverClassName(Connexion.JDBC_DRIVER);
             dataSource.setUrl(Connexion.JDBC_URL);
             dataSource.setUsername(Connexion.JDBC_USER);
             dataSource.setPassword(Connexion.JDBC_PASSWORD);

@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class CountryModel implements Serializable {
@@ -18,4 +17,13 @@ public class CountryModel implements Serializable {
     @Getter
     @Setter
     private CityModel cityModel;
+
+    public CountryModel(String country) {
+        this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return this.country;
+    }
 }

@@ -45,4 +45,27 @@ public class PeopleModel implements Serializable {
         this.mail = mail;
         this.phone = phone;
     }
+
+    public PeopleModel(Integer idPeople, String dni, String name, String lastname, String mail, String phone,
+                       CountryModel countryModel) {
+        this.idPeople = idPeople;
+        this.dni = dni;
+        this.name = name;
+        this.lastname = lastname;
+        this.mail = mail;
+        this.phone = phone;
+        this.countryModel = countryModel;
+    }
+
+    public PeopleModel(Integer idPeople, String dni, String name, String lastname, String mail,
+                       String phone, String urlImgProfile, Date birthDate) {
+        this.idPeople = idPeople;
+        this.dni = dni;
+        this.name = name;
+        this.lastname = lastname;
+        this.mail = mail;
+        this.phone = phone;
+        this.urlImgProfile = urlImgProfile;
+        this.birthDate = birthDate;
+    }
 }

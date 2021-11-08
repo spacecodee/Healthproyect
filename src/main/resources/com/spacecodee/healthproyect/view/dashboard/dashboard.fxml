@@ -119,7 +119,7 @@
                 </Button>
                 <Button fx:id="btnAddres" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" text="Direcciones" VBox.vgrow="ALWAYS">
+                        mnemonicParsing="false" onAction="#addressOnAction" text="Direcciones" VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

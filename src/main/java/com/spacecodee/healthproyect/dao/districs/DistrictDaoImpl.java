@@ -96,7 +96,7 @@ public class DistrictDaoImpl implements IDistrictDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_ADD_DISTRICT);
-            pst.setString(1, value.getDistrict_name());
+            pst.setString(1, value.getDistrictName());
             pst.executeUpdate();
 
             return true;
@@ -118,7 +118,7 @@ public class DistrictDaoImpl implements IDistrictDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_UPDATE_DISTRICT);
-            pst.setString(1, value.getDistrict_name());
+            pst.setString(1, value.getDistrictName());
             pst.setInt(2, value.getIdDistrict());
             pst.executeUpdate();
 

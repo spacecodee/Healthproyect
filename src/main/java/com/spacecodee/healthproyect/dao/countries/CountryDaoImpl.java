@@ -3,6 +3,9 @@ package com.spacecodee.healthproyect.dao.countries;
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.model.countries.CountryTable;
+import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.model.postal_codes.PostalCodeModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,25 +16,52 @@ import java.sql.SQLException;
 
 public class CountryDaoImpl implements ICountryDao {
 
-    private static final String SQL_LOAD_CITIES = "SELECT c.id_country, c.country_name, c2.city_name \n" +
-            " FROM countries c \n" +
-            "         INNER JOIN cities c2 \n" +
-            "                    on c.id_city = c2.id_city";
+    private static final String SQL_LOAD_CITIES = "SELECT c.id_country,\n" +
+            "       c.country_name,\n" +
+            "       c2.id_city,\n" +
+            "       c2.city_name,\n" +
+            "       d.id_district,\n" +
+            "       d.district_name,\n" +
+            "       pc.id_postal_code,\n" +
+            "       pc.postal_code\n" +
+            "FROM countries c\n" +
+            "         INNER JOIN cities c2 on c.id_city = c2.id_city\n" +
+            "         INNER JOIN districts d on c2.id_district = d.id_district\n" +
+            "         INNER JOIN postal_codes pc on c2.id_postal_code = pc.id_postal_code;";
     private static final String SQL_ADD_COUNTRY = "INSERT INTO countries (country_name, id_city) VALUES (?, ?)";
     private static final String SQL_UPDATE_COUNTRY = "UPDATE countries SET country_name = ?, id_city = ?" +
             " WHERE id_country = ?";
     private static final String SQL_DELETE_COUNTRY = "DELETE FROM cities WHERE id_city = ?";
-    private static final String SQL_FIND_COUNTRIES_BY_CITY_NAME = "SELECT c.id_country, c.country_name, c2.city_name\n" +
-            " FROM countries c\n" +
-            "         INNER JOIN cities c2\n" +
-            " WHERE country_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_COUNTRIES_BY_CITY_NAME = "SELECT c.id_country,\n" +
+            "       c.country_name,\n" +
+            "       c2.id_city,\n" +
+            "       c2.city_name,\n" +
+            "       d.id_district,\n" +
+            "       d.district_name,\n" +
+            "       pc.id_postal_code,\n" +
+            "       pc.postal_code\n" +
+            "FROM countries c\n" +
+            "         INNER JOIN cities c2 on c.id_city = c2.id_city\n" +
+            "         INNER JOIN districts d on c2.id_district = d.id_district\n" +
+            "         INNER JOIN postal_codes pc on c2.id_postal_code = pc.id_postal_code" +
+            " WHERE c2.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
     public ObservableList<CountryModel> load() {
+        return null;
+    }
+
+    @Override
+    public ObservableList<CountryModel> findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public ObservableList<CountryTable> loadTable() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<CountryModel> countries = FXCollections.observableArrayList();
+        ObservableList<CountryTable> countries = FXCollections.observableArrayList();
 
         try {
             conn = Connexion.getConnection();
@@ -52,11 +82,11 @@ public class CountryDaoImpl implements ICountryDao {
     }
 
     @Override
-    public ObservableList<CountryModel> findByName(String name) {
+    public ObservableList<CountryTable> findByNameTable(String name) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<CountryModel> countries = FXCollections.observableArrayList();
+        ObservableList<CountryTable> countries = FXCollections.observableArrayList();
 
         try {
             conn = Connexion.getConnection();
@@ -77,15 +107,19 @@ public class CountryDaoImpl implements ICountryDao {
         return countries;
     }
 
-    private void returnResults(ResultSet rs, ObservableList<CountryModel> countries) throws SQLException {
+    private void returnResults(ResultSet rs, ObservableList<CountryTable> countries) throws SQLException {
         countries.clear();
 
         while (rs.next()) {
-            var cityModel = new CityModel(rs.getString("city_name"));
-            var countryModel = new CountryModel(
+            var countryModel = new CountryTable(
                     rs.getInt("id_country"),
                     rs.getString("country_name"),
-                    cityModel
+                    rs.getInt("id_city"),
+                    rs.getString("city_name"),
+                    rs.getInt("id_postal_code"),
+                    rs.getString("postal_code"),
+                    rs.getInt("id_district"),
+                    rs.getString("district_name")
             );
 
             countries.add(countryModel);

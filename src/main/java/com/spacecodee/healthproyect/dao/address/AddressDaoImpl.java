@@ -28,10 +28,10 @@ public class AddressDaoImpl implements IAddressDao {
             "         INNER JOIN cities c on a.id_city = c.id_city\n" +
             "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code\n" +
             "         INNER JOIN districts d on c.id_district = d.id_district";
-    private static final String SQL_ADD_ADDRESS = "INSERT INTO countries (country_name) VALUES (?)";
-    private static final String SQL_UPDATE_ADDRESS = "UPDATE countries SET country_name = ? " +
-            " WHERE id_country = ?";
-    private static final String SQL_DELETE_ADDRESS = "DELETE FROM cities WHERE id_city = ?";
+    private static final String SQL_ADD_ADDRESS = "INSERT INTO address (id_city, id_country) VALUES (?, ?)";
+    private static final String SQL_UPDATE_ADDRESS = "UPDATE address SET id_city = ?, id_country = ? " +
+            " WHERE id_address = ?";
+    private static final String SQL_DELETE_ADDRESS = "DELETE FROM address WHERE id_address = ?";
     private static final String SQL_FIND_ADDRESS_BY_CITY_NAME = "SELECT a.id_address,\n" +
             "       c2.id_country,\n" +
             "       c2.country_name,\n" +
@@ -132,16 +132,70 @@ public class AddressDaoImpl implements IAddressDao {
 
     @Override
     public boolean add(AddressModel value) {
-        return false;
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(AddressDaoImpl.SQL_ADD_ADDRESS);
+            pst.setInt(1, value.getCityModel().getIdCity());
+            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.executeUpdate();
+
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            return false;
+        } finally {
+            assert pst != null;
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
     }
 
     @Override
     public boolean update(AddressModel value) {
-        return false;
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(AddressDaoImpl.SQL_UPDATE_ADDRESS);
+            pst.setInt(1, value.getCityModel().getIdCity());
+            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.setInt(3, value.getIdAddress());
+            pst.executeUpdate();
+
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            return false;
+        } finally {
+            assert pst != null;
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
     }
 
     @Override
     public boolean delete(AddressModel value) {
-        return false;
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(AddressDaoImpl.SQL_DELETE_ADDRESS);
+            pst.setInt(1, value.getIdAddress());
+            pst.executeUpdate();
+
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            return false;
+        } finally {
+            assert pst != null;
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
     }
 }

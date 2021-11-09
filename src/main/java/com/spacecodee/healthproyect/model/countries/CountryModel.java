@@ -15,6 +15,10 @@ public class CountryModel implements Serializable {
     @Setter
     private String country;
 
+    public CountryModel(Integer idCountry) {
+        this.idCountry = idCountry;
+    }
+
     public CountryModel(String country) {
         this.country = country;
     }

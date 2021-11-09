@@ -2,12 +2,15 @@ package com.spacecodee.healthproyect.utils;
 
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
+import com.spacecodee.healthproyect.model.cities.CityModel;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -113,5 +116,9 @@ public class AppUtils {
         } catch (IOException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+    public static boolean validateCombo(ComboBox<CityModel> cbxCity, ComboBox<CountryModel> cbxCountry) {
+        return cbxCity.getSelectionModel().isEmpty() || cbxCountry.getSelectionModel().isEmpty();
     }
 }

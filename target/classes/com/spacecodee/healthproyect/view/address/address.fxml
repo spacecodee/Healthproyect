@@ -16,7 +16,7 @@
 
 <BorderPane fx:id="addressSection" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" styleClass="main-color"
-            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/17"
+            stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.spacecodee.healthproyect.controllers.address.Address">
     <padding>

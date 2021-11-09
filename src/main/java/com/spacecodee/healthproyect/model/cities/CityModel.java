@@ -22,4 +22,8 @@ public class CityModel implements Serializable {
     @Getter
     @Setter
     private DistrictModel districtModel;
+
+    public CityModel(int idCity) {
+        this.idCity = idCity;
+    }
 }

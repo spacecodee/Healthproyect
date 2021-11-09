@@ -17,4 +17,13 @@ public class AddressModel {
     @Getter
     @Setter
     private CountryModel countryModel;
+
+    public AddressModel(int idAddress) {
+        this.idAddress = idAddress;
+    }
+
+    public AddressModel(CityModel cityModel, CountryModel countryModel) {
+        this.cityModel = cityModel;
+        this.countryModel = countryModel;
+    }
 }

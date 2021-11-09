@@ -1,30 +1,32 @@
 package com.spacecodee.healthproyect.controllers.address;
 
+import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
 import com.spacecodee.healthproyect.dao.address.IAddressDao;
 import com.spacecodee.healthproyect.dao.cities.CityDaoImpl;
 import com.spacecodee.healthproyect.dao.cities.ICityDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
-import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
-import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
-import com.spacecodee.healthproyect.dao.postal_code.IPostalCodeDao;
-import com.spacecodee.healthproyect.dao.postal_code.PostalCodeDaoImpl;
 import com.spacecodee.healthproyect.dto.city.CityConverter;
 import com.spacecodee.healthproyect.dto.country.CountryConverter;
+import com.spacecodee.healthproyect.model.address.AddressModel;
 import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import com.spacecodee.healthproyect.model.postal_codes.PostalCodeModel;
+import com.spacecodee.healthproyect.utils.AppUtils;
+import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -86,8 +88,6 @@ public class Address implements Initializable {
     private final IAddressDao addressDao = new AddressDaoImpl();
     private final ICountryDao countryDao = new CountryDaoImpl();
     private final ICityDao cityDao = new CityDaoImpl();
-    private final IDistrictDao districtDao = new DistrictDaoImpl();
-    private final IPostalCodeDao postalCodeDao = new PostalCodeDaoImpl();
     private AddressTable addressTable;
     private ArrayList<CityModel> listCities;
     private ArrayList<CountryModel> listCountries;
@@ -103,6 +103,7 @@ public class Address implements Initializable {
 
     private void loadCities() {
         this.listCities = this.cityDao.listOfCities();
+        this.cbxCity.getItems().removeAll();
         this.cbxCity.getItems().addAll(this.listCities);
         this.cbxCity.setConverter(new CityConverter());
     }
@@ -139,17 +140,43 @@ public class Address implements Initializable {
 
     @FXML
     private void addOnAction(ActionEvent event) {
-
+        if (event.getSource().equals(this.btnAdd)) {
+            if (!AppUtils.validateCombo(this.cbxCity, this.cbxCountry)) {
+                if (Address.actionCrud.equalsIgnoreCase("add")) {
+                    this.add();
+                } else if (Address.actionCrud.equalsIgnoreCase("edit")) {
+                    if (this.validateSelectedAddress()) {
+                        this.loadModalConfirmation("¿Estas seguro(a) que quieres editar la dirección");
+                    } else {
+                        AppUtils.loadModalMessage("Selecciona la fila a editar", "error");
+                    }
+                }
+            } else {
+                AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
+            }
+        }
     }
 
     @FXML
     private void cancelOnAction(ActionEvent event) {
-
+        if (event.getSource().equals(this.btnCancel)) {
+            this.reloadTableAndForm();
+            Address.actionCrud = "add";
+            this.changedCrudAction();
+        }
     }
 
     @FXML
     private void deleteRolOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnDelete)) {
+            Address.actionCrud = "delete";
 
+            if (this.validateSelectedAddress()) {
+                this.loadModalConfirmation("¿Estas seguro(a) que quieres eliminar esta dirección");
+            } else {
+                AppUtils.loadModalMessage("Selecciona la fila a eliminar", "error");
+            }
+        }
     }
 
     @FXML
@@ -192,20 +219,100 @@ public class Address implements Initializable {
         }
     }
 
+    private void add() {
+        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
+        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
+
+        var address = new AddressModel(
+                new CityModel(idCity),
+                new CountryModel(idCountry)
+        );
+
+        if (this.addressDao.add(address)) {
+            this.reloadTableAndForm();
+            AppUtils.loadModalMessage("Dirección agregada", "success");
+        } else {
+            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+        }
+    }
+
+    private void edit(ActionEvent actionEvent) {
+        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
+        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
+
+        var address = new AddressModel(
+                new CityModel(idCity),
+                new CountryModel(idCountry)
+        );
+
+        if (this.addressDao.update(address)) {
+            this.reloadTableAndForm();
+            AppUtils.loadModalMessage("Dirección actualizada", "success");
+            AppUtils.closeModal(actionEvent);
+        } else {
+            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+        }
+
+        Address.actionCrud = "add";
+        this.changedCrudAction();
+    }
+
+    private void delete(ActionEvent actionEvent) {
+        var address = new AddressModel(this.addressTable.getIdAddress());
+
+        if (this.addressDao.delete(address)) {
+            this.reloadTableAndForm();
+            AppUtils.loadModalMessage("Dirección eliminada con exito", "success");
+            AppUtils.closeModal(actionEvent);
+        } else {
+            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+        }
+
+        Address.actionCrud = "add";
+        this.changedCrudAction();
+    }
+
+    private void loadModalConfirmation(String message) {
+        var stage = new Stage();
+
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader);
+
+        final ModalConfirmation modalConfirmation = fxmlLoader.getController();
+
+        modalConfirmation.getLblMessage().setText(message.toUpperCase());
+        Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
+        modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
+            if (Address.actionCrud.equalsIgnoreCase("edit")) {
+                this.edit(actionEvent);
+            } else {
+                this.delete(actionEvent);
+            }
+        });
+        modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
+            this.loadTable();
+            AppUtils.closeModal(actionEvent);
+        });
+
+        stage.show();
+    }
+
     private void changedCrudAction() {
         var title = (Address.actionCrud.equalsIgnoreCase("add") ? "Agregar" : "Actualizar");
         this.lblAddEdit.setText(title);
         this.btnAdd.setText(title);
     }
 
-    private boolean validateSelectedRoles() {
+    private boolean validateSelectedAddress() {
         return this.tableCountries.getSelectionModel().getSelectedItem() != null;
     }
 
     private void reloadTableAndForm() {
         this.loadTable();
-        this.loadCountries();
-        this.loadCities();
+        this.cbxCountry.getSelectionModel().select(0);
+        this.cbxCity.getSelectionModel().select(0);
     }
 
     private int getPositionCity(ArrayList<CityModel> listCities, CityModel cityModel) {

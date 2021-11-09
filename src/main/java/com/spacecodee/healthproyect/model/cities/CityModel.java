@@ -22,8 +22,4 @@ public class CityModel implements Serializable {
     @Getter
     @Setter
     private DistrictModel districtModel;
-
-    public CityModel(String name) {
-        this.name = name;
-    }
 }

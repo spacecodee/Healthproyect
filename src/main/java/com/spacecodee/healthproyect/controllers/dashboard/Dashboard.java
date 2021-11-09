@@ -111,7 +111,7 @@ public class Dashboard implements Initializable {
             BorderPane borderPane;
 
             try {
-                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL + "countries/countries.fxml"));
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL + "address/address.fxml"));
                 borderPane = fxmlLoader.load();
 
                 this.bpContainer.setCenter(borderPane);

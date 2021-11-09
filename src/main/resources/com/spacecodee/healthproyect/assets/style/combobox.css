@@ -1,0 +1,53 @@
+.combo-box-base {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15px;
+    -fx-padding: 0px 15px;
+}
+
+.combo-box-base:editable {
+    -fx-background-color: #ffffff;
+}
+
+.combo-box-base:editable > .text-field {
+    -fx-border-image-source: null;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.combo-box-base > .arrow-button {
+    -fx-background-color: #f4f4f8;
+    -fx-padding: 2 4;
+}
+
+.combo-box-base > .arrow-button > .arrow {
+    -fx-background-color: #333333;
+    -fx-background-insets: 0 0 0 0;
+    -fx-padding: 2 4;
+
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: #f4f4f8;
+    -fx-background-radius: 15px;
+    -fx-background-insets: 0, 1;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 1 10;
+    -fx-background: #f4f4f8;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+    -fx-background: silver;
+    -fx-background-color: silver !important;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background-color: silver !important;
+}
+
+.combo-box-popup > .list-view > .placeholder > .label {
+    -fx-text-fill: #333333;
+    -fx-prompt-text-fill: #333333;
+}

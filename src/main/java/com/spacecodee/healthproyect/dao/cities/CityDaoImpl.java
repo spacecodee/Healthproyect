@@ -11,33 +11,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CityDaoImpl implements ICityDao {
 
-    private static final String SQL_LOAD_CITIES = "SELECT c.id_city,\n" +
-            "       c.city_name,\n" +
-            "       pc.postal_code,\n" +
-            "       d.district_name \n" +
+    private static final String SQL_LOAD_CITIES = "SELECT c.id_city, c.city_name, pc.id_postal_code, " +
+            "pc.postal_code, d.id_district, d.district_name \n" +
             "FROM cities c\n" +
-            "         INNER JOIN postal_codes pc\n" +
-            "                    on c.id_postal_code = pc.id_postal_code\n" +
-            "         INNER JOIN districts d\n" +
-            "                    on c.id_district = d.id_district";
+            "         INNER JOIN districts d on c.id_district = d.id_district\n" +
+            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code";
+
     private static final String SQL_ADD_CITY = "INSERT INTO cities (city_name, id_postal_code, id_district) " +
             "VALUES (?, ?, ?);";
     private static final String SQL_UPDATE_CITY = "UPDATE cities SET city_name = ?, id_postal_code = ?, " +
             " id_district = ? WHERE id_city = ?";
     private static final String SQL_DELETE_CITY = "DELETE FROM cities WHERE id_city = ?";
-    private static final String SQL_FIND_CITY_BY_CITY_NAME = "SELECT c.id_city,\n" +
-            "       c.city_name,\n" +
-            "       pc.postal_code,\n" +
-            "       d.district_name \n" +
+    private static final String SQL_FIND_CITY_BY_CITY_NAME = "SELECT c.id_city, c.city_name, pc.id_postal_code, " +
+            "pc.postal_code, d.id_district, d.district_name \n" +
             "FROM cities c\n" +
-            "         INNER JOIN postal_codes pc\n" +
-            "                    on c.id_postal_code = pc.id_postal_code\n" +
-            "         INNER JOIN districts d\n" +
-            "                    on c.id_district = d.id_district" +
-            " WHERE district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+            "         INNER JOIN districts d on c.id_district = d.id_district\n" +
+            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code" +
+            " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_MAX_CITY_ID = "SELECT MAX(id_city) AS id FROM cities";
 
     @Override
     public ObservableList<CityModel> load() {
@@ -96,19 +91,17 @@ public class CityDaoImpl implements ICityDao {
 
     private void returnResults(ResultSet rs, ObservableList<CityModel> cities) throws SQLException {
         while (rs.next()) {
-            var postalCodeModel = new PostalCodeModel(
-                    rs.getString("postal_code")
-            );
-
-            var districtModel = new DistrictModel(
-                    rs.getString("district_name")
-            );
-
             var cityModel = new CityModel(
                     rs.getInt("id_city"),
                     rs.getString("city_name"),
-                    postalCodeModel,
-                    districtModel
+                    new PostalCodeModel(
+                            rs.getInt("id_postal_code"),
+                            rs.getString("postal_code")
+                    ),
+                    new DistrictModel(
+                            rs.getInt("id_district"),
+                            rs.getString("district_name")
+                    )
             );
 
             cities.add(cityModel);
@@ -184,5 +177,74 @@ public class CityDaoImpl implements ICityDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public ArrayList<CityModel> listOfCities() {
+        ArrayList<CityModel> listCities = new ArrayList<>();
+        CityModel cityModel;
+
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CityDaoImpl.SQL_LOAD_CITIES);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                cityModel = new CityModel(
+                        rs.getInt("id_city"),
+                        rs.getString("city_name"),
+                        new PostalCodeModel(
+                                rs.getInt("id_postal_code"),
+                                rs.getString("postal_code")
+                        ),
+                        new DistrictModel(
+                                rs.getInt("id_district"),
+                                rs.getString("district_name")
+                        )
+                );
+
+                listCities.add(cityModel);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listCities;
+    }
+
+    @Override
+    public int getMaxId() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var id = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CityDaoImpl.SQL_MAX_CITY_ID);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getInt("id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return id;
     }
 }

@@ -21,6 +21,7 @@ import java.io.IOException;
 public class AppUtils {
     public static final String URL = "/com/spacecodee/healthproyect/view/";
     public static final String URL_IMG = "src/main/resources/com/spacecodee/healthproyect/assets/icons/asteroid.png";
+    public static final String urlAlert = "icons/modals/error.png";
 
     public static EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return e -> {

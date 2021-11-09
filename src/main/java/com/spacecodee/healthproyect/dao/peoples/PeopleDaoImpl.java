@@ -19,12 +19,12 @@ public class PeopleDaoImpl implements IPeopleDao {
             "       c.country_name \n" +
             "FROM peoples p\n" +
             "         INNER JOIN countries c\n" +
-            "                    on p.id_country = c.id_country";
+            "                    on p.id_address = c.id_country";
     private static final String SQL_ADD_PEOPLE = "INSERT INTO peoples (dni, name, last_name, mail, phone, " +
-            "url_img_profile, birth_date, id_country) \n" +
+            "url_img_profile, birth_date, id_address) \n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_PEOPLE = "UPDATE peoples SET dni = ?, name = ?, " +
-            " last_name = ?, mail = ?, phone = ?, url_img_profile = ?, birth_date = ?, id_country = ? WHERE id_people = ?";
+            " last_name = ?, mail = ?, phone = ?, url_img_profile = ?, birth_date = ?, id_address = ? WHERE id_people = ?";
     private static final String SQL_DELETE_PEOPLE = "DELETE FROM peoples WHERE id_people = ?";
     private static final String SQL_FIND_PEOPLE_BY_NAME = "SELECT p.id_people,\n" +
             "       p.dni,\n" +
@@ -35,7 +35,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             "       c.country_name \n" +
             "FROM peoples p\n" +
             "         INNER JOIN countries c\n" +
-            "                    on p.id_country = c.id_country" +
+            "                    on p.id_address = c.id_country" +
             " WHERE name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_FIND_PEOPLE_DNI = "SELECT id_people,\n" +
             "       dni,\n" +
@@ -45,7 +45,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             "       phone,\n" +
             "       url_img_profile,\n" +
             "       birth_date,\n" +
-            "       id_country \n" +
+            "       id_address \n" +
             "FROM peoples \n" +
             "WHERE id_people = ?;";
 

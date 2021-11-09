@@ -157,8 +157,6 @@ public class UserRoles implements Initializable {
     }
 
     private void loadModalConfirmation(String message) {
-        final String urlAlert = "icons/modals/error.png";
-
         var stage = new Stage();
 
         var fxmlLoader = new FXMLLoader();
@@ -169,7 +167,7 @@ public class UserRoles implements Initializable {
         final ModalConfirmation modalConfirmation = fxmlLoader.getController();
 
         modalConfirmation.getLblMessage().setText(message.toUpperCase());
-        Images.addImg(urlAlert, modalConfirmation.getIconType());
+        Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
         modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
             if (UserRoles.actionCrud.equalsIgnoreCase("edit")) {
                 this.edit(actionEvent);

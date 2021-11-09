@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dao.postal_code.PostalCodeDaoImpl;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ public class DistrictDaoImpl implements IDistrictDao {
     private static final String SQL_DELETE_DISTRICT = "DELETE FROM districts WHERE id_district = ?";
     private static final String SQL_FIND_DISTRICT_BY_NAME = "SELECT id_district, district_name FROM districts " +
             "WHERE district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_MAX_DISTRICT_ID = "SELECT MAX(id_district) AS id FROM districts";
 
     @Override
     public ObservableList<DistrictModel> load() {
@@ -153,5 +155,32 @@ public class DistrictDaoImpl implements IDistrictDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public int getMaxId() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var id = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_MAX_DISTRICT_ID);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getInt("id");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return id;
     }
 }

@@ -7,7 +7,7 @@ public class CountryConverter extends StringConverter<CountryModel> {
 
     @Override
     public String toString(CountryModel countryModel) {
-        return countryModel != null ? countryModel.getCountry() : null;
+        return countryModel != null ? countryModel.getCountryName() : null;
     }
 
     @Override

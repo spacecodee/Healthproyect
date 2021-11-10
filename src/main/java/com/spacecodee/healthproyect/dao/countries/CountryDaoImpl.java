@@ -130,7 +130,7 @@ public class CountryDaoImpl implements ICountryDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CountryDaoImpl.SQL_ADD_COUNTRY);
-            pst.setString(1, value.getCountry());
+            pst.setString(1, value.getCountryName());
             pst.executeUpdate();
 
             return true;
@@ -152,7 +152,7 @@ public class CountryDaoImpl implements ICountryDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CountryDaoImpl.SQL_UPDATE_COUNTRY);
-            pst.setString(1, value.getCountry());
+            pst.setString(1, value.getCountryName());
             pst.setInt(2, value.getIdCountry());
             pst.executeUpdate();
 

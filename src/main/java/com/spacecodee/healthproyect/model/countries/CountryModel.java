@@ -13,14 +13,14 @@ public class CountryModel implements Serializable {
     private Integer idCountry;
     @Getter
     @Setter
-    private String country;
+    private String countryName;
 
     public CountryModel(Integer idCountry) {
         this.idCountry = idCountry;
     }
 
-    public CountryModel(String country) {
-        this.country = country;
+    public CountryModel(String countryName) {
+        this.countryName = countryName;
     }
 
 }

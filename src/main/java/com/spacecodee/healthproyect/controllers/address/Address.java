@@ -1,5 +1,6 @@
 package com.spacecodee.healthproyect.controllers.address;
 
+import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
 import com.spacecodee.healthproyect.dao.address.IAddressDao;
@@ -42,6 +43,15 @@ public class Address implements Initializable {
 
     @FXML
     private Button btnDelete;
+
+    @FXML
+    private Button btnAddCities;
+
+    @FXML
+    private Button btnAddCountries;
+
+    @FXML
+    private Button btnAddDistrics;
 
     @FXML
     private Label lblAddEdit;
@@ -182,6 +192,23 @@ public class Address implements Initializable {
     }
 
     @FXML
+    private void btnAddOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnAddCountries)) {
+            Stage stage = new Stage();
+
+            final Countries countriesController = AppUtils.loadCountriesModal(stage, "Agregar Paises");
+            countriesController.setCbxCountry(this.cbxCountry);
+            countriesController.setTableAddress(this.tableAddress);
+
+            stage.show();
+        } else if (event.getSource().equals(this.btnAddCities)) {
+            System.out.println();
+        } else if (event.getSource().equals(this.btnAddDistrics)) {
+            System.out.println();
+        }
+    }
+
+    @FXML
     private void cancelOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnCancel)) {
             this.reloadTableAndForm();
@@ -204,22 +231,17 @@ public class Address implements Initializable {
     }
 
     @FXML
-    private void findByCityKeyTyped(KeyEvent event) {
-        if (event.getSource().equals(this.txtFindByCity)) {
+    private void findByOnTyped(KeyEvent event) {
+        if (event.getSource().equals(this.txtFindByCity) || event.getSource().equals(this.txtFindByDistrict)) {
             var cityName = this.txtFindByCity.getText().trim();
+            var districtName = this.txtFindByDistrict.getText().trim();
 
+            var AddressModel = new AddressTable(cityName, districtName);
             if (cityName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableAddress.setItems(this.addressDao.findByNameTable(cityName));
+                this.tableAddress.setItems(this.addressDao.findByNameTable(AddressModel));
             }
-        }
-    }
-
-    @FXML
-    private void findByDistrictKeyTyped(KeyEvent event) {
-        if (event.getSource().equals(this.txtFindByDistrict)) {
-            System.out.println();
         }
     }
 
@@ -394,7 +416,7 @@ public class Address implements Initializable {
 
     private int getPositionCountry(ArrayList<CountryModel> listCountries, CountryModel countryModel) {
         for (int i = 0; i < listCountries.size(); i++) {
-            if (listCountries.get(i).getCountry().equalsIgnoreCase(countryModel.getCountry())) {
+            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryModel.getCountryName())) {
                 return i;
             }
         }

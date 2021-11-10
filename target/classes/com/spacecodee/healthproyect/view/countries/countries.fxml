@@ -4,7 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -17,7 +16,7 @@
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
             minWidth="-Infinity" styleClass="main-color" stylesheets="@../../assets/style/style.css"
             xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.spacecodee.healthproyect.controllers.address.Address">
+            fx:controller="com.spacecodee.healthproyect.controllers.countries.Countries">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
@@ -25,8 +24,8 @@
         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
               minWidth="-Infinity" BorderPane.alignment="CENTER">
             <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308"
-                   maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                   text="SECCIÓN DE DIRECCIONES DEL SISTEMA" HBox.hgrow="ALWAYS">
+                   maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="SECCIÓN DE PAISES"
+                   HBox.hgrow="ALWAYS">
                 <font>
                     <Font name="Segoe UI Bold" size="36.0"/>
                 </font>
@@ -48,9 +47,9 @@
             </padding>
             <HBox alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   minWidth="-Infinity" spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
-                <TextField fx:id="txtFindByCity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                           minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#findByOnTyped"
-                           promptText="Buscar por Ciudad" HBox.hgrow="ALWAYS">
+                <TextField fx:id="txtFindByCountry" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                           minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#findByOnKeyTyped"
+                           promptText="Buscar por País" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI" size="15.0"/>
                     </font>
@@ -59,72 +58,16 @@
                         <String fx:value="h4"/>
                     </styleClass>
                 </TextField>
-                <TextField fx:id="txtFindByDistrict" layoutX="25.0" layoutY="25.0" maxHeight="1.7976931348623157E308"
-                           maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                           onKeyTyped="#findByOnTyped" promptText="Buscar por Distrito" HBox.hgrow="ALWAYS">
-                    <font>
-                        <Font name="Segoe UI" size="15.0"/>
-                    </font>
-                    <styleClass>
-                        <String fx:value="font-bold"/>
-                        <String fx:value="h4"/>
-                    </styleClass>
-                </TextField>
-            </HBox>
-            <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                  spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
-                <Button fx:id="btnAddCountries" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction" text="Agregar Paises"
-                        HBox.hgrow="ALWAYS">
-                    <styleClass>
-                        <String fx:value="font-bold"/>
-                        <String fx:value="h4"/>
-                        <String fx:value="btn"/>
-                        <String fx:value="btn__dark"/>
-                    </styleClass>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button fx:id="btnAddCities" layoutX="25.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction"
-                        text="Agregar Ciudades" HBox.hgrow="ALWAYS">
-                    <styleClass>
-                        <String fx:value="font-bold"/>
-                        <String fx:value="h4"/>
-                        <String fx:value="btn"/>
-                        <String fx:value="btn__dark"/>
-                    </styleClass>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button fx:id="btnAddDistrics" layoutX="120.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction"
-                        text="Agregar distritos" HBox.hgrow="ALWAYS">
-                    <styleClass>
-                        <String fx:value="font-bold"/>
-                        <String fx:value="h4"/>
-                        <String fx:value="btn"/>
-                        <String fx:value="btn__dark"/>
-                    </styleClass>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
             </HBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   minWidth="-Infinity" styleClass="card" stylesheets="@../../assets/style/table.css"
                   VBox.vgrow="ALWAYS">
-                <TableView fx:id="tableAddress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                           minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#tblAddressOnClick"
-                           prefHeight="142.0" prefWidth="459.0" HBox.hgrow="ALWAYS">
+                <TableView fx:id="tableCountries" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                           minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#tblRolesUserOnClick"
+                           prefHeight="142.0" prefWidth="248.0" HBox.hgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="idAddress" maxWidth="-1.0" minWidth="60.0" prefWidth="-1.0" text="#"/>
-                        <TableColumn fx:id="country" prefWidth="242.0" text="PAIS"/>
-                        <TableColumn fx:id="city" prefWidth="242.0" text="CIUDAD"/>
-                        <TableColumn fx:id="district" prefWidth="242.0" text="DISTRITO"/>
-                        <TableColumn fx:id="address" prefWidth="242.0" text="DIRECCIÓN"/>
+                        <TableColumn fx:id="idCountry" maxWidth="-1.0" minWidth="60.0" prefWidth="-1.0" text="#"/>
+                        <TableColumn fx:id="country" prefWidth="242.0" text="PAÍS"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -142,7 +85,7 @@
             <BorderPane.margin>
                 <Insets left="20.0" top="15.0"/>
             </BorderPane.margin>
-            <Label fx:id="lblAddEdit" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
+            <Label fx:id="lblTitleForm" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
                    minHeight="-Infinity" minWidth="-Infinity" text="Agregar" VBox.vgrow="ALWAYS">
                 <font>
                     <Font name="Segoe UI Bold" size="35.0"/>
@@ -152,31 +95,14 @@
                     <String fx:value="h2"/>
                 </styleClass>
             </Label>
-            <ComboBox fx:id="cbxCountry" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona el país"
-                      stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
-                <styleClass>
-                    <String fx:value="font-bold"/>
-                    <String fx:value="h4"/>
-                </styleClass>
-            </ComboBox>
-            <ComboBox fx:id="cbxCity" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona la ciudad"
-                      stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
-                <styleClass>
-                    <String fx:value="font-bold"/>
-                    <String fx:value="h4"/>
-                </styleClass>
-            </ComboBox>
-            <ComboBox fx:id="cbxDistrict" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona el distrito"
-                      stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
-                <styleClass>
-                    <String fx:value="font-bold"/>
-                    <String fx:value="h4"/>
-                </styleClass>
-            </ComboBox>
-            <TextField fx:id="txtAddress" promptText="Dirección">
+            <TextField fx:id="txtCountry" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                       minWidth="-Infinity" promptText="Ingresa el País" VBox.vgrow="ALWAYS">
+                <font>
+                    <Font name="Segoe UI" size="15.0"/>
+                </font>
+                <VBox.margin>
+                    <Insets bottom="10.0"/>
+                </VBox.margin>
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
@@ -200,7 +126,7 @@
             </Button>
             <Button fx:id="btnDelete" layoutX="25.0" layoutY="137.0" maxHeight="-Infinity"
                     maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                    onAction="#deleteRolOnAction" text="Eliminar" VBox.vgrow="ALWAYS">
+                    onAction="#deleteOnAction" text="Eliminar" VBox.vgrow="ALWAYS">
                 <font>
                     <Font name="Segoe UI Bold" size="15.0"/>
                 </font>

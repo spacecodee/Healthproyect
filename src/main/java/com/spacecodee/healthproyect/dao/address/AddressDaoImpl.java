@@ -29,7 +29,8 @@ public class AddressDaoImpl implements IAddressDao {
             "         INNER JOIN districts d on a.id_district = d.id_district\n" +
             "         INNER JOIN cities c on d.id_city = c.id_city\n" +
             "         INNER JOIN countries c2 on c.id_country = c2.id_country" +
-            " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+            " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%') " +
+            "AND d.district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
 
     @Override
@@ -68,7 +69,7 @@ public class AddressDaoImpl implements IAddressDao {
     }
 
     @Override
-    public ObservableList<AddressTable> findByNameTable(String name) {
+    public ObservableList<AddressTable> findByNameTable(AddressTable addressModel) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -77,7 +78,8 @@ public class AddressDaoImpl implements IAddressDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_FIND_ADDRESS_BY_CITY_NAME);
-            pst.setString(1, name);
+            pst.setString(1, addressModel.getCityName());
+            pst.setString(2, addressModel.getDistrictName());
             rs = pst.executeQuery();
 
             this.returnResults(rs, countries);

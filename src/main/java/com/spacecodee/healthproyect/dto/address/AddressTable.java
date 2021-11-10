@@ -21,4 +21,9 @@ public class AddressTable {
     @Getter
     @Setter
     private String addressName;
+
+    public AddressTable(String cityName, String districtName) {
+        this.cityName = cityName;
+        this.districtName = districtName;
+    }
 }

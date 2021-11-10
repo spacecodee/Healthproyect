@@ -9,5 +9,5 @@ public interface IAddressDao extends ICrudGeneric<AddressModel> {
 
     ObservableList<AddressTable> loadTable();
 
-    ObservableList<AddressTable> findByNameTable(String name);
+    ObservableList<AddressTable> findByNameTable(AddressTable addressModel);
 }

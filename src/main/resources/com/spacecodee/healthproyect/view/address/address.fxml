@@ -49,7 +49,7 @@
             <HBox alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   minWidth="-Infinity" spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
                 <TextField fx:id="txtFindByCity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                           minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#findByCityKeyTyped"
+                           minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#findByOnTyped"
                            promptText="Buscar por Ciudad" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI" size="15.0"/>
@@ -61,7 +61,7 @@
                 </TextField>
                 <TextField fx:id="txtFindByDistrict" layoutX="25.0" layoutY="25.0" maxHeight="1.7976931348623157E308"
                            maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                           onKeyTyped="#findByDistrictKeyTyped" promptText="Buscar por Distrito" HBox.hgrow="ALWAYS">
+                           onKeyTyped="#findByOnTyped" promptText="Buscar por Distrito" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Segoe UI" size="15.0"/>
                     </font>
@@ -70,6 +70,48 @@
                         <String fx:value="h4"/>
                     </styleClass>
                 </TextField>
+            </HBox>
+            <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                  spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnAddCountries" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                        minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction" text="Agregar Paises"
+                        HBox.hgrow="ALWAYS">
+                    <styleClass>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h4"/>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn__dark"/>
+                    </styleClass>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+                <Button fx:id="btnAddCities" layoutX="25.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction"
+                        text="Agregar Ciudades" HBox.hgrow="ALWAYS">
+                    <styleClass>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h4"/>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn__dark"/>
+                    </styleClass>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+                <Button fx:id="btnAddDistrics" layoutX="120.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnAddOnAction"
+                        text="Agregar distritos" HBox.hgrow="ALWAYS">
+                    <styleClass>
+                        <String fx:value="font-bold"/>
+                        <String fx:value="h4"/>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn__dark"/>
+                    </styleClass>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
             </HBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   minWidth="-Infinity" styleClass="card" stylesheets="@../../assets/style/table.css"

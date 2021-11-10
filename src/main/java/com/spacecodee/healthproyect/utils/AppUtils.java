@@ -1,5 +1,6 @@
 package com.spacecodee.healthproyect.utils;
 
+import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import javafx.event.ActionEvent;
@@ -92,7 +93,7 @@ public class AppUtils {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-message.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader);
+        AppUtils.globalModal(stage, fxmlLoader, "Health Dashboard", 650, 250);
 
         final ModalMessage modalMessage = fxmlLoader.getController();
         modalMessage.getLblMessage().setText(message.toUpperCase());
@@ -101,10 +102,10 @@ public class AppUtils {
         stage.show();
     }
 
-    public static void globalModal(Stage stage, FXMLLoader fxmlLoader) {
+    private static void globalModal(Stage stage, FXMLLoader fxmlLoader, String title, int width, int height) {
         try {
-            var scene = new Scene(fxmlLoader.load(), 650, 250);
-            stage.setTitle("Health Dashboard");
+            var scene = new Scene(fxmlLoader.load(), width, height);
+            stage.setTitle(title);
             stage.setScene(scene);
             stage.initStyle(StageStyle.UTILITY);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -115,11 +116,11 @@ public class AppUtils {
         }
     }
 
-    public static ModalConfirmation loadModalConfirmation(Stage stage, String message) {
+    public static ModalConfirmation loadModalConfirmation(Stage stage, final String message) {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader);
+        AppUtils.globalModal(stage, fxmlLoader, message, 650, 250);
 
         final ModalConfirmation modalConfirmation = fxmlLoader.getController();
 
@@ -127,5 +128,13 @@ public class AppUtils {
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
 
         return modalConfirmation;
+    }
+
+    public static Countries loadCountriesModal(Stage stage, String TITLE) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "countries/countries.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 650, 450);
+        return fxmlLoader.getController();
     }
 }

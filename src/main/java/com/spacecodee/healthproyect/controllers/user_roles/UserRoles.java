@@ -8,7 +8,6 @@ import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -159,12 +158,7 @@ public class UserRoles implements Initializable {
     private void loadModalConfirmation(String message) {
         var stage = new Stage();
 
-        var fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
-
-        AppUtils.globalModal(stage, fxmlLoader);
-
-        final ModalConfirmation modalConfirmation = fxmlLoader.getController();
+        final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, message);
 
         modalConfirmation.getLblMessage().setText(message.toUpperCase());
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());

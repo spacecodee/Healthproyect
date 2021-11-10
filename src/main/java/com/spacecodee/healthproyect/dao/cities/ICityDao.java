@@ -9,5 +9,7 @@ public interface ICityDao extends ICrudGeneric<CityModel> {
 
     ArrayList<CityModel> listOfCities();
 
+    ArrayList<CityModel> listOfCities(int id);
+
     int getMaxId();
 }

@@ -75,7 +75,7 @@
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                   minWidth="-Infinity" styleClass="card" stylesheets="@../../assets/style/table.css"
                   VBox.vgrow="ALWAYS">
-                <TableView fx:id="tableCountries" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                <TableView fx:id="tableAddress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                            minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#tblAddressOnClick"
                            prefHeight="142.0" prefWidth="459.0" HBox.hgrow="ALWAYS">
                     <columns>
@@ -83,6 +83,7 @@
                         <TableColumn fx:id="country" prefWidth="242.0" text="PAIS"/>
                         <TableColumn fx:id="city" prefWidth="242.0" text="CIUDAD"/>
                         <TableColumn fx:id="district" prefWidth="242.0" text="DISTRITO"/>
+                        <TableColumn fx:id="address" prefWidth="242.0" text="DIRECCIÓN"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -110,30 +111,36 @@
                     <String fx:value="h2"/>
                 </styleClass>
             </Label>
-            <ComboBox fx:id="cbxCountry" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                      minHeight="-Infinity" minWidth="-Infinity" promptText="Selecciona el país"
+            <ComboBox fx:id="cbxCountry" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona el país"
                       stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
                 </styleClass>
             </ComboBox>
-            <ComboBox fx:id="cbxCity" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                      minHeight="-Infinity" minWidth="-Infinity" promptText="Selecciona la ciudad"
+            <ComboBox fx:id="cbxCity" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona la ciudad"
                       stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
                 </styleClass>
             </ComboBox>
-            <ComboBox fx:id="cbxDistrict" editable="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                      minHeight="-Infinity" minWidth="-Infinity" promptText="Selecciona el distrito"
+            <ComboBox fx:id="cbxDistrict" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                      minWidth="-Infinity" onAction="#comboChangeOnAction" promptText="Selecciona el distrito"
                       stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
                 </styleClass>
             </ComboBox>
+            <TextField fx:id="txtAddress" promptText="Dirección">
+                <styleClass>
+                    <String fx:value="font-bold"/>
+                    <String fx:value="h4"/>
+                </styleClass>
+            </TextField>
             <Button fx:id="btnAdd" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                     minWidth="-Infinity" mnemonicParsing="false" onAction="#addOnAction" text="Agregar"
                     VBox.vgrow="ALWAYS">

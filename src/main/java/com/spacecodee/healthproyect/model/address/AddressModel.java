@@ -1,7 +1,5 @@
 package com.spacecodee.healthproyect.model.address;
 
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import lombok.*;
 
@@ -14,10 +12,7 @@ public class AddressModel {
     private int idAddress;
     @Getter
     @Setter
-    private CountryModel countryModel;
-    @Getter
-    @Setter
-    private CityModel cityModel;
+    private String addressName;
     @Getter
     @Setter
     private DistrictModel districtModel;
@@ -26,9 +21,8 @@ public class AddressModel {
         this.idAddress = idAddress;
     }
 
-    public AddressModel(CountryModel countryModel, CityModel cityModel, DistrictModel districtModel) {
-        this.countryModel = countryModel;
-        this.cityModel = cityModel;
+    public AddressModel(String addressName, DistrictModel districtModel) {
+        this.addressName = addressName;
         this.districtModel = districtModel;
     }
 }

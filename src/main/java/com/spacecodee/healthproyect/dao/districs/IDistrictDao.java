@@ -9,5 +9,7 @@ public interface IDistrictDao extends ICrudGeneric<DistrictModel> {
 
     ArrayList<DistrictModel> listOfDistrict();
 
+    ArrayList<DistrictModel> listOfDistrict(int id);
+
     int getMaxId();
 }

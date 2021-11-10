@@ -13,22 +13,22 @@ import java.sql.SQLException;
 
 public class AddressDaoImpl implements IAddressDao {
 
-    private static final String SQL_LOAD_ADDRESS = "SELECT a.id_address, c2.id_country, c2.country_name, c.id_city, " +
-            "c.city_name, d.id_district, d.district_name \n" +
+    private static final String SQL_LOAD_ADDRESS = "SELECT a.id_address, c2.country_name, " +
+            "c.city_name, d.district_name, a.address\n" +
             "FROM address a\n" +
-            "         INNER JOIN countries c2 on a.id_country = c2.id_country\n" +
-            "         INNER JOIN cities c on a.id_city = c.id_city\n" +
-            "         INNER JOIN districts d on a.id_district = d.id_district";
-    private static final String SQL_ADD_ADDRESS = "INSERT INTO address (id_country, id_city, id_district) VALUES (?, ?, ?)";
-    private static final String SQL_UPDATE_ADDRESS = "UPDATE address SET id_country = ?, id_city = ?, id_district = ? " +
+            "         INNER JOIN districts d on a.id_district = d.id_district\n" +
+            "         INNER JOIN cities c on d.id_city = c.id_city\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country";
+    private static final String SQL_ADD_ADDRESS = "INSERT INTO address (address, id_district) VALUES (?, ?)";
+    private static final String SQL_UPDATE_ADDRESS = "UPDATE address SET address = ?, id_district = ? " +
             " WHERE id_address = ?";
     private static final String SQL_DELETE_ADDRESS = "DELETE FROM address WHERE id_address = ?";
-    private static final String SQL_FIND_ADDRESS_BY_CITY_NAME = "SELECT a.id_address, c2.id_country, c2.country_name, c.id_city, " +
-            "c.city_name, d.id_district, d.district_name \n" +
+    private static final String SQL_FIND_ADDRESS_BY_CITY_NAME = "SELECT a.id_address, c2.country_name, " +
+            "c.city_name, d.district_name, a.address\n" +
             "FROM address a\n" +
-            "         INNER JOIN countries c2 on a.id_country = c2.id_country\n" +
-            "         INNER JOIN cities c on a.id_city = c.id_city\n" +
-            "         INNER JOIN districts d on a.id_district = d.id_district" +
+            "         INNER JOIN districts d on a.id_district = d.id_district\n" +
+            "         INNER JOIN cities c on d.id_city = c.id_city\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country" +
             " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
 
@@ -99,12 +99,10 @@ public class AddressDaoImpl implements IAddressDao {
         while (rs.next()) {
             var addressTable = new AddressTable(
                     rs.getInt("id_address"),
-                    rs.getInt("id_country"),
                     rs.getString("country_name"),
-                    rs.getInt("id_city"),
                     rs.getString("city_name"),
-                    rs.getInt("id_district"),
-                    rs.getString("district_name")
+                    rs.getString("district_name"),
+                    rs.getString("address")
             );
 
             address.add(addressTable);
@@ -119,9 +117,8 @@ public class AddressDaoImpl implements IAddressDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_ADD_ADDRESS);
-            pst.setInt(1, value.getCountryModel().getIdCountry());
-            pst.setInt(2, value.getCityModel().getIdCity());
-            pst.setInt(3, value.getDistrictModel().getIdDistrict());
+            pst.setString(1, value.getAddressName());
+            pst.setInt(2, value.getDistrictModel().getIdDistrict());
             pst.executeUpdate();
 
             return true;
@@ -143,10 +140,9 @@ public class AddressDaoImpl implements IAddressDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_UPDATE_ADDRESS);
-            pst.setInt(1, value.getCountryModel().getIdCountry());
-            pst.setInt(2, value.getCityModel().getIdCity());
-            pst.setInt(3, value.getDistrictModel().getIdDistrict());
-            pst.setInt(4, value.getIdAddress());
+            pst.setString(1, value.getAddressName());
+            pst.setInt(2, value.getDistrictModel().getIdDistrict());
+            pst.setInt(3, value.getIdAddress());
             pst.executeUpdate();
 
             return true;

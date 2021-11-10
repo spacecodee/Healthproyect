@@ -21,7 +21,6 @@ import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -61,7 +60,7 @@ public class Address implements Initializable {
     private ComboBox<DistrictModel> cbxDistrict;
 
     @FXML
-    private TableView<AddressTable> tableCountries;
+    private TableView<AddressTable> tableAddress;
 
     @FXML
     private TableColumn<AddressTable, Integer> idAddress;
@@ -76,10 +75,16 @@ public class Address implements Initializable {
     private TableColumn<AddressTable, String> district;
 
     @FXML
+    private TableColumn<AddressTable, String> address;
+
+    @FXML
     private TextField txtFindByCity;
 
     @FXML
     private TextField txtFindByDistrict;
+
+    @FXML
+    private TextField txtAddress;
 
     private final IAddressDao addressDao = new AddressDaoImpl();
     private final ICountryDao countryDao = new CountryDaoImpl();
@@ -95,27 +100,37 @@ public class Address implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.loadCities();
         this.loadCountries();
-        this.loadDistricts();
+        this.loadCities(0);
+        this.loadDistricts(0);
         this.initTable();
     }
 
-    private void loadCities() {
-        this.listCities = this.cityDao.listOfCities();
-        this.cbxCity.getItems().removeAll();
+    private void loadCities(int id) {
+        if (id != 0) {
+            this.listCities = this.cityDao.listOfCities(id);
+        } else {
+            this.listCities = this.cityDao.listOfCities();
+        }
+        this.cbxCity.getItems().clear();
         this.cbxCity.getItems().addAll(this.listCities);
         this.cbxCity.setConverter(new CityConverter());
     }
 
     private void loadCountries() {
         this.listCountries = this.countryDao.listOfCountries();
+        this.cbxCountry.getItems().clear();
         this.cbxCountry.getItems().addAll(this.listCountries);
         this.cbxCountry.setConverter(new CountryConverter());
     }
 
-    private void loadDistricts() {
-        this.listDistrict = this.districtDao.listOfDistrict();
+    private void loadDistricts(int id) {
+        if (id != 0) {
+            this.listDistrict = this.districtDao.listOfDistrict(id);
+        } else {
+            this.listDistrict = this.districtDao.listOfDistrict();
+        }
+        this.cbxDistrict.getItems().clear();
         this.cbxDistrict.getItems().addAll(this.listDistrict);
         this.cbxDistrict.setConverter(new DistrictConverter());
     }
@@ -125,18 +140,36 @@ public class Address implements Initializable {
         this.country.setCellValueFactory(new PropertyValueFactory<>("countryName"));
         this.city.setCellValueFactory(new PropertyValueFactory<>("cityName"));
         this.district.setCellValueFactory(new PropertyValueFactory<>("districtName"));
+        this.address.setCellValueFactory(new PropertyValueFactory<>("addressName"));
 
         this.loadTable();
     }
 
     private void loadTable() {
-        this.tableCountries.setItems(this.addressDao.loadTable());
+        this.tableAddress.setItems(this.addressDao.loadTable());
+    }
+
+    @FXML
+    private void comboChangeOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.cbxCountry)) {
+            if (!this.cbxCountry.getSelectionModel().isEmpty()) {
+                var countryId = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
+                this.loadCities(countryId);
+            }
+        } else if (event.getSource().equals(this.cbxCity)) {
+            if (!this.cbxCity.getSelectionModel().isEmpty()) {
+                var cityId = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
+                this.loadDistricts(cityId);
+            }
+        }
     }
 
     @FXML
     private void addOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnAdd)) {
-            if (!this.validateCombo(this.cbxCity, this.cbxCountry, this.cbxDistrict)) {
+            if (!this.validateCombo(this.cbxCity, this.cbxCountry, this.cbxDistrict)
+                    && !this.txtAddress.getText().trim().isEmpty()) {
+
                 if (Address.actionCrud.equalsIgnoreCase("add")) {
                     this.add();
                 } else if (Address.actionCrud.equalsIgnoreCase("edit")) {
@@ -182,7 +215,7 @@ public class Address implements Initializable {
             if (cityName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableCountries.setItems(this.addressDao.findByNameTable(cityName));
+                this.tableAddress.setItems(this.addressDao.findByNameTable(cityName));
             }
         }
     }
@@ -196,63 +229,98 @@ public class Address implements Initializable {
 
     @FXML
     private void tblAddressOnClick(MouseEvent event) {
-        if (event.getSource().equals(this.tableCountries)) {
+        if (event.getSource().equals(this.tableAddress)) {
             Address.actionCrud = "edit";
-            this.addressTable = this.tableCountries.getSelectionModel().getSelectedItem();
+            this.addressTable = this.tableAddress.getSelectionModel().getSelectedItem();
             if (this.addressTable != null) {
                 this.changedCrudAction();
-                var city = new CityModel(
-                        this.addressTable.getIdCity(), this.addressTable.getCityName()
-                );
+                var city = new CityModel(this.addressTable.getCityName());
                 var positionCity = this.getPositionCity(this.listCities, city);
                 this.cbxCity.getSelectionModel().select(positionCity);
 
-                var country = new CountryModel(this.addressTable.getIdCountry(), this.addressTable.getCountryName());
+                var country = new CountryModel(this.addressTable.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
                 this.cbxCountry.getSelectionModel().select(positionCountry);
 
-                var district = new DistrictModel(this.addressTable.getIdDistrict(), this.addressTable.getDistrictName());
+                var district = new DistrictModel(this.addressTable.getDistrictName());
                 var positionDistrict = this.getPositionDistrict(this.listDistrict, district);
                 this.cbxDistrict.getSelectionModel().select(positionDistrict);
+
+                var address = this.addressTable.getAddressName();
+                this.txtAddress.setText(address);
             }
         }
     }
 
     private void add() {
         AddressModel address = returnAddress();
+        var validation = false;
+        var addressList = this.tableAddress.getItems();
 
-        if (this.addressDao.add(address)) {
-            this.reloadTableAndForm();
-            AppUtils.loadModalMessage("Dirección agregada", "success");
-        } else {
-            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+        for (AddressTable table : addressList) {
+            if (table.getAddressName().equalsIgnoreCase(address.getAddressName())
+                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictModel().getDistrictName())) {
+                validation = true;
+                break;
+            }
         }
+
+        if (!validation) {
+            if (this.addressDao.add(address)) {
+                AppUtils.loadModalMessage("Dirección agregada", "success");
+            } else {
+                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+            }
+        } else {
+            AppUtils.loadModalMessage("Esa dirección ya existe", "error");
+        }
+
+        this.reloadTableAndForm();
     }
 
     private void edit(ActionEvent actionEvent) {
         AddressModel address = returnAddress();
+        var validation = false;
+        var addressList = this.tableAddress.getItems();
 
-        if (this.addressDao.update(address)) {
-            this.reloadTableAndForm();
-            AppUtils.loadModalMessage("Dirección actualizada", "success");
-            AppUtils.closeModal(actionEvent);
+        for (AddressTable table : addressList) {
+            if (table.getAddressName().equalsIgnoreCase(address.getAddressName())
+                    && table.getIdAddress() != address.getIdAddress()
+                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictModel().getDistrictName())) {
+                validation = true;
+                break;
+            }
+        }
+
+        if (!validation) {
+            if (this.addressDao.update(address)) {
+                AppUtils.loadModalMessage("Dirección actualizada", "success");
+            } else {
+                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+            }
         } else {
-            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+            AppUtils.loadModalMessage("Esa dirección ya existe", "error");
         }
 
         Address.actionCrud = "add";
         this.changedCrudAction();
+        this.reloadTableAndForm();
+        AppUtils.closeModal(actionEvent);
     }
 
     private AddressModel returnAddress() {
-        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
-        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
+        var idAddress = 0;
+        if (this.validateSelectedAddress()) {
+            idAddress = this.tableAddress.getSelectionModel().getSelectedItem().getIdAddress();
+        }
+        var addressName = this.txtAddress.getText().trim();
         var idDistrict = this.cbxDistrict.getSelectionModel().getSelectedItem().getIdDistrict();
+        var districtName = this.cbxDistrict.getSelectionModel().getSelectedItem().getDistrictName();
 
         return new AddressModel(
-                new CountryModel(idCountry),
-                new CityModel(idCity),
-                new DistrictModel(idDistrict)
+                idAddress,
+                addressName,
+                new DistrictModel(idDistrict, districtName)
         );
     }
 
@@ -273,13 +341,7 @@ public class Address implements Initializable {
 
     private void loadModalConfirmation(String message) {
         var stage = new Stage();
-
-        var fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
-
-        AppUtils.globalModal(stage, fxmlLoader);
-
-        final ModalConfirmation modalConfirmation = fxmlLoader.getController();
+        final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, message);
 
         modalConfirmation.getLblMessage().setText(message.toUpperCase());
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
@@ -305,10 +367,11 @@ public class Address implements Initializable {
     }
 
     private boolean validateSelectedAddress() {
-        return this.tableCountries.getSelectionModel().getSelectedItem() != null;
+        return this.tableAddress.getSelectionModel().getSelectedItem() != null;
     }
 
     private void reloadTableAndForm() {
+        AppUtils.clearText(this.txtAddress);
         this.loadTable();
         this.cbxCountry.getSelectionModel().select(0);
         this.cbxCity.getSelectionModel().select(0);

@@ -2,15 +2,12 @@ package com.spacecodee.healthproyect.utils;
 
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -116,5 +113,19 @@ public class AppUtils {
         } catch (IOException e) {
             e.printStackTrace(System.out);
         }
+    }
+
+    public static ModalConfirmation loadModalConfirmation(Stage stage, String message) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader);
+
+        final ModalConfirmation modalConfirmation = fxmlLoader.getController();
+
+        modalConfirmation.getLblMessage().setText(message.toUpperCase());
+        Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
+
+        return modalConfirmation;
     }
 }

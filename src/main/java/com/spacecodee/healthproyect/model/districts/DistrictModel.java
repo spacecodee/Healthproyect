@@ -1,5 +1,6 @@
 package com.spacecodee.healthproyect.model.districts;
 
+import com.spacecodee.healthproyect.model.cities.CityModel;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,13 +15,16 @@ public class DistrictModel implements Serializable {
     @Getter
     @Setter
     private String districtName;
-
-    public DistrictModel(int idDistrict) {
-        this.idDistrict = idDistrict;
-    }
+    @Getter
+    @Setter
+    private CityModel cityModel;
 
     public DistrictModel(String districtName) {
         this.districtName = districtName;
     }
 
+    public DistrictModel(int idDistrict, String districtName) {
+        this.idDistrict = idDistrict;
+        this.districtName = districtName;
+    }
 }

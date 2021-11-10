@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,12 +14,12 @@ import java.util.ArrayList;
 
 public class DistrictDaoImpl implements IDistrictDao {
 
-    private static final String SQL_LOAD_DISTRICTS = "SELECT id_district, district_name FROM districts";
+    private static final String SQL_LOAD_DISTRICTS = "SELECT id_district, district_name, id_city FROM districts";
     private static final String SQL_ADD_DISTRICT = "INSERT INTO districts (district_name) VALUES (?)";
     private static final String SQL_UPDATE_DISTRICT = "UPDATE districts SET district_name = ? WHERE id_district = ?";
     private static final String SQL_DELETE_DISTRICT = "DELETE FROM districts WHERE id_district = ?";
-    private static final String SQL_FIND_DISTRICT_BY_NAME = "SELECT id_district, district_name FROM districts " +
-            "WHERE district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_DISTRICT_BY_ID_CITY = "SELECT id_district, district_name, id_city\n" +
+            "FROM districts WHERE id_city  = ?";
     private static final String SQL_MAX_DISTRICT_ID = "SELECT MAX(id_district) AS id FROM districts";
 
     @Override
@@ -57,7 +58,7 @@ public class DistrictDaoImpl implements IDistrictDao {
 
         try {
             conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_NAME);
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_ID_CITY);
             pst.setString(1, name);
             rs = pst.executeQuery();
 
@@ -80,7 +81,8 @@ public class DistrictDaoImpl implements IDistrictDao {
         while (rs.next()) {
             var districtModel = new DistrictModel(
                     rs.getInt("id_district"),
-                    rs.getString("district_name")
+                    rs.getString("district_name"),
+                    new CityModel("id_city")
             );
 
             districts.add(districtModel);
@@ -156,8 +158,7 @@ public class DistrictDaoImpl implements IDistrictDao {
 
     @Override
     public ArrayList<DistrictModel> listOfDistrict() {
-        ArrayList<DistrictModel> listCities = new ArrayList<>();
-        DistrictModel districtModel;
+        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pst = null;
@@ -168,14 +169,7 @@ public class DistrictDaoImpl implements IDistrictDao {
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
             rs = pst.executeQuery();
 
-            while (rs.next()) {
-                districtModel = new DistrictModel(
-                        rs.getInt("id_district"),
-                        rs.getString("district_name")
-                );
-
-                listCities.add(districtModel);
-            }
+            this.returnResults(rs, listDistricts);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -185,7 +179,46 @@ public class DistrictDaoImpl implements IDistrictDao {
             Connexion.close(conn);
         }
 
-        return listCities;
+        return listDistricts;
+    }
+
+    @Override
+    public ArrayList<DistrictModel> listOfDistrict(int id) {
+        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_ID_CITY);
+            pst.setInt(1, id);
+            rs = pst.executeQuery();
+
+            this.returnResults(rs, listDistricts);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listDistricts;
+    }
+
+    private void returnResults(ResultSet rs, ArrayList<DistrictModel> districts) throws SQLException {
+        while (rs.next()) {
+            var districtModel = new DistrictModel(
+                    rs.getInt("id_district"),
+                    rs.getString("district_name"),
+                    new CityModel("id_city")
+            );
+
+            districts.add(districtModel);
+        }
     }
 
     @Override

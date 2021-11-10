@@ -7,14 +7,16 @@ import com.spacecodee.healthproyect.dao.cities.CityDaoImpl;
 import com.spacecodee.healthproyect.dao.cities.ICityDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
+import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
+import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
 import com.spacecodee.healthproyect.dto.city.CityConverter;
 import com.spacecodee.healthproyect.dto.country.CountryConverter;
+import com.spacecodee.healthproyect.dto.district.DistrictConverter;
 import com.spacecodee.healthproyect.model.address.AddressModel;
 import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import com.spacecodee.healthproyect.model.postal_codes.PostalCodeModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
@@ -41,12 +43,6 @@ public class Address implements Initializable {
     private Button btnAdd;
 
     @FXML
-    private Button btnAddCity;
-
-    @FXML
-    private Button btnAddCountry;
-
-    @FXML
     private Button btnCancel;
 
     @FXML
@@ -60,6 +56,9 @@ public class Address implements Initializable {
 
     @FXML
     private ComboBox<CountryModel> cbxCountry;
+
+    @FXML
+    private ComboBox<DistrictModel> cbxDistrict;
 
     @FXML
     private TableView<AddressTable> tableCountries;
@@ -77,9 +76,6 @@ public class Address implements Initializable {
     private TableColumn<AddressTable, String> district;
 
     @FXML
-    private TableColumn<AddressTable, String> postalCode;
-
-    @FXML
     private TextField txtFindByCity;
 
     @FXML
@@ -88,9 +84,12 @@ public class Address implements Initializable {
     private final IAddressDao addressDao = new AddressDaoImpl();
     private final ICountryDao countryDao = new CountryDaoImpl();
     private final ICityDao cityDao = new CityDaoImpl();
+    private final IDistrictDao districtDao = new DistrictDaoImpl();
+
     private AddressTable addressTable;
     private ArrayList<CityModel> listCities;
     private ArrayList<CountryModel> listCountries;
+    private ArrayList<DistrictModel> listDistrict;
 
     private static String actionCrud = "add";
 
@@ -98,6 +97,7 @@ public class Address implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.loadCities();
         this.loadCountries();
+        this.loadDistricts();
         this.initTable();
     }
 
@@ -114,11 +114,16 @@ public class Address implements Initializable {
         this.cbxCountry.setConverter(new CountryConverter());
     }
 
+    private void loadDistricts() {
+        this.listDistrict = this.districtDao.listOfDistrict();
+        this.cbxDistrict.getItems().addAll(this.listDistrict);
+        this.cbxDistrict.setConverter(new DistrictConverter());
+    }
+
     private void initTable() {
         this.idAddress.setCellValueFactory(new PropertyValueFactory<>("idAddress"));
         this.country.setCellValueFactory(new PropertyValueFactory<>("countryName"));
         this.city.setCellValueFactory(new PropertyValueFactory<>("cityName"));
-        this.postalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         this.district.setCellValueFactory(new PropertyValueFactory<>("districtName"));
 
         this.loadTable();
@@ -129,19 +134,9 @@ public class Address implements Initializable {
     }
 
     @FXML
-    private void addCityOnAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    private void addCountryOnAction(ActionEvent event) {
-
-    }
-
-    @FXML
     private void addOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnAdd)) {
-            if (!AppUtils.validateCombo(this.cbxCity, this.cbxCountry)) {
+            if (!this.validateCombo(this.cbxCity, this.cbxCountry, this.cbxDistrict)) {
                 if (Address.actionCrud.equalsIgnoreCase("add")) {
                     this.add();
                 } else if (Address.actionCrud.equalsIgnoreCase("edit")) {
@@ -194,7 +189,9 @@ public class Address implements Initializable {
 
     @FXML
     private void findByDistrictKeyTyped(KeyEvent event) {
-
+        if (event.getSource().equals(this.txtFindByDistrict)) {
+            System.out.println();
+        }
     }
 
     @FXML
@@ -205,9 +202,7 @@ public class Address implements Initializable {
             if (this.addressTable != null) {
                 this.changedCrudAction();
                 var city = new CityModel(
-                        this.addressTable.getIdCity(), this.addressTable.getCityName(),
-                        new PostalCodeModel(this.addressTable.getIdPostalCode(), this.addressTable.getPostalCode()),
-                        new DistrictModel(this.addressTable.getIdDistrict(), this.addressTable.getDistrictName())
+                        this.addressTable.getIdCity(), this.addressTable.getCityName()
                 );
                 var positionCity = this.getPositionCity(this.listCities, city);
                 this.cbxCity.getSelectionModel().select(positionCity);
@@ -215,18 +210,16 @@ public class Address implements Initializable {
                 var country = new CountryModel(this.addressTable.getIdCountry(), this.addressTable.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
                 this.cbxCountry.getSelectionModel().select(positionCountry);
+
+                var district = new DistrictModel(this.addressTable.getIdDistrict(), this.addressTable.getDistrictName());
+                var positionDistrict = this.getPositionDistrict(this.listDistrict, district);
+                this.cbxDistrict.getSelectionModel().select(positionDistrict);
             }
         }
     }
 
     private void add() {
-        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
-        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
-
-        var address = new AddressModel(
-                new CityModel(idCity),
-                new CountryModel(idCountry)
-        );
+        AddressModel address = returnAddress();
 
         if (this.addressDao.add(address)) {
             this.reloadTableAndForm();
@@ -237,13 +230,7 @@ public class Address implements Initializable {
     }
 
     private void edit(ActionEvent actionEvent) {
-        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
-        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
-
-        var address = new AddressModel(
-                new CityModel(idCity),
-                new CountryModel(idCountry)
-        );
+        AddressModel address = returnAddress();
 
         if (this.addressDao.update(address)) {
             this.reloadTableAndForm();
@@ -255,6 +242,18 @@ public class Address implements Initializable {
 
         Address.actionCrud = "add";
         this.changedCrudAction();
+    }
+
+    private AddressModel returnAddress() {
+        var idCountry = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
+        var idCity = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
+        var idDistrict = this.cbxDistrict.getSelectionModel().getSelectedItem().getIdDistrict();
+
+        return new AddressModel(
+                new CountryModel(idCountry),
+                new CityModel(idCity),
+                new DistrictModel(idDistrict)
+        );
     }
 
     private void delete(ActionEvent actionEvent) {
@@ -313,12 +312,20 @@ public class Address implements Initializable {
         this.loadTable();
         this.cbxCountry.getSelectionModel().select(0);
         this.cbxCity.getSelectionModel().select(0);
+        this.cbxDistrict.getSelectionModel().select(0);
+    }
+
+    private boolean validateCombo(ComboBox<CityModel> cbxCity,
+                                  ComboBox<CountryModel> cbxCountry,
+                                  ComboBox<DistrictModel> cbxDistrict) {
+        return cbxCity.getSelectionModel().isEmpty()
+                || cbxCountry.getSelectionModel().isEmpty()
+                || cbxDistrict.getSelectionModel().isEmpty();
     }
 
     private int getPositionCity(ArrayList<CityModel> listCities, CityModel cityModel) {
         for (int i = 0; i < listCities.size(); i++) {
-            if (listCities.get(i).getDistrictModel().getDistrictName()
-                    .equalsIgnoreCase(cityModel.getDistrictModel().getDistrictName())) {
+            if (listCities.get(i).getName().equalsIgnoreCase(cityModel.getName())) {
                 return i;
             }
         }
@@ -329,6 +336,16 @@ public class Address implements Initializable {
     private int getPositionCountry(ArrayList<CountryModel> listCountries, CountryModel countryModel) {
         for (int i = 0; i < listCountries.size(); i++) {
             if (listCountries.get(i).getCountry().equalsIgnoreCase(countryModel.getCountry())) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    private int getPositionDistrict(ArrayList<DistrictModel> listDistrict, DistrictModel districtModel) {
+        for (int i = 0; i < listDistrict.size(); i++) {
+            if (listDistrict.get(i).getDistrictName().equalsIgnoreCase(districtModel.getDistrictName())) {
                 return i;
             }
         }

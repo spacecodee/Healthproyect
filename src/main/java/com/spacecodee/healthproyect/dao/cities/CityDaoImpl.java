@@ -2,8 +2,6 @@ package com.spacecodee.healthproyect.dao.cities;
 
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import com.spacecodee.healthproyect.model.postal_codes.PostalCodeModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,23 +13,12 @@ import java.util.ArrayList;
 
 public class CityDaoImpl implements ICityDao {
 
-    private static final String SQL_LOAD_CITIES = "SELECT c.id_city, c.city_name, pc.id_postal_code, " +
-            "pc.postal_code, d.id_district, d.district_name \n" +
-            "FROM cities c\n" +
-            "         INNER JOIN districts d on c.id_district = d.id_district\n" +
-            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code";
-
-    private static final String SQL_ADD_CITY = "INSERT INTO cities (city_name, id_postal_code, id_district) " +
-            "VALUES (?, ?, ?);";
-    private static final String SQL_UPDATE_CITY = "UPDATE cities SET city_name = ?, id_postal_code = ?, " +
-            " id_district = ? WHERE id_city = ?";
+    private static final String SQL_LOAD_CITIES = "SELECT id_city, city_name FROM cities";
+    private static final String SQL_ADD_CITY = "INSERT INTO cities (city_name) VALUES (?);";
+    private static final String SQL_UPDATE_CITY = "UPDATE cities SET city_name = ? WHERE id_city = ?";
     private static final String SQL_DELETE_CITY = "DELETE FROM cities WHERE id_city = ?";
-    private static final String SQL_FIND_CITY_BY_CITY_NAME = "SELECT c.id_city, c.city_name, pc.id_postal_code, " +
-            "pc.postal_code, d.id_district, d.district_name \n" +
-            "FROM cities c\n" +
-            "         INNER JOIN districts d on c.id_district = d.id_district\n" +
-            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code" +
-            " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_CITY_BY_CITY_NAME = "SELECT id_city, city_name FROM cities" +
+            " WHERE city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_CITY_ID = "SELECT MAX(id_city) AS id FROM cities";
 
     @Override
@@ -93,15 +80,7 @@ public class CityDaoImpl implements ICityDao {
         while (rs.next()) {
             var cityModel = new CityModel(
                     rs.getInt("id_city"),
-                    rs.getString("city_name"),
-                    new PostalCodeModel(
-                            rs.getInt("id_postal_code"),
-                            rs.getString("postal_code")
-                    ),
-                    new DistrictModel(
-                            rs.getInt("id_district"),
-                            rs.getString("district_name")
-                    )
+                    rs.getString("city_name")
             );
 
             cities.add(cityModel);
@@ -117,8 +96,6 @@ public class CityDaoImpl implements ICityDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_ADD_CITY);
             pst.setString(1, value.getName());
-            pst.setInt(2, value.getPostalCodeModel().getIdPostalCode());
-            pst.setInt(3, value.getDistrictModel().getIdDistrict());
             pst.executeUpdate();
 
             return true;
@@ -141,9 +118,7 @@ public class CityDaoImpl implements ICityDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_UPDATE_CITY);
             pst.setString(1, value.getName());
-            pst.setInt(2, value.getPostalCodeModel().getIdPostalCode());
-            pst.setInt(3, value.getDistrictModel().getIdDistrict());
-            pst.setInt(4, value.getIdCity());
+            pst.setInt(2, value.getIdCity());
             pst.executeUpdate();
 
             return true;
@@ -196,15 +171,7 @@ public class CityDaoImpl implements ICityDao {
             while (rs.next()) {
                 cityModel = new CityModel(
                         rs.getInt("id_city"),
-                        rs.getString("city_name"),
-                        new PostalCodeModel(
-                                rs.getInt("id_postal_code"),
-                                rs.getString("postal_code")
-                        ),
-                        new DistrictModel(
-                                rs.getInt("id_district"),
-                                rs.getString("district_name")
-                        )
+                        rs.getString("city_name")
                 );
 
                 listCities.add(cityModel);

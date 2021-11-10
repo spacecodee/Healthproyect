@@ -1,7 +1,6 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.postal_code.PostalCodeDaoImpl;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DistrictDaoImpl implements IDistrictDao {
 
@@ -35,14 +35,7 @@ public class DistrictDaoImpl implements IDistrictDao {
 
             districts.clear();
 
-            while (rs.next()) {
-                var districtModel = new DistrictModel(
-                        rs.getInt("id_district"),
-                        rs.getString("name")
-                );
-
-                districts.add(districtModel);
-            }
+            this.returnResults(rs, districts);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -70,14 +63,7 @@ public class DistrictDaoImpl implements IDistrictDao {
 
             districts.clear();
 
-            while (rs.next()) {
-                var districtModel = new DistrictModel(
-                        rs.getInt("id_district"),
-                        rs.getString("name")
-                );
-
-                districts.add(districtModel);
-            }
+            this.returnResults(rs, districts);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -88,6 +74,17 @@ public class DistrictDaoImpl implements IDistrictDao {
         }
 
         return districts;
+    }
+
+    private void returnResults(ResultSet rs, ObservableList<DistrictModel> districts) throws SQLException {
+        while (rs.next()) {
+            var districtModel = new DistrictModel(
+                    rs.getInt("id_district"),
+                    rs.getString("district_name")
+            );
+
+            districts.add(districtModel);
+        }
     }
 
     @Override
@@ -155,6 +152,40 @@ public class DistrictDaoImpl implements IDistrictDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public ArrayList<DistrictModel> listOfDistrict() {
+        ArrayList<DistrictModel> listCities = new ArrayList<>();
+        DistrictModel districtModel;
+
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                districtModel = new DistrictModel(
+                        rs.getInt("id_district"),
+                        rs.getString("district_name")
+                );
+
+                listCities.add(districtModel);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listCities;
     }
 
     @Override

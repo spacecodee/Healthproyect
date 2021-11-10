@@ -1,7 +1,6 @@
 package com.spacecodee.healthproyect.dao.address;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.model.address.AddressModel;
 import javafx.collections.FXCollections;
@@ -14,38 +13,22 @@ import java.sql.SQLException;
 
 public class AddressDaoImpl implements IAddressDao {
 
-    private static final String SQL_LOAD_ADDRESS = "SELECT a.id_address,\n" +
-            "       c2.id_country,\n" +
-            "       c2.country_name,\n" +
-            "       c.id_city,\n" +
-            "       c.city_name,\n" +
-            "       pc.id_postal_code,\n" +
-            "       pc.postal_code,\n" +
-            "       d.id_district,\n" +
-            "       d.district_name\n" +
+    private static final String SQL_LOAD_ADDRESS = "SELECT a.id_address, c2.id_country, c2.country_name, c.id_city, " +
+            "c.city_name, d.id_district, d.district_name \n" +
             "FROM address a\n" +
             "         INNER JOIN countries c2 on a.id_country = c2.id_country\n" +
             "         INNER JOIN cities c on a.id_city = c.id_city\n" +
-            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code\n" +
-            "         INNER JOIN districts d on c.id_district = d.id_district";
-    private static final String SQL_ADD_ADDRESS = "INSERT INTO address (id_city, id_country) VALUES (?, ?)";
-    private static final String SQL_UPDATE_ADDRESS = "UPDATE address SET id_city = ?, id_country = ? " +
+            "         INNER JOIN districts d on a.id_district = d.id_district";
+    private static final String SQL_ADD_ADDRESS = "INSERT INTO address (id_country, id_city, id_district) VALUES (?, ?, ?)";
+    private static final String SQL_UPDATE_ADDRESS = "UPDATE address SET id_country = ?, id_city = ?, id_district = ? " +
             " WHERE id_address = ?";
     private static final String SQL_DELETE_ADDRESS = "DELETE FROM address WHERE id_address = ?";
-    private static final String SQL_FIND_ADDRESS_BY_CITY_NAME = "SELECT a.id_address,\n" +
-            "       c2.id_country,\n" +
-            "       c2.country_name,\n" +
-            "       c.id_city,\n" +
-            "       c.city_name,\n" +
-            "       pc.id_postal_code,\n" +
-            "       pc.postal_code,\n" +
-            "       d.id_district,\n" +
-            "       d.district_name\n" +
+    private static final String SQL_FIND_ADDRESS_BY_CITY_NAME = "SELECT a.id_address, c2.id_country, c2.country_name, c.id_city, " +
+            "c.city_name, d.id_district, d.district_name \n" +
             "FROM address a\n" +
             "         INNER JOIN countries c2 on a.id_country = c2.id_country\n" +
             "         INNER JOIN cities c on a.id_city = c.id_city\n" +
-            "         INNER JOIN postal_codes pc on c.id_postal_code = pc.id_postal_code\n" +
-            "         INNER JOIN districts d on c.id_district = d.id_district" +
+            "         INNER JOIN districts d on a.id_district = d.id_district" +
             " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
 
@@ -120,8 +103,6 @@ public class AddressDaoImpl implements IAddressDao {
                     rs.getString("country_name"),
                     rs.getInt("id_city"),
                     rs.getString("city_name"),
-                    rs.getInt("id_postal_code"),
-                    rs.getString("postal_code"),
                     rs.getInt("id_district"),
                     rs.getString("district_name")
             );
@@ -138,8 +119,9 @@ public class AddressDaoImpl implements IAddressDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_ADD_ADDRESS);
-            pst.setInt(1, value.getCityModel().getIdCity());
-            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.setInt(1, value.getCountryModel().getIdCountry());
+            pst.setInt(2, value.getCityModel().getIdCity());
+            pst.setInt(3, value.getDistrictModel().getIdDistrict());
             pst.executeUpdate();
 
             return true;
@@ -161,9 +143,10 @@ public class AddressDaoImpl implements IAddressDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_UPDATE_ADDRESS);
-            pst.setInt(1, value.getCityModel().getIdCity());
-            pst.setInt(2, value.getCountryModel().getIdCountry());
-            pst.setInt(3, value.getIdAddress());
+            pst.setInt(1, value.getCountryModel().getIdCountry());
+            pst.setInt(2, value.getCityModel().getIdCity());
+            pst.setInt(3, value.getDistrictModel().getIdDistrict());
+            pst.setInt(4, value.getIdAddress());
             pst.executeUpdate();
 
             return true;

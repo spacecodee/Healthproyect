@@ -20,11 +20,6 @@ public class AddressTable {
     @Setter
     private String cityName;
     @Getter
-    private int idPostalCode;
-    @Getter
-    @Setter
-    private String postalCode;
-    @Getter
     private int idDistrict;
     @Getter
     @Setter

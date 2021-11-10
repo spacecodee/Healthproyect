@@ -7,7 +7,7 @@ public class CityConverter extends StringConverter<CityModel> {
 
     @Override
     public String toString(CityModel cityModel) {
-        return cityModel != null ? cityModel.getName() + " - " + cityModel.getDistrictModel().getDistrictName() : null;
+        return cityModel != null ? cityModel.getName() : null;
     }
 
     @Override

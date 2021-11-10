@@ -117,8 +117,4 @@ public class AppUtils {
             e.printStackTrace(System.out);
         }
     }
-
-    public static boolean validateCombo(ComboBox<CityModel> cbxCity, ComboBox<CountryModel> cbxCountry) {
-        return cbxCity.getSelectionModel().isEmpty() || cbxCountry.getSelectionModel().isEmpty();
-    }
 }

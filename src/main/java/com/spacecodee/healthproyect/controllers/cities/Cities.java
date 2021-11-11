@@ -118,7 +118,7 @@ public class Cities implements Initializable {
     private void addOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnAdd)) {
             if (!AppUtils.validateText(this.txtCity)) {
-                if (!AppUtils.validateText(this.txtCity) || !this.validateCombo(this.cbxCity)) {
+                if (!AppUtils.validateText(this.txtCity) && !this.validateCombo(this.cbxCity)) {
                     if (Cities.actionCrud.equalsIgnoreCase("add")) {
                         this.add();
                     } else if (Cities.actionCrud.equalsIgnoreCase("edit")) {

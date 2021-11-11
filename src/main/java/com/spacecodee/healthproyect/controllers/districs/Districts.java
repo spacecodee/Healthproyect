@@ -133,7 +133,7 @@ public class Districts implements Initializable {
     @FXML
     private void addOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnAdd)) {
-            if (!AppUtils.validateText(this.txtDistrict) || !this.validateCombo(this.cbxCities, this.cbxCountries)) {
+            if (!AppUtils.validateText(this.txtDistrict) && !this.validateCombo(this.cbxCities, this.cbxCountries)) {
                 if (Districts.actionCrud.equalsIgnoreCase("add")) {
                     this.add();
                 } else if (Districts.actionCrud.equalsIgnoreCase("edit")) {

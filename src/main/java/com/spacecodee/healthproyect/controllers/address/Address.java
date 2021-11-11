@@ -174,7 +174,6 @@ public class Address implements Initializable {
         if (event.getSource().equals(this.btnAdd)) {
             if (!this.validateCombo(this.cbxCity, this.cbxCountry, this.cbxDistrict)
                     && !this.txtAddress.getText().trim().isEmpty()) {
-
                 if (Address.actionCrud.equalsIgnoreCase("add")) {
                     this.add();
                 } else if (Address.actionCrud.equalsIgnoreCase("edit")) {

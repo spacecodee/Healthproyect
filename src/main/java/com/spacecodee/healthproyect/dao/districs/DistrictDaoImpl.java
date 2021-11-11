@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dto.district.DistrictTable;
 import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.collections.FXCollections;
@@ -14,79 +15,32 @@ import java.util.ArrayList;
 
 public class DistrictDaoImpl implements IDistrictDao {
 
-    private static final String SQL_LOAD_DISTRICTS = "SELECT id_district, district_name, id_city FROM districts";
-    private static final String SQL_ADD_DISTRICT = "INSERT INTO districts (district_name) VALUES (?)";
-    private static final String SQL_UPDATE_DISTRICT = "UPDATE districts SET district_name = ? WHERE id_district = ?";
+    private static final String SQL_LOAD_DISTRICTS = "SELECT d.id_district, d.district_name, c.id_city, " +
+            "c.city_name, c2.id_country, c2.country_name\n" +
+            "FROM districts d\n" +
+            "         INNER JOIN cities c on d.id_city = c.id_city\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country";
+    private static final String SQL_ADD_DISTRICT = "INSERT INTO districts (district_name, id_city) VALUES (?, ?)";
+    private static final String SQL_UPDATE_DISTRICT = "UPDATE districts SET district_name = ?, id_city = ? WHERE id_district = ?";
     private static final String SQL_DELETE_DISTRICT = "DELETE FROM districts WHERE id_district = ?";
     private static final String SQL_FIND_DISTRICT_BY_ID_CITY = "SELECT id_district, district_name, id_city\n" +
             "FROM districts WHERE id_city  = ?";
+    private static final String SQL_FIND_DISTRICT_BY_DISTRICT_NAME = "SELECT d.id_district, d.district_name, c.id_city, " +
+            "c.city_name, c2.id_country, c2.country_name\n" +
+            "FROM districts d\n" +
+            "         INNER JOIN cities c on d.id_city = c.id_city\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country " +
+            "WHERE d.district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_DISTRICT_ID = "SELECT MAX(id_district) AS id FROM districts";
 
     @Override
     public ObservableList<DistrictModel> load() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<DistrictModel> districts = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
-            rs = pst.executeQuery();
-
-            districts.clear();
-
-            this.returnResults(rs, districts);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return districts;
+        return null;
     }
 
     @Override
     public ObservableList<DistrictModel> findByName(String name) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<DistrictModel> districts = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_ID_CITY);
-            pst.setString(1, name);
-            rs = pst.executeQuery();
-
-            districts.clear();
-
-            this.returnResults(rs, districts);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return districts;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<DistrictModel> districts) throws SQLException {
-        while (rs.next()) {
-            var districtModel = new DistrictModel(
-                    rs.getInt("id_district"),
-                    rs.getString("district_name"),
-                    new CityModel("id_city")
-            );
-
-            districts.add(districtModel);
-        }
+        return null;
     }
 
     @Override
@@ -98,6 +52,7 @@ public class DistrictDaoImpl implements IDistrictDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_ADD_DISTRICT);
             pst.setString(1, value.getDistrictName());
+            pst.setInt(2, value.getCityModel().getIdCity());
             pst.executeUpdate();
 
             return true;
@@ -120,7 +75,8 @@ public class DistrictDaoImpl implements IDistrictDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_UPDATE_DISTRICT);
             pst.setString(1, value.getDistrictName());
-            pst.setInt(2, value.getIdDistrict());
+            pst.setInt(2, value.getCityModel().getIdCity());
+            pst.setInt(3, value.getIdDistrict());
             pst.executeUpdate();
 
             return true;
@@ -153,6 +109,74 @@ public class DistrictDaoImpl implements IDistrictDao {
             assert pst != null;
             Connexion.close(pst);
             Connexion.close(conn);
+        }
+    }
+
+    @Override
+    public ObservableList<DistrictTable> loadTable() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ObservableList<DistrictTable> districts = FXCollections.observableArrayList();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
+            rs = pst.executeQuery();
+
+            districts.clear();
+
+            this.returnResults(rs, districts);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return districts;
+    }
+
+    @Override
+    public ObservableList<DistrictTable> findByNameTable(String districtName) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ObservableList<DistrictTable> districts = FXCollections.observableArrayList();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_DISTRICT_NAME);
+            pst.setString(1, districtName);
+            rs = pst.executeQuery();
+
+            districts.clear();
+
+            this.returnResults(rs, districts);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return districts;
+    }
+
+    private void returnResults(ResultSet rs, ObservableList<DistrictTable> districts) throws SQLException {
+        while (rs.next()) {
+            var districtModel = new DistrictTable(
+                    rs.getInt("id_district"),
+                    rs.getString("district_name"),
+                    rs.getString("city_name"),
+                    rs.getString("country_name")
+            );
+
+            districts.add(districtModel);
         }
     }
 

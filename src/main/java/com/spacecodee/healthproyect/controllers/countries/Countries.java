@@ -190,7 +190,9 @@ public class Countries implements Initializable {
             }
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
-            this.loadTable();
+            Countries.actionCrud = "add";
+            this.changedCrudAction();
+            this.reloadTableAndForm();
             AppUtils.closeModal(actionEvent);
         });
 
@@ -202,11 +204,11 @@ public class Countries implements Initializable {
         var countryModel = new CountryModel(countryName);
 
         if (this.countryDao.add(countryModel)) {
-            this.reloadTableAndForm();
             AppUtils.loadModalMessage("Pais Agregado", "success");
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
         }
+        this.reloadTableAndForm();
     }
 
     private void edit(ActionEvent actionEvent) {
@@ -214,7 +216,6 @@ public class Countries implements Initializable {
         var countryModel = new CountryModel(this.countryModel.getIdCountry(), countryName);
 
         if (this.countryDao.update(countryModel)) {
-
             AppUtils.loadModalMessage("País actualizado", "success");
             AppUtils.closeModal(actionEvent);
         } else {
@@ -228,7 +229,6 @@ public class Countries implements Initializable {
 
     private void delete(ActionEvent actionEvent) {
         if (this.countryDao.delete(this.countryModel)) {
-            this.reloadTableAndForm();
             AppUtils.loadModalMessage("País " + this.countryModel.getCountryName()
                     + " eliminado con exito", "success");
             AppUtils.closeModal(actionEvent);

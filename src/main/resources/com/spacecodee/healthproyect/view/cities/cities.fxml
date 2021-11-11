@@ -97,7 +97,7 @@
                     <String fx:value="h2"/>
                 </styleClass>
             </Label>
-            <ComboBox fx:id="cbxCountires" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+            <ComboBox fx:id="cbxCountries" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
                       minWidth="-Infinity" promptText="Selecciona el País"
                       stylesheets="@../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
                 <styleClass>

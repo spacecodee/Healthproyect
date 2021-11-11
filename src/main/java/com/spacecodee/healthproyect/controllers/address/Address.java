@@ -209,7 +209,14 @@ public class Address implements Initializable {
 
             stage.show();
         } else if (event.getSource().equals(this.btnAddDistrics)) {
-            System.out.println();
+            Stage stage = new Stage();
+
+            final var districtsController = AppUtils.loadDistrictsModal(stage, "Agregar Distritos");
+            districtsController.setCbxCity(this.cbxCity);
+            districtsController.setCbxCountry(this.cbxCountry);
+            districtsController.setTableAddress(this.tableAddress);
+
+            stage.show();
         }
     }
 
@@ -351,7 +358,6 @@ public class Address implements Initializable {
         var address = new AddressModel(this.addressTable.getIdAddress());
 
         if (this.addressDao.delete(address)) {
-            this.reloadTableAndForm();
             AppUtils.loadModalMessage("Dirección eliminada con exito", "success");
             AppUtils.closeModal(actionEvent);
         } else {
@@ -360,6 +366,7 @@ public class Address implements Initializable {
 
         Address.actionCrud = "add";
         this.changedCrudAction();
+        this.reloadTableAndForm();
     }
 
     private void loadModalConfirmation(String message) {
@@ -376,7 +383,9 @@ public class Address implements Initializable {
             }
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
-            this.loadTable();
+            Address.actionCrud = "add";
+            this.changedCrudAction();
+            this.reloadTableAndForm();
             AppUtils.closeModal(actionEvent);
         });
 

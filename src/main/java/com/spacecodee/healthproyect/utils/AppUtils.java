@@ -1,7 +1,9 @@
 package com.spacecodee.healthproyect.utils;
 
+import com.spacecodee.healthproyect.controllers.address.Address;
 import com.spacecodee.healthproyect.controllers.cities.Cities;
 import com.spacecodee.healthproyect.controllers.countries.Countries;
+import com.spacecodee.healthproyect.controllers.districs.Districts;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import javafx.event.ActionEvent;
@@ -144,6 +146,14 @@ public class AppUtils {
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "cities/cities.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 450);
+        return fxmlLoader.getController();
+    }
+
+    public static Districts loadDistrictsModal(Stage stage, final String TITLE) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "districts/districts.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 800, 450);
         return fxmlLoader.getController();
     }
 }

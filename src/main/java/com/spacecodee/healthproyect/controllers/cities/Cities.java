@@ -41,7 +41,7 @@ public class Cities implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private ComboBox<CountryModel> cbxCountires;
+    private ComboBox<CountryModel> cbxCountries;
 
     @FXML
     private TableView<CityTable> tableCities;
@@ -86,9 +86,9 @@ public class Cities implements Initializable {
 
     private void loadCountries() {
         this.listCountries = this.countryDao.listOfCountries();
-        this.cbxCountires.getItems().clear();
-        this.cbxCountires.getItems().addAll(this.listCountries);
-        this.cbxCountires.setConverter(new CountryConverter());
+        this.cbxCountries.getItems().clear();
+        this.cbxCountries.getItems().addAll(this.listCountries);
+        this.cbxCountries.setConverter(new CountryConverter());
     }
 
     private void loadComboCities() {
@@ -181,7 +181,7 @@ public class Cities implements Initializable {
 
                 var country = new CountryModel(this.cityModel.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
-                this.cbxCity.getSelectionModel().select(positionCountry);
+                this.cbxCountries.getSelectionModel().select(positionCountry);
             }
         }
     }
@@ -219,7 +219,9 @@ public class Cities implements Initializable {
             }
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
-            this.loadTable();
+            Cities.actionCrud = "add";
+            this.changedCrudAction();
+            this.reloadTableAndForm();
             AppUtils.closeModal(actionEvent);
         });
 
@@ -228,21 +230,21 @@ public class Cities implements Initializable {
 
     private void add() {
         var cityName = this.txtCity.getText().trim();
-        var countryId = this.cbxCountires.getSelectionModel().getSelectedItem().getIdCountry();
+        var countryId = this.cbxCountries.getSelectionModel().getSelectedItem().getIdCountry();
         var cityModel = new CityModel(cityName, new CountryModel(countryId));
 
         if (this.cityDao.add(cityModel)) {
-            this.reloadTableAndForm();
             AppUtils.loadModalMessage("Ciudad Agregada", "success");
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
         }
+        this.reloadTableAndForm();
     }
 
     private void edit(ActionEvent actionEvent) {
         var cityId = this.cityModel.getIdCity();
         var cityName = this.txtCity.getText().trim();
-        var countryId = this.cbxCountires.getSelectionModel().getSelectedItem().getIdCountry();
+        var countryId = this.cbxCountries.getSelectionModel().getSelectedItem().getIdCountry();
         var cityModel = new CityModel(cityId, cityName, new CountryModel(countryId));
 
         if (this.cityDao.update(cityModel)) {
@@ -260,7 +262,6 @@ public class Cities implements Initializable {
     private void delete(ActionEvent actionEvent) {
         var cityModel = new CityModel(this.cityModel.getIdCity());
         if (this.cityDao.delete(cityModel)) {
-            this.reloadTableAndForm();
             AppUtils.loadModalMessage("Ciudad " + cityModel.getCityName()
                     + " eliminada con exito", "success");
             AppUtils.closeModal(actionEvent);

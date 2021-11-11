@@ -1,6 +1,5 @@
 package com.spacecodee.healthproyect.controllers.address;
 
-import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
 import com.spacecodee.healthproyect.dao.address.IAddressDao;
@@ -196,13 +195,19 @@ public class Address implements Initializable {
         if (event.getSource().equals(this.btnAddCountries)) {
             Stage stage = new Stage();
 
-            final Countries countriesController = AppUtils.loadCountriesModal(stage, "Agregar Paises");
+            final var countriesController = AppUtils.loadCountriesModal(stage, "Agregar Paises");
             countriesController.setCbxCountry(this.cbxCountry);
             countriesController.setTableAddress(this.tableAddress);
 
             stage.show();
         } else if (event.getSource().equals(this.btnAddCities)) {
-            System.out.println();
+            Stage stage = new Stage();
+
+            final var countriesController = AppUtils.loadCitiesModal(stage, "Agregar Ciudades");
+            countriesController.setCbxCity(this.cbxCity);
+            countriesController.setTableAddress(this.tableAddress);
+
+            stage.show();
         } else if (event.getSource().equals(this.btnAddDistrics)) {
             System.out.println();
         }
@@ -406,7 +411,7 @@ public class Address implements Initializable {
 
     private int getPositionCity(ArrayList<CityModel> listCities, CityModel cityModel) {
         for (int i = 0; i < listCities.size(); i++) {
-            if (listCities.get(i).getName().equalsIgnoreCase(cityModel.getName())) {
+            if (listCities.get(i).getCityName().equalsIgnoreCase(cityModel.getCityName())) {
                 return i;
             }
         }

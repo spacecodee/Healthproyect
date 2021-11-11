@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.cities;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dto.city.CityTable;
 import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import javafx.collections.FXCollections;
@@ -14,79 +15,28 @@ import java.util.ArrayList;
 
 public class CityDaoImpl implements ICityDao {
 
-    private static final String SQL_LOAD_CITIES = "SELECT id_city, city_name, id_country FROM cities";
-    private static final String SQL_ADD_CITY = "INSERT INTO cities (city_name) VALUES (?);";
-    private static final String SQL_UPDATE_CITY = "UPDATE cities SET city_name = ? WHERE id_city = ?";
+    private static final String SQL_LOAD_CITIES = "SELECT c.id_city, c.city_name, c2.id_country, c2.country_name \n" +
+            "FROM cities c\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country";
+    private static final String SQL_ADD_CITY = "INSERT INTO cities (city_name, id_country) VALUES (?, ?);";
+    private static final String SQL_UPDATE_CITY = "UPDATE cities SET city_name = ?, id_country = ? WHERE id_city = ?";
     private static final String SQL_DELETE_CITY = "DELETE FROM cities WHERE id_city = ?";
     private static final String SQL_FIND_CITY_BY_ID_COUNTRY = "SELECT id_city, city_name, id_country FROM cities" +
             " WHERE id_country  = ?";
+    private static final String SQL_FIND_CITY_BY_CITY_NAME = "SELECT c.id_city, c.city_name, c2.id_country, c2.country_name\n" +
+            "FROM cities c\n" +
+            "         INNER JOIN countries c2 on c.id_country = c2.id_country " +
+            "WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_MAX_CITY_ID = "SELECT MAX(id_city) AS id FROM cities";
 
     @Override
     public ObservableList<CityModel> load() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<CityModel> cities = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(CityDaoImpl.SQL_LOAD_CITIES);
-            rs = pst.executeQuery();
-
-            cities.clear();
-
-            returnResults(rs, cities);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return cities;
+        return null;
     }
 
     @Override
     public ObservableList<CityModel> findByName(String name) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<CityModel> cities = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(CityDaoImpl.SQL_FIND_CITY_BY_ID_COUNTRY);
-            pst.setString(1, name);
-            rs = pst.executeQuery();
-
-            cities.clear();
-
-            returnResults(rs, cities);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return cities;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<CityModel> cities) throws SQLException {
-        while (rs.next()) {
-            var cityModel = new CityModel(
-                    rs.getInt("id_city"),
-                    rs.getString("city_name"),
-                    new CountryModel(rs.getInt("id_country"))
-            );
-
-            cities.add(cityModel);
-        }
+        return null;
     }
 
     @Override
@@ -97,7 +47,8 @@ public class CityDaoImpl implements ICityDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_ADD_CITY);
-            pst.setString(1, value.getName());
+            pst.setString(1, value.getCityName());
+            pst.setInt(2, value.getCountryModel().getIdCountry());
             pst.executeUpdate();
 
             return true;
@@ -119,8 +70,9 @@ public class CityDaoImpl implements ICityDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_UPDATE_CITY);
-            pst.setString(1, value.getName());
-            pst.setInt(2, value.getIdCity());
+            pst.setString(1, value.getCityName());
+            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.setInt(3, value.getIdCity());
             pst.executeUpdate();
 
             return true;
@@ -153,6 +105,73 @@ public class CityDaoImpl implements ICityDao {
             assert pst != null;
             Connexion.close(pst);
             Connexion.close(conn);
+        }
+    }
+
+    @Override
+    public ObservableList<CityTable> loadTable() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ObservableList<CityTable> cities = FXCollections.observableArrayList();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CityDaoImpl.SQL_LOAD_CITIES);
+            rs = pst.executeQuery();
+
+            cities.clear();
+
+            returnResults(rs, cities);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return cities;
+    }
+
+    @Override
+    public ObservableList<CityTable> findByNameTable(String cityName) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ObservableList<CityTable> cities = FXCollections.observableArrayList();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CityDaoImpl.SQL_FIND_CITY_BY_CITY_NAME);
+            pst.setString(1, cityName);
+            rs = pst.executeQuery();
+
+            cities.clear();
+
+            returnResults(rs, cities);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return cities;
+    }
+
+    private void returnResults(ResultSet rs, ObservableList<CityTable> cities) throws SQLException {
+        while (rs.next()) {
+            var cityModel = new CityTable(
+                    rs.getInt("id_city"),
+                    rs.getString("city_name"),
+                    rs.getString("country_name")
+            );
+
+            cities.add(cityModel);
         }
     }
 

@@ -14,7 +14,7 @@ public class CityModel implements Serializable {
     private int idCity;
     @Getter
     @Setter
-    private String name;
+    private String cityName;
     @Getter
     @Setter
     private CountryModel countryModel;
@@ -23,7 +23,12 @@ public class CityModel implements Serializable {
         this.idCity = idCity;
     }
 
-    public CityModel(String name) {
-        this.name = name;
+    public CityModel(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public CityModel(String cityName, CountryModel countryModel) {
+        this.cityName = cityName;
+        this.countryModel = countryModel;
     }
 }

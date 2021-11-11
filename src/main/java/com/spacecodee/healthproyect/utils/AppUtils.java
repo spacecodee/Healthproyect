@@ -1,5 +1,6 @@
 package com.spacecodee.healthproyect.utils;
 
+import com.spacecodee.healthproyect.controllers.cities.Cities;
 import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
@@ -116,25 +117,33 @@ public class AppUtils {
         }
     }
 
-    public static ModalConfirmation loadModalConfirmation(Stage stage, final String message) {
+    public static ModalConfirmation loadModalConfirmation(Stage stage, final String MESSAGE) {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-confirmation.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader, message, 650, 250);
+        AppUtils.globalModal(stage, fxmlLoader, MESSAGE, 650, 250);
 
         final ModalConfirmation modalConfirmation = fxmlLoader.getController();
 
-        modalConfirmation.getLblMessage().setText(message.toUpperCase());
+        modalConfirmation.getLblMessage().setText(MESSAGE.toUpperCase());
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
 
         return modalConfirmation;
     }
 
-    public static Countries loadCountriesModal(Stage stage, String TITLE) {
+    public static Countries loadCountriesModal(Stage stage, final String TITLE) {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "countries/countries.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 650, 450);
+        return fxmlLoader.getController();
+    }
+
+    public static Cities loadCitiesModal(Stage stage, final String TITLE) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "cities/cities.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 450);
         return fxmlLoader.getController();
     }
 }

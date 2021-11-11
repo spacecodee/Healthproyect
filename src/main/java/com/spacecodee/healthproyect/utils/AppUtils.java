@@ -153,7 +153,7 @@ public class AppUtils {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "districts/districts.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader, TITLE, 800, 450);
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 850, 450);
         return fxmlLoader.getController();
     }
 }

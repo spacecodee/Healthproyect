@@ -84,6 +84,25 @@ public class Dashboard implements Initializable {
     }
 
     @FXML
+    private void btnUsersOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnUsers)) {
+            this.bpContainer.setCenter(null);
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            BorderPane borderPane;
+
+            try {
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "users/users.fxml"));
+                borderPane = fxmlLoader.load();
+
+                this.bpContainer.setCenter(borderPane);
+            } catch (IOException e) {
+                e.printStackTrace(System.out);
+            }
+        }
+    }
+
+    @FXML
     private void userRolesOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnUserRoles)) {
             this.bpContainer.setCenter(null);
@@ -92,7 +111,7 @@ public class Dashboard implements Initializable {
             BorderPane borderPane;
 
             try {
-                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL + "user-roles/users-rol.fxml"));
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "user-roles/users-rol.fxml"));
                 borderPane = fxmlLoader.load();
 
                 this.bpContainer.setCenter(borderPane);
@@ -111,7 +130,7 @@ public class Dashboard implements Initializable {
             BorderPane borderPane;
 
             try {
-                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL + "address/address.fxml"));
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "address/address.fxml"));
                 borderPane = fxmlLoader.load();
 
                 this.bpContainer.setCenter(borderPane);
@@ -145,7 +164,7 @@ public class Dashboard implements Initializable {
     }
 
     private void loadTopBar() {
-        var URL = "/com/spacecodee/healthproyect/view/components/top-bar.fxml";
+        var URL = "/com/spacecodee/healthproyect/view/shared/top-bar/top-bar.fxml";
         FXMLLoader fxmlLoader = new FXMLLoader();
         HBox hBox = null;
         try {

@@ -9,6 +9,7 @@ import lombok.*;
 public class AddressModel {
 
     @Getter
+    @Setter
     private int idAddress;
     @Getter
     @Setter

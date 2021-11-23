@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class Images {
-    //private static final String URL_MAIN = "com/spacecodee/healthproyect/assets/img/profile.jpg";
     private static final String URL_MAIN = "src/main/resources/com/spacecodee/healthproyect/assets/";
 
     public static void addImg(String url, ImageView imageView) {

@@ -1,11 +1,12 @@
 package com.spacecodee.healthproyect.utils;
 
-import com.spacecodee.healthproyect.controllers.address.Address;
+import com.spacecodee.healthproyect.controllers.add_modal.AddModal;
 import com.spacecodee.healthproyect.controllers.cities.Cities;
 import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.districs.Districts;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
+import com.spacecodee.healthproyect.controllers.users.Users;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class AppUtils {
+    public static final String URL_COMPONENTS = "/com/spacecodee/healthproyect/view/components/";
+    public static final String URL_SHARED = "/com/spacecodee/healthproyect/view/shared/";
     public static final String URL = "/com/spacecodee/healthproyect/view/";
     public static final String URL_IMG = "src/main/resources/com/spacecodee/healthproyect/assets/icons/asteroid.png";
     public static final String urlAlert = "icons/modals/error.png";
@@ -135,7 +138,7 @@ public class AppUtils {
 
     public static Countries loadCountriesModal(Stage stage, final String TITLE) {
         var fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "countries/countries.fxml"));
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "countries/countries.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 650, 450);
         return fxmlLoader.getController();
@@ -143,7 +146,7 @@ public class AppUtils {
 
     public static Cities loadCitiesModal(Stage stage, final String TITLE) {
         var fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "cities/cities.fxml"));
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "cities/cities.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 450);
         return fxmlLoader.getController();
@@ -151,9 +154,17 @@ public class AppUtils {
 
     public static Districts loadDistrictsModal(Stage stage, final String TITLE) {
         var fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "districts/districts.fxml"));
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "districts/districts.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 850, 450);
+        return fxmlLoader.getController();
+    }
+
+    public static AddModal loadAddModal(Stage stage, final String TITLE) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_SHARED + "add-modal/add-modal.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 600);
         return fxmlLoader.getController();
     }
 }

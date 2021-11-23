@@ -14,7 +14,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(MainApp.class.getResource(AppUtils.URL + "dashboard/dashboard.fxml"));
+        fxmlLoader.setLocation(MainApp.class.getResource(AppUtils.URL_COMPONENTS + "dashboard/dashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
 
         Dashboard dashboard = fxmlLoader.getController();

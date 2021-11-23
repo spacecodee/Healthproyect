@@ -10,7 +10,7 @@ import lombok.*;
 public class UserModel {
 
     @Getter
-    private int idCustomer;
+    private int idUser;
     @Getter
     @Setter
     private String userName;

@@ -1,6 +1,8 @@
 package com.spacecodee.healthproyect.dao.user_roles;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserRolesDaoImpl implements IUserRolesDao {
 
@@ -153,5 +156,39 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public ArrayList<UserRolesModel> listOfUserRoles() {
+        ArrayList<UserRolesModel> listCountries = new ArrayList<>();
+        UserRolesModel countryModel;
+
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserRolesDaoImpl.SQL_LOAD_ROLES);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                countryModel = new UserRolesModel(
+                        rs.getInt("id_user_rol"),
+                        rs.getString("role_name")
+                );
+
+                listCountries.add(countryModel);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listCountries;
     }
 }

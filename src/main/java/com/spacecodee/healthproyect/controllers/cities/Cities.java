@@ -117,20 +117,18 @@ public class Cities implements Initializable {
     @FXML
     private void addOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnAdd)) {
-            if (!AppUtils.validateText(this.txtCity)) {
-                if (!AppUtils.validateText(this.txtCity) && !this.validateCombo(this.cbxCity)) {
-                    if (Cities.actionCrud.equalsIgnoreCase("add")) {
-                        this.add();
-                    } else if (Cities.actionCrud.equalsIgnoreCase("edit")) {
-                        if (this.validateSelectedCities()) {
-                            this.loadModalConfirmation("¿Estas seguro(a) que quieres editar la ciudad");
-                        } else {
-                            AppUtils.loadModalMessage("Selecciona la fila a editar", "error");
-                        }
+            if (!AppUtils.validateText(this.txtCity) && !this.validateCombo(this.cbxCountries)) {
+                if (Cities.actionCrud.equalsIgnoreCase("add")) {
+                    this.add();
+                } else if (Cities.actionCrud.equalsIgnoreCase("edit")) {
+                    if (this.validateSelectedCities()) {
+                        this.loadModalConfirmation("¿Estas seguro(a) que quieres editar la ciudad");
+                    } else {
+                        AppUtils.loadModalMessage("Selecciona la fila a editar", "error");
                     }
-                } else {
-                    AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
                 }
+            } else {
+                AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
             }
         }
     }
@@ -274,7 +272,7 @@ public class Cities implements Initializable {
         this.reloadTableAndForm();
     }
 
-    private boolean validateCombo(ComboBox<CityModel> cbxCity) {
+    private boolean validateCombo(ComboBox<CountryModel> cbxCity) {
         return cbxCity.getSelectionModel().isEmpty();
     }
 

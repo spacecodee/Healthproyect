@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.dao.peoples;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.model.address.AddressModel;
 import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +24,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             "url_img_profile, birth_date, id_address) \n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_PEOPLE = "UPDATE peoples SET dni = ?, name = ?, " +
-            " last_name = ?, mail = ?, phone = ?, url_img_profile = ?, birth_date = ?, id_address = ? WHERE id_people = ?";
+            " last_name = ?, mail = ?, phone = ? WHERE id_people = ?";
     private static final String SQL_DELETE_PEOPLE = "DELETE FROM peoples WHERE id_people = ?";
     private static final String SQL_FIND_PEOPLE_BY_NAME = "SELECT p.id_people,\n" +
             "       p.dni,\n" +
@@ -48,6 +48,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             "       id_address \n" +
             "FROM peoples \n" +
             "WHERE id_people = ?;";
+    private static final String SQL_MAX_PEOPLE_ID = "SELECT MAX(id_people) AS id FROM peoples";
 
     @Override
     public ObservableList<PeopleModel> load() {
@@ -106,8 +107,8 @@ public class PeopleDaoImpl implements IPeopleDao {
 
     private void returnResults(ResultSet rs, ObservableList<PeopleModel> peoples) throws SQLException {
         while (rs.next()) {
-            var countryModel = new CountryModel(
-                    rs.getString("city_name")
+            var address = new AddressModel(
+                    rs.getInt("city_name")
             );
 
             var people = new PeopleModel(
@@ -117,7 +118,7 @@ public class PeopleDaoImpl implements IPeopleDao {
                     rs.getString("last_name"),
                     rs.getString("mail"),
                     rs.getString("phone"),
-                    countryModel
+                    address
             );
 
             peoples.add(people);
@@ -133,6 +134,9 @@ public class PeopleDaoImpl implements IPeopleDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(PeopleDaoImpl.SQL_ADD_PEOPLE);
             this.addValues(value, pst);
+            pst.setString(6, value.getUrlImgProfile());
+            pst.setString(7, value.getBirthDate());
+            pst.setInt(8, value.getAddressModel().getIdAddress());
             pst.executeUpdate();
 
             return true;
@@ -155,7 +159,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(PeopleDaoImpl.SQL_UPDATE_PEOPLE);
             this.addValues(value, pst);
-            pst.setInt(9, value.getIdPeople());
+            pst.setInt(6, value.getIdPeople());
             pst.executeUpdate();
 
             return true;
@@ -175,9 +179,6 @@ public class PeopleDaoImpl implements IPeopleDao {
         pst.setString(3, value.getLastname());
         pst.setString(4, value.getMail());
         pst.setString(5, value.getPhone());
-        pst.setString(6, value.getUrlImgProfile());
-        pst.setDate(7, (Date) value.getBirthDate());
-        pst.setInt(8, value.getCountryModel().getIdCountry());
     }
 
     @Override
@@ -203,28 +204,22 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public PeopleModel findPeopleByDni(String dni) {
+    public int returnMaxId() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        PeopleModel people = null;
+        var idPeople = 0;
 
         try {
             conn = Connexion.getConnection();
-            pst = conn.prepareStatement(PeopleDaoImpl.SQL_FIND_PEOPLE_DNI);
-            pst.setString(1, dni);
+            pst = conn.prepareStatement(PeopleDaoImpl.SQL_MAX_PEOPLE_ID);
             rs = pst.executeQuery();
 
-            people = new PeopleModel(
-                    rs.getInt("id_people"),
-                    rs.getString("dni"),
-                    rs.getString("name"),
-                    rs.getString("last_name"),
-                    rs.getString("mail"),
-                    rs.getString("phone"),
-                    rs.getString("url_img_profile"),
-                    rs.getDate("birth_date")
-            );
+            while (rs.next()) {
+                idPeople = rs.getInt("id");
+            }
+
+            return idPeople;
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -234,6 +229,6 @@ public class PeopleDaoImpl implements IPeopleDao {
             Connexion.close(conn);
         }
 
-        return people;
+        return idPeople;
     }
 }

@@ -31,7 +31,7 @@ public class AddressDaoImpl implements IAddressDao {
             "         INNER JOIN countries c2 on c.id_country = c2.id_country" +
             " WHERE c.city_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%') " +
             "AND d.district_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
-    private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
+    private static final String SQL_MAX_ADDRESS_ID = "SELECT MAX(id_address) AS id FROM address";
 
     @Override
     public ObservableList<AddressModel> load() {
@@ -93,6 +93,34 @@ public class AddressDaoImpl implements IAddressDao {
         }
 
         return countries;
+    }
+
+    @Override
+    public int returnMaxId() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var idAddress = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(AddressDaoImpl.SQL_MAX_ADDRESS_ID);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                idAddress = rs.getInt("id");
+            }
+
+            return idAddress;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return idAddress;
     }
 
     private void returnResults(ResultSet rs, ObservableList<AddressTable> address) throws SQLException {

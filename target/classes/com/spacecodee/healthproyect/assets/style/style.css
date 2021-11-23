@@ -122,6 +122,10 @@
     -fx-padding: 5px 15px;
 }
 
+.text-field__modal {
+    -fx-background-color: #efefef;
+}
+
 /*cards*/
 .card {
     -fx-background-color: #efefef;

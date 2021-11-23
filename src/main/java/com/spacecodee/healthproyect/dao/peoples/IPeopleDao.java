@@ -5,5 +5,5 @@ import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 
 public interface IPeopleDao extends ICrudGeneric<PeopleModel> {
 
-    PeopleModel findPeopleByDni(String dni);
+    int returnMaxId();
 }

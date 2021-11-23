@@ -16,6 +16,10 @@ public class UserRolesModel implements Serializable {
     @Setter
     private String roleName;
 
+    public UserRolesModel(int idRolUser) {
+        this.idRolUser = idRolUser;
+    }
+
     public UserRolesModel(String roleName) {
         this.roleName = roleName;
     }

@@ -125,30 +125,36 @@ public class Users implements Initializable {
                         AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
                     }
                 });
+
+                stage.show();
             } else if (Users.actionCrud.equalsIgnoreCase("Edit")) {
-                var addModalController = AppUtils.loadAddModal(stage, "Actualizar Usuarios");
-                addModalController.getLblTitle().setText("Actualizar Usuario".toUpperCase());
+                if (this.validateSelectedUserTable()) {
+                    var addModalController = AppUtils.loadAddModal(stage, "Actualizar Usuarios");
+                    addModalController.getLblTitle().setText("Actualizar Usuario".toUpperCase());
 
-                ///edit data
-                addModalController.setUserTable(this.userTable);
-                addModalController.sendData();
+                    ///edit data
+                    addModalController.setUserTable(this.userTable);
+                    addModalController.sendData();
 
-                ////////////////////////
-                addModalController.disableSections(true);
+                    ////////////////////////
+                    addModalController.disableSections(true);
 
-                /////////
-                addModalController.getBtnSave().setOnAction(actionEvent -> {
-                    if (this.validateSelectedUserTable()) {
+                    /////////
+                    addModalController.getBtnSave().setOnAction(actionEvent -> {
                         if (!addModalController.validateTextEdit()) {
                             var peopleModel = addModalController.returnUser().getPeople();
-                            this.loadModalConfirmation("¿Estas seguro(a) que quieres editar a este usuario?", actionEvent, peopleModel);
+                            this.loadModalConfirmation("¿Estas seguro(a) que quieres editar a este usuario?",
+                                    actionEvent, peopleModel);
+                        } else {
+                            AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
                         }
-                    } else {
-                        AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
-                    }
-                });
+                    });
+
+                    stage.show();
+                } else {
+                    AppUtils.loadModalMessage("Selecciona la fila a editar", "error");
+                }
             }
-            stage.show();
         }
     }
 

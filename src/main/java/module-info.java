@@ -17,6 +17,7 @@ module com.spacecodee.healthproyect {
     opens com.spacecodee.healthproyect.controllers.districs to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.users to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.add_modal to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.customers to javafx.fxml;
     opens com.spacecodee.healthproyect.model.users_roles to javafx.base;
     opens com.spacecodee.healthproyect.model.countries to javafx.base;
     opens com.spacecodee.healthproyect.dto.country to javafx.base;
@@ -24,6 +25,7 @@ module com.spacecodee.healthproyect {
     opens com.spacecodee.healthproyect.dto.city to javafx.base;
     opens com.spacecodee.healthproyect.dto.district to javafx.base;
     opens com.spacecodee.healthproyect.dto.user to javafx.base;
+    opens com.spacecodee.healthproyect.dto.customer to javafx.base;
     exports com.spacecodee.healthproyect to javafx.graphics;
     exports com.spacecodee.healthproyect.controllers.dashboard;
     exports com.spacecodee.healthproyect.controllers.user_roles;

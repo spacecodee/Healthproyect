@@ -10,6 +10,7 @@ import com.spacecodee.healthproyect.dao.user_roles.IUserRolesDao;
 import com.spacecodee.healthproyect.dao.user_roles.UserRolesDaoImpl;
 import com.spacecodee.healthproyect.dto.city.CityConverter;
 import com.spacecodee.healthproyect.dto.country.CountryConverter;
+import com.spacecodee.healthproyect.dto.customer.CustomerTable;
 import com.spacecodee.healthproyect.dto.district.DistrictConverter;
 import com.spacecodee.healthproyect.dto.user.UserTable;
 import com.spacecodee.healthproyect.model.address.AddressModel;
@@ -108,6 +109,9 @@ public class AddModal implements Initializable {
     @Getter
     @Setter
     private UserTable userTable;
+    @Getter
+    @Setter
+    private CustomerTable customerTable;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

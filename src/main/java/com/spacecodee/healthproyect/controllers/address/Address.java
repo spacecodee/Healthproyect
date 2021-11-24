@@ -157,15 +157,9 @@ public class Address implements Initializable {
     @FXML
     private void comboChangeOnAction(ActionEvent event) {
         if (event.getSource().equals(this.cbxCountry)) {
-            if (!this.cbxCountry.getSelectionModel().isEmpty()) {
-                var countryId = this.cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
-                this.loadCities(countryId);
-            }
+            this.loadCities(AppUtils.loadCities(this.cbxCountry));
         } else if (event.getSource().equals(this.cbxCity)) {
-            if (!this.cbxCity.getSelectionModel().isEmpty()) {
-                var cityId = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
-                this.loadDistricts(cityId);
-            }
+            this.loadDistricts(AppUtils.loadDistricts(this.cbxDistrict));
         }
     }
 

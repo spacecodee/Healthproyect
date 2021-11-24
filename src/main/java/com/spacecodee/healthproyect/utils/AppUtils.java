@@ -7,12 +7,15 @@ import com.spacecodee.healthproyect.controllers.districs.Districts;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import com.spacecodee.healthproyect.controllers.users.Users;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -166,5 +169,21 @@ public class AppUtils {
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 600);
         return fxmlLoader.getController();
+    }
+
+    public static int loadCities(ComboBox<CountryModel> cbxCountry) {
+        if (!cbxCountry.getSelectionModel().isEmpty()) {
+            return cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
+        }
+
+        return 0;
+    }
+
+    public static int loadDistricts(ComboBox<DistrictModel> cbxDistricts) {
+        if (!cbxDistricts.getSelectionModel().isEmpty()) {
+            return cbxDistricts.getSelectionModel().getSelectedItem().getIdDistrict();
+        }
+
+        return 0;
     }
 }

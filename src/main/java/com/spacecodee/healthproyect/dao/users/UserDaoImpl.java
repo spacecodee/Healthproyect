@@ -42,7 +42,7 @@ public class UserDaoImpl implements IUserDao {
             "FROM users u\n" +
             "         INNER JOIN peoples p on u.id_people = p.id_people\n" +
             "         INNER JOIN user_roles ur on u.id_user_rol = ur.id_user_rol\n" +
-            "WHERE p.dni COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')\n" +
+            "WHERE p.dni LIKE CONCAT('%', ?, '%')\n" +
             "   AND u.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override

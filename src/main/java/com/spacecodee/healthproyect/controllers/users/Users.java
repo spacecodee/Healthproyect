@@ -82,6 +82,8 @@ public class Users implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.txtFindByDni.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(8));
+        this.txtFindByUserName.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.letterValidation(120));
         this.initTable();
     }
 
@@ -112,9 +114,13 @@ public class Users implements Initializable {
                 addModalController.getLblTitle().setText("Agregar Usuario".toUpperCase());
                 addModalController.getBtnSave().setOnAction(actionEvent -> {
                     if (!addModalController.validateTextFieldsUser()) {
-                        var userModel = addModalController.returnUser();
-                        this.add(userModel);
-                        AppUtils.closeModal(actionEvent);
+                        if (addModalController.validateLengthPassword()) {
+                            var userModel = addModalController.returnUser();
+                            this.add(userModel);
+                            AppUtils.closeModal(actionEvent);
+                        } else {
+                            AppUtils.loadModalMessage("La contraseña debe tener al menos 6 carácteres", "error");
+                        }
                     } else {
                         AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
                     }
@@ -124,31 +130,16 @@ public class Users implements Initializable {
                 addModalController.getLblTitle().setText("Actualizar Usuario".toUpperCase());
 
                 ///edit data
-                addModalController.getTxtDni().setText(this.userTable.getDni());
-                addModalController.getTxtName().setText(this.userTable.getName());
-                addModalController.getTxtLastName().setText(this.userTable.getLastName());
-                addModalController.getTxtEmail().setText(this.userTable.getEmail());
-                addModalController.getTxtPhone().setText(this.userTable.getPhone());
                 addModalController.setUserTable(this.userTable);
+                addModalController.sendData();
 
                 ////////////////////////
-                addModalController.getTxtPassword().setDisable(true);
-                addModalController.getCbxCountry().setDisable(true);
-                addModalController.getCbxCity().setDisable(true);
-                addModalController.getCbxDistrict().setDisable(true);
-                addModalController.getCbxRol().setDisable(true);
-                addModalController.getDtBirthDate().setDisable(true);
-                addModalController.getTxtUserName().setDisable(true);
-                addModalController.getTxtAddress().setDisable(true);
+                addModalController.disableSections(true);
 
                 /////////
                 addModalController.getBtnSave().setOnAction(actionEvent -> {
                     if (this.validateSelectedUserTable()) {
-                        if (!addModalController.getTxtDni().getText().trim().isEmpty()
-                                || !addModalController.getTxtName().getText().trim().isEmpty()
-                                || !addModalController.getTxtLastName().getText().trim().isEmpty()
-                                || !addModalController.getTxtEmail().getText().trim().isEmpty()
-                                || !addModalController.getTxtPhone().getText().trim().isEmpty()) {
+                        if (!addModalController.validateTextEdit()) {
                             var peopleModel = addModalController.returnUser().getPeople();
                             this.loadModalConfirmation("¿Estas seguro(a) que quieres editar a este usuario?", actionEvent, peopleModel);
                         }

@@ -8,8 +8,6 @@ import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
 import com.spacecodee.healthproyect.dao.user_roles.IUserRolesDao;
 import com.spacecodee.healthproyect.dao.user_roles.UserRolesDaoImpl;
-import com.spacecodee.healthproyect.dao.users.IUserDao;
-import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
 import com.spacecodee.healthproyect.dto.city.CityConverter;
 import com.spacecodee.healthproyect.dto.country.CountryConverter;
 import com.spacecodee.healthproyect.dto.district.DistrictConverter;
@@ -22,12 +20,14 @@ import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.model.users.UserModel;
 import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
+import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -104,7 +104,6 @@ public class AddModal implements Initializable {
     private final ICountryDao countryDao = new CountryDaoImpl();
     private final ICityDao cityDao = new CityDaoImpl();
     private final IDistrictDao districtDao = new DistrictDaoImpl();
-    private final IUserDao userDao = new UserDaoImpl();
 
     @Getter
     @Setter
@@ -112,6 +111,8 @@ public class AddModal implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.txtDni.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(8));
+        this.txtPhone.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(9));
         Images.addImg("icons/save.png", this.iconSave);
         this.loadUserRoles();
         this.loadCountries();
@@ -171,10 +172,12 @@ public class AddModal implements Initializable {
         }
     }
 
+    public boolean validateLengthPassword() {
+        return this.txtPassword.getText().trim().length() < 6;
+    }
+
     public boolean validateText() {
-        return this.txtDni.getText().trim().isEmpty() || this.txtName.getText().trim().isEmpty()
-                || this.txtLastName.getText().trim().isEmpty() || this.txtEmail.getText().trim().isEmpty()
-                || this.txtPhone.getText().trim().isEmpty() || this.dtBirthDate.getValue() == null
+        return this.validateTextEdit() || this.dtBirthDate.getValue() == null
                 || this.cbxCountry.getSelectionModel().isEmpty() || this.cbxCity.getSelectionModel().isEmpty()
                 || this.cbxDistrict.getSelectionModel().isEmpty() || this.txtAddress.getText().trim().isEmpty()
                 || this.txtUserName.getText().trim().isEmpty();
@@ -183,6 +186,14 @@ public class AddModal implements Initializable {
     public boolean validateTextFieldsUser() {
         return this.validateText() || this.txtPassword.getText().trim().isEmpty()
                 || this.cbxRol.getSelectionModel().isEmpty();
+    }
+
+    public boolean validateTextEdit() {
+        return this.txtDni.getText().trim().isEmpty()
+                || this.txtName.getText().trim().isEmpty()
+                || this.txtLastName.getText().trim().isEmpty()
+                || this.txtEmail.getText().trim().isEmpty()
+                || this.txtPhone.getText().trim().isEmpty();
     }
 
     private AddressModel returnAddress() {
@@ -235,5 +246,24 @@ public class AddModal implements Initializable {
         }
         var userName = this.txtUserName.getText().trim();
         return new CustomerModel(id, userName, this.returnPeople());
+    }
+
+    public void disableSections(boolean disable) {
+        this.txtPassword.setDisable(disable);
+        this.cbxCountry.setDisable(disable);
+        this.cbxCity.setDisable(disable);
+        this.cbxDistrict.setDisable(disable);
+        this.cbxRol.setDisable(disable);
+        this.dtBirthDate.setDisable(disable);
+        this.txtUserName.setDisable(disable);
+        this.txtAddress.setDisable(disable);
+    }
+
+    public void sendData() {
+        this.txtDni.setText(this.userTable.getDni());
+        this.txtName.setText(this.userTable.getName());
+        this.txtLastName.setText(this.userTable.getLastName());
+        this.txtEmail.setText(this.userTable.getEmail());
+        this.txtPhone.setText(this.userTable.getPhone());
     }
 }

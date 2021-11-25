@@ -6,6 +6,4 @@ import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
 import java.util.ArrayList;
 
 public interface IUserRolesDao extends ICrudGeneric<UserRolesModel> {
-
-    ArrayList<UserRolesModel> listOfUserRoles();
 }

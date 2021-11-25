@@ -1,15 +1,18 @@
 package com.spacecodee.healthproyect.dao.reservation_appointments;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dto.reservation_appointments.ReservationTable;
+import com.spacecodee.healthproyect.model.customers.CustomerModel;
+import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.model.reservation_appointments.ReservationApModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.spacecodee.healthproyect.model.reserved_days.ReservedDaysModel;
+import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
+import com.spacecodee.healthproyect.model.users.UserModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ReservationApDaoImpl implements IReservationApDao {
 
@@ -67,13 +70,53 @@ public class ReservationApDaoImpl implements IReservationApDao {
             "WHERE id_reservation_quote = ?";
 
     @Override
-    public ObservableList<ReservationApModel> load() {
-        return null;
+    public ArrayList<ReservationApModel> load() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<ReservationApModel> listReservationAp = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(ReservationApDaoImpl.SQL_LOAD_RESERVATION_AP);
+            rs = pst.executeQuery();
+
+            returnResults(rs, listReservationAp);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listReservationAp;
     }
 
-    @Override
-    public ObservableList<ReservationApModel> findByName(String name) {
-        return null;
+    public ArrayList<ReservationApModel> findValue(ReservationApModel value) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<ReservationApModel> listReservationAp = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(ReservationApDaoImpl.SQL_FIND_RESERVATION_AP);
+            pst.setString(1, value.getCustomer().getPeople().getDni());
+            rs = pst.executeQuery();
+
+            returnResults(rs, listReservationAp);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listReservationAp;
     }
 
     @Override
@@ -149,80 +192,33 @@ public class ReservationApDaoImpl implements IReservationApDao {
         }
     }
 
-    @Override
-    public ObservableList<ReservationTable> loadTable() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<ReservationTable> reservationList = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(ReservationApDaoImpl.SQL_LOAD_RESERVATION_AP);
-            rs = pst.executeQuery();
-
-            reservationList.clear();
-
-            returnResults(rs, reservationList);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return reservationList;
-    }
-
-    @Override
-    public ObservableList<ReservationTable> findReservation(ReservationTable customerTable) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<ReservationTable> reservationList = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(ReservationApDaoImpl.SQL_FIND_RESERVATION_AP);
-            pst.setString(1, customerTable.getCustomerDni());
-            rs = pst.executeQuery();
-
-            reservationList.clear();
-
-            returnResults(rs, reservationList);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return reservationList;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<ReservationTable> reservationList) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<ReservationApModel> reservationList) throws SQLException {
         while (rs.next()) {
-            var customerTable = new ReservationTable(
+            var reservations = new ReservationApModel(
                     rs.getInt("id_reservation_quote"),
-                    rs.getInt("id_customer"),
-                    rs.getInt("id_user"),
-                    rs.getInt("id_type_reservations"),
-                    rs.getInt("id_reserved_day"),
-                    rs.getString("customer_name"),
-                    rs.getString("customer_last_name"),
-                    rs.getString("customer_dni"),
-                    rs.getString("name"),
-                    rs.getDouble("price"),
-                    rs.getString("reservation_date"),
-                    rs.getString("user_name"),
-                    rs.getString("user_dni")
+                    new CustomerModel(
+                            rs.getInt("id_customer"),
+                            new PeopleModel(
+                                    rs.getString("customer_dni"), rs.getString("customer_name"),
+                                    rs.getString("customer_last_name")
+                            )
+                    ),
+                    new UserModel(
+                            rs.getInt("id_user"), rs.getString("user_name"),
+                            new PeopleModel(rs.getString("user_dni"))
+                    ),
+                    new TypeReservationModel(
+                            rs.getInt("id_type_reservations"),
+                            rs.getString("name"),
+                            rs.getDouble("price")
+                    ),
+                    new ReservedDaysModel(
+                            rs.getInt("id_reserved_day"),
+                            rs.getString("reservation_date")
+                    )
             );
 
-            reservationList.add(customerTable);
+            reservationList.add(reservations);
         }
     }
 }

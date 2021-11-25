@@ -3,10 +3,9 @@ package com.spacecodee.healthproyect.dao.peoples;
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.address.AddressModel;
 import com.spacecodee.healthproyect.model.peoples.PeopleModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class PeopleDaoImpl implements IPeopleDao {
 
@@ -37,33 +36,20 @@ public class PeopleDaoImpl implements IPeopleDao {
             "         INNER JOIN countries c\n" +
             "                    on p.id_address = c.id_country" +
             " WHERE name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
-    private static final String SQL_FIND_PEOPLE_DNI = "SELECT id_people,\n" +
-            "       dni,\n" +
-            "       name,\n" +
-            "       last_name,\n" +
-            "       mail,\n" +
-            "       phone,\n" +
-            "       url_img_profile,\n" +
-            "       birth_date,\n" +
-            "       id_address \n" +
-            "FROM peoples \n" +
-            "WHERE id_people = ?;";
     private static final String SQL_MAX_PEOPLE_ID = "SELECT MAX(id_people) AS id FROM peoples";
 
     @Override
-    public ObservableList<PeopleModel> load() {
+    public ArrayList<PeopleModel> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<PeopleModel> cities = FXCollections.observableArrayList();
+        ArrayList<PeopleModel> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(PeopleDaoImpl.SQL_LOAD_PEOPLES);
             rs = pst.executeQuery();
 
-            cities.clear();
-
             this.returnResults(rs, cities);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
@@ -78,19 +64,17 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public ObservableList<PeopleModel> findByName(String name) {
+    public ArrayList<PeopleModel> findValue(PeopleModel value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<PeopleModel> cities = FXCollections.observableArrayList();
+        ArrayList<PeopleModel> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(PeopleDaoImpl.SQL_FIND_PEOPLE_BY_NAME);
-            pst.setString(1, name);
+            pst.setString(1, value.getName());
             rs = pst.executeQuery();
-
-            cities.clear();
 
             this.returnResults(rs, cities);
         } catch (SQLException ex) {
@@ -103,26 +87,6 @@ public class PeopleDaoImpl implements IPeopleDao {
         }
 
         return cities;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<PeopleModel> peoples) throws SQLException {
-        while (rs.next()) {
-            var address = new AddressModel(
-                    rs.getInt("city_name")
-            );
-
-            var people = new PeopleModel(
-                    rs.getInt("id_people"),
-                    rs.getString("dni"),
-                    rs.getString("name"),
-                    rs.getString("last_name"),
-                    rs.getString("mail"),
-                    rs.getString("phone"),
-                    address
-            );
-
-            peoples.add(people);
-        }
     }
 
     @Override
@@ -171,14 +135,6 @@ public class PeopleDaoImpl implements IPeopleDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
-    }
-
-    private void addValues(PeopleModel value, PreparedStatement pst) throws SQLException {
-        pst.setString(1, value.getDni());
-        pst.setString(2, value.getName());
-        pst.setString(3, value.getLastname());
-        pst.setString(4, value.getMail());
-        pst.setString(5, value.getPhone());
     }
 
     @Override
@@ -230,5 +186,33 @@ public class PeopleDaoImpl implements IPeopleDao {
         }
 
         return idPeople;
+    }
+
+    private void returnResults(ResultSet rs, ArrayList<PeopleModel> peoples) throws SQLException {
+        while (rs.next()) {
+            var address = new AddressModel(
+                    rs.getInt("city_name")
+            );
+
+            var people = new PeopleModel(
+                    rs.getInt("id_people"),
+                    rs.getString("dni"),
+                    rs.getString("name"),
+                    rs.getString("last_name"),
+                    rs.getString("mail"),
+                    rs.getString("phone"),
+                    address
+            );
+
+            peoples.add(people);
+        }
+    }
+
+    private void addValues(PeopleModel value, PreparedStatement pst) throws SQLException {
+        pst.setString(1, value.getDni());
+        pst.setString(2, value.getName());
+        pst.setString(3, value.getLastname());
+        pst.setString(4, value.getMail());
+        pst.setString(5, value.getPhone());
     }
 }

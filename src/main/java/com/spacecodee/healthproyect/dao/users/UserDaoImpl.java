@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserDaoImpl implements IUserDao {
 
@@ -46,12 +47,11 @@ public class UserDaoImpl implements IUserDao {
             "   AND u.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
-    public ObservableList<UserModel> load() {
+    public ArrayList<UserModel> load() {
         return null;
     }
 
-    @Override
-    public ObservableList<UserModel> findByName(String name) {
+    public ArrayList<UserModel> findValue(UserModel value) {
         return null;
     }
 

@@ -19,12 +19,13 @@ public class CustomerModel implements Serializable {
     @Setter
     private PeopleModel people;
 
-    public CustomerModel(int idCustomer) {
-        this.idCustomer = idCustomer;
-    }
-
     public CustomerModel(String userName, PeopleModel people) {
         this.userName = userName;
+        this.people = people;
+    }
+
+    public CustomerModel(int idCustomer, PeopleModel people) {
+        this.idCustomer = idCustomer;
         this.people = people;
     }
 }

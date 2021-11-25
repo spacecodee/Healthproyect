@@ -10,6 +10,8 @@ import com.spacecodee.healthproyect.dto.country.CountryConverter;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -76,7 +78,7 @@ public class Countries implements Initializable {
     }
 
     private void loadTable() {
-        this.tableCountries.setItems(this.countryDao.load());
+        this.tableCountries.setItems(this.loadCountries());
     }
 
     @FXML
@@ -128,7 +130,7 @@ public class Countries implements Initializable {
             if (countryName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableCountries.setItems(this.countryDao.findByName(countryName));
+                this.tableCountries.setItems(this.findCountries(countryName));
             }
         }
     }
@@ -148,7 +150,7 @@ public class Countries implements Initializable {
     private void loadComboCountries() {
         if (this.cbxCountry != null) {
             this.cbxCountry.getItems().clear();
-            this.cbxCountry.getItems().addAll(this.countryDao.listOfCountries());
+            this.cbxCountry.getItems().addAll(this.countryDao.load());
             this.cbxCountry.setConverter(new CountryConverter());
         }
     }
@@ -239,5 +241,21 @@ public class Countries implements Initializable {
         Countries.actionCrud = "add";
         this.changedCrudAction();
         this.reloadTableAndForm();
+    }
+
+    private ObservableList<CountryModel> loadCountries() {
+        final ObservableList<CountryModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.countryDao.load());
+
+        return observableArrayList;
+    }
+
+    private ObservableList<CountryModel> findCountries(String name) {
+        final ObservableList<CountryModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.countryDao.findValue(new CountryModel(name)));
+
+        return observableArrayList;
     }
 }

@@ -125,18 +125,18 @@ public class AddModal implements Initializable {
     }
 
     private void loadCountries() {
-        ArrayList<CountryModel> listCountries = this.countryDao.listOfCountries();
+        ArrayList<CountryModel> listCountries = this.countryDao.load();
         this.cbxCountry.getItems().clear();
         this.cbxCountry.getItems().addAll(listCountries);
         this.cbxCountry.setConverter(new CountryConverter());
     }
 
     private void loadCities(int id) {
-        ArrayList<CityModel> listCities;
+        ArrayList<CityModel> listCities = new ArrayList<>();
         if (id != 0) {
             listCities = this.cityDao.listOfCities(id);
         } else {
-            listCities = this.cityDao.listOfCities();
+            listCities = this.cityDao.load();
         }
         this.cbxCity.getItems().clear();
         this.cbxCity.getItems().addAll(listCities);
@@ -148,7 +148,7 @@ public class AddModal implements Initializable {
         if (id != 0) {
             listDistrict = this.districtDao.listOfDistrict(id);
         } else {
-            listDistrict = this.districtDao.listOfDistrict();
+            listDistrict = this.districtDao.load();
         }
         this.cbxDistrict.getItems().clear();
         this.cbxDistrict.getItems().addAll(listDistrict);
@@ -156,7 +156,7 @@ public class AddModal implements Initializable {
     }
 
     private void loadUserRoles() {
-        ArrayList<UserRolesModel> listUserRoles = this.userRolesDao.listOfUserRoles();
+        ArrayList<UserRolesModel> listUserRoles = this.userRolesDao.load();
         this.cbxRol.getItems().clear();
         this.cbxRol.getItems().addAll(listUserRoles);
     }

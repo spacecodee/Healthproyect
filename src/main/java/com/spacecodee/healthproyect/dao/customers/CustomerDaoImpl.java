@@ -1,15 +1,14 @@
 package com.spacecodee.healthproyect.dao.customers;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dto.customer.CustomerTable;
 import com.spacecodee.healthproyect.model.customers.CustomerModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CustomerDaoImpl implements ICustomerDao {
 
@@ -48,13 +47,55 @@ public class CustomerDaoImpl implements ICustomerDao {
             "   AND c.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
-    public ObservableList<CustomerModel> load() {
-        return null;
+    public ArrayList<CustomerModel> load() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<CustomerModel> customerList = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CustomerDaoImpl.SQL_LOAD_CUSTOMERS);
+            rs = pst.executeQuery();
+
+            returnResults(rs, customerList);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return customerList;
     }
 
     @Override
-    public ObservableList<CustomerModel> findByName(String name) {
-        return null;
+    public ArrayList<CustomerModel> findValue(CustomerModel value) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<CustomerModel> customerList = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CustomerDaoImpl.SQL_FIND_CUSTOMER);
+            pst.setString(1, value.getPeople().getDni());
+            pst.setString(2, value.getUserName());
+            rs = pst.executeQuery();
+
+            returnResults(rs, customerList);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return customerList;
     }
 
     @Override
@@ -126,76 +167,18 @@ public class CustomerDaoImpl implements ICustomerDao {
         }
     }
 
-    @Override
-    public ObservableList<CustomerTable> loadTable() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<CustomerTable> customerList = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(CustomerDaoImpl.SQL_LOAD_CUSTOMERS);
-            rs = pst.executeQuery();
-
-            customerList.clear();
-
-            returnResults(rs, customerList);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return customerList;
-    }
-
-    @Override
-    public ObservableList<CustomerTable> findByNameAndDniTable(CustomerTable customerTable) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<CustomerTable> customers = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(CustomerDaoImpl.SQL_FIND_CUSTOMER);
-            pst.setString(1, customerTable.getDni());
-            pst.setString(2, customerTable.getUserName());
-            rs = pst.executeQuery();
-
-            customers.clear();
-
-            returnResults(rs, customers);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return customers;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<CustomerTable> customers) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<CustomerModel> customers) throws SQLException {
         while (rs.next()) {
-            var customerTable = new CustomerTable(
-                    rs.getInt("id_customer"),
-                    rs.getInt("id_people"),
-                    rs.getString("name"),
-                    rs.getString("last_name"),
-                    rs.getString("mail"),
-                    rs.getString("dni"),
-                    rs.getString("phone"),
-                    rs.getString("user_name")
+            var customer = new CustomerModel(
+                    rs.getInt("id_customer"), rs.getString("user_name"),
+                    new PeopleModel(
+                            rs.getInt("id_people"), rs.getString("dni"),
+                            rs.getString("name"), rs.getString("last_name"),
+                            rs.getString("mail"), rs.getString("phone")
+                    )
             );
 
-            customers.add(customerTable);
+            customers.add(customer);
         }
     }
 }

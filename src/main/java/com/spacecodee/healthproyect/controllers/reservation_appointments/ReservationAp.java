@@ -3,7 +3,10 @@ package com.spacecodee.healthproyect.controllers.reservation_appointments;
 import com.spacecodee.healthproyect.dao.reservation_appointments.IReservationApDao;
 import com.spacecodee.healthproyect.dao.reservation_appointments.ReservationApDaoImpl;
 import com.spacecodee.healthproyect.dto.reservation_appointments.ReservationTable;
+import com.spacecodee.healthproyect.model.reservation_appointments.ReservationApModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -88,7 +91,7 @@ public class ReservationAp implements Initializable {
     }
 
     private void loadTable() {
-        this.tableReservations.setItems(this.reservationApDao.loadTable());
+        this.tableReservations.setItems(this.loadReservations());
     }
 
     @FXML
@@ -123,5 +126,33 @@ public class ReservationAp implements Initializable {
     @FXML
     private void tblUsersOnClick(MouseEvent event) {
 
+    }
+
+    private ObservableList<ReservationTable> loadReservations() {
+        final ObservableList<ReservationTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.reservationApDao.load();
+        for (ReservationApModel model : list) {
+            observableArrayList.add(
+                    new ReservationTable(
+                            model.getIdReservationQuote(),
+                            model.getCustomer().getIdCustomer(),
+                            model.getUser().getIdUser(),
+                            model.getTypeReservation().getIdTypeReservation(),
+                            model.getReservedDays().getIdReservedDay(),
+                            model.getCustomer().getPeople().getName(),
+                            model.getCustomer().getPeople().getLastname(),
+                            model.getCustomer().getPeople().getDni(),
+                            model.getTypeReservation().getNameReservation(),
+                            model.getTypeReservation().getPriceReservation(),
+                            model.getReservedDays().getReservationDate(),
+                            model.getUser().getUserName(),
+                            model.getUser().getPeople().getDni()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

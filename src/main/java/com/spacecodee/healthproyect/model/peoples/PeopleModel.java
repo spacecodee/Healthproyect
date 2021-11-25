@@ -1,11 +1,9 @@
 package com.spacecodee.healthproyect.model.peoples;
 
 import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @ToString
 @AllArgsConstructor
@@ -44,12 +42,14 @@ public class PeopleModel implements Serializable {
         this.idPeople = idPeople;
     }
 
-    public PeopleModel(String dni, String name, String lastname, String mail, String phone) {
+    public PeopleModel(String dni) {
+        this.dni = dni;
+    }
+
+    public PeopleModel(String dni, String name, String lastname) {
         this.dni = dni;
         this.name = name;
         this.lastname = lastname;
-        this.mail = mail;
-        this.phone = phone;
     }
 
     public PeopleModel(int idPeople, String dni, String name, String lastname, String mail, String phone,
@@ -63,18 +63,6 @@ public class PeopleModel implements Serializable {
         this.addressModel = addressModel;
     }
 
-    public PeopleModel(int idPeople, String dni, String name, String lastname, String mail,
-                       String phone, String urlImgProfile, String birthDate) {
-        this.idPeople = idPeople;
-        this.dni = dni;
-        this.name = name;
-        this.lastname = lastname;
-        this.mail = mail;
-        this.phone = phone;
-        this.urlImgProfile = urlImgProfile;
-        this.birthDate = birthDate;
-    }
-
     public PeopleModel(int idPeople, String dni, String name, String lastname, String mail, String phone,
                        String birthDate, AddressModel addressModel) {
         this.idPeople = idPeople;
@@ -85,5 +73,14 @@ public class PeopleModel implements Serializable {
         this.phone = phone;
         this.birthDate = birthDate;
         this.addressModel = addressModel;
+    }
+
+    public PeopleModel(int idPeople, String dni, String name, String lastname, String mail, String phone) {
+        this.idPeople = idPeople;
+        this.dni = dni;
+        this.name = name;
+        this.lastname = lastname;
+        this.mail = mail;
+        this.phone = phone;
     }
 }

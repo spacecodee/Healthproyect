@@ -1,11 +1,9 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dto.district.DistrictTable;
 import com.spacecodee.healthproyect.model.cities.CityModel;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,13 +32,53 @@ public class DistrictDaoImpl implements IDistrictDao {
     private static final String SQL_MAX_DISTRICT_ID = "SELECT MAX(id_district) AS id FROM districts";
 
     @Override
-    public ObservableList<DistrictModel> load() {
-        return null;
+    public ArrayList<DistrictModel> load() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
+            rs = pst.executeQuery();
+
+            this.returnResults(rs, listDistricts);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listDistricts;
     }
 
-    @Override
-    public ObservableList<DistrictModel> findByName(String name) {
-        return null;
+    public ArrayList<DistrictModel> findValue(DistrictModel value) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_DISTRICT_NAME);
+            pst.setString(1, value.getDistrictName());
+            rs = pst.executeQuery();
+
+            this.returnResults(rs, listDistricts);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return listDistricts;
     }
 
     @Override
@@ -113,100 +151,6 @@ public class DistrictDaoImpl implements IDistrictDao {
     }
 
     @Override
-    public ObservableList<DistrictTable> loadTable() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<DistrictTable> districts = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
-            rs = pst.executeQuery();
-
-            districts.clear();
-
-            this.returnResults(rs, districts);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return districts;
-    }
-
-    @Override
-    public ObservableList<DistrictTable> findByNameTable(String districtName) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<DistrictTable> districts = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_FIND_DISTRICT_BY_DISTRICT_NAME);
-            pst.setString(1, districtName);
-            rs = pst.executeQuery();
-
-            districts.clear();
-
-            this.returnResults(rs, districts);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return districts;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<DistrictTable> districts) throws SQLException {
-        while (rs.next()) {
-            var districtModel = new DistrictTable(
-                    rs.getInt("id_district"),
-                    rs.getString("district_name"),
-                    rs.getString("city_name"),
-                    rs.getString("country_name")
-            );
-
-            districts.add(districtModel);
-        }
-    }
-
-    @Override
-    public ArrayList<DistrictModel> listOfDistrict() {
-        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
-
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(DistrictDaoImpl.SQL_LOAD_DISTRICTS);
-            rs = pst.executeQuery();
-
-            this.returnResults(rs, listDistricts);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return listDistricts;
-    }
-
-    @Override
     public ArrayList<DistrictModel> listOfDistrict(int id) {
         ArrayList<DistrictModel> listDistricts = new ArrayList<>();
 
@@ -238,8 +182,9 @@ public class DistrictDaoImpl implements IDistrictDao {
             var districtModel = new DistrictModel(
                     rs.getInt("id_district"),
                     rs.getString("district_name"),
-                    new CityModel("id_city")
-            );
+                    new CityModel(rs.getInt("id_city"), rs.getString("city_name"),
+                            new CountryModel(rs.getInt("id_country"), rs.getString("country_name"))
+                    ));
 
             districts.add(districtModel);
         }

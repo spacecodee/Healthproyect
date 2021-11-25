@@ -23,4 +23,10 @@ public class UserModel {
     @Getter
     @Setter
     private UserRolesModel userRolesModel;
+
+    public UserModel(int idUser, String userName, PeopleModel people) {
+        this.idUser = idUser;
+        this.userName = userName;
+        this.people = people;
+    }
 }

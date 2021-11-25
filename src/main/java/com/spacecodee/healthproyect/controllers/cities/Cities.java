@@ -15,6 +15,8 @@ import com.spacecodee.healthproyect.model.cities.CityModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -85,7 +87,7 @@ public class Cities implements Initializable {
     }
 
     private void loadCountries() {
-        this.listCountries = this.countryDao.listOfCountries();
+        this.listCountries = this.countryDao.load();
         this.cbxCountries.getItems().clear();
         this.cbxCountries.getItems().addAll(this.listCountries);
         this.cbxCountries.setConverter(new CountryConverter());
@@ -93,7 +95,7 @@ public class Cities implements Initializable {
 
     private void loadComboCities() {
         this.cbxCity.getItems().clear();
-        this.cbxCity.getItems().addAll(this.cityDao.listOfCities());
+        this.cbxCity.getItems().addAll(this.cityDao.load());
         this.cbxCity.setConverter(new CityConverter());
     }
 
@@ -111,7 +113,7 @@ public class Cities implements Initializable {
     }
 
     private void loadTable() {
-        this.tableCities.setItems(this.cityDao.loadTable());
+        this.tableCities.setItems(this.loadDistricts());
     }
 
     @FXML
@@ -163,7 +165,7 @@ public class Cities implements Initializable {
             if (countryName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableCities.setItems(this.cityDao.findByNameTable(countryName));
+                this.tableCities.setItems(this.findByNameDistricts(countryName));
             }
         }
     }
@@ -284,5 +286,42 @@ public class Cities implements Initializable {
         }
 
         return 0;
+    }
+
+    private ObservableList<CityTable> loadDistricts() {
+        final ObservableList<CityTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.cityDao.load();
+        for (CityModel model : list) {
+            observableArrayList.add(
+                    new CityTable(
+                            model.getIdCity(),
+                            model.getCityName(),
+                            model.getCountryModel().getCountryName()
+                    )
+            );
+        }
+
+        return observableArrayList;
+    }
+
+    private ObservableList<CityTable> findByNameDistricts(String name) {
+        final ObservableList<CityTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.cityDao.findValue(new CityModel(name));
+
+        for (CityModel model : list) {
+            observableArrayList.add(
+                    new CityTable(
+                            model.getIdCity(),
+                            model.getCityName(),
+                            model.getCountryModel().getCountryName()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

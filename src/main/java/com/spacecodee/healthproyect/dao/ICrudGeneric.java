@@ -1,12 +1,12 @@
 package com.spacecodee.healthproyect.dao;
 
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
 
 public interface ICrudGeneric<T> {
 
-    ObservableList<T> load();
+    ArrayList<T> load();
 
-    ObservableList<T> findByName(String name);
+    ArrayList<T> findValue(T value);
 
     boolean add(T value);
 

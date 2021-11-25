@@ -6,6 +6,8 @@ import com.spacecodee.healthproyect.dao.user_roles.UserRolesDaoImpl;
 import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -71,7 +73,7 @@ public class UserRoles implements Initializable {
     }
 
     private void loadTable() {
-        this.tableRolUsers.setItems(this.userRolesDao.load());
+        this.tableRolUsers.setItems(this.loadUserRoles());
     }
 
     @FXML
@@ -120,9 +122,9 @@ public class UserRoles implements Initializable {
             var roleName = this.txtSearchRol.getText().trim().toUpperCase();
 
             if (roleName.isEmpty()) {
-                this.tableRolUsers.setItems(this.userRolesDao.load());
+                this.tableRolUsers.setItems(this.loadUserRoles());
             } else {
-                this.tableRolUsers.setItems(this.userRolesDao.findByName(roleName));
+                this.tableRolUsers.setItems(this.findUserRoles(roleName));
             }
         }
     }
@@ -217,5 +219,21 @@ public class UserRoles implements Initializable {
 
         UserRoles.actionCrud = "add";
         this.changedCrudAction();
+    }
+
+    private ObservableList<UserRolesModel> loadUserRoles() {
+        final ObservableList<UserRolesModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.userRolesDao.load());
+
+        return observableArrayList;
+    }
+
+    private ObservableList<UserRolesModel> findUserRoles(String name) {
+        final ObservableList<UserRolesModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.userRolesDao.findValue(new UserRolesModel(name)));
+
+        return observableArrayList;
     }
 }

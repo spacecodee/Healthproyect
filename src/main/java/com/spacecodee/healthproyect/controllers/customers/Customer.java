@@ -6,9 +6,12 @@ import com.spacecodee.healthproyect.dao.customers.ICustomerDao;
 import com.spacecodee.healthproyect.dao.peoples.IPeopleDao;
 import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
 import com.spacecodee.healthproyect.dto.customer.CustomerTable;
+import com.spacecodee.healthproyect.model.customers.CustomerModel;
 import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -97,7 +100,7 @@ public class Customer implements Initializable {
     }
 
     private void loadTable() {
-        this.tableCustomers.setItems(this.customerDao.loadTable());
+        this.tableCustomers.setItems(this.loadCustomers());
     }
 
     @FXML
@@ -215,8 +218,7 @@ public class Customer implements Initializable {
             if (dni.isEmpty() || userName.isEmpty()) {
                 this.loadTable();
             } else {
-                var customerTable = new CustomerTable(dni, userName);
-                this.tableCustomers.setItems(this.customerDao.findByNameAndDniTable(customerTable));
+                this.tableCustomers.setItems(this.findCustomers(dni, userName));
             }
 
         }
@@ -236,5 +238,54 @@ public class Customer implements Initializable {
 
     private void changedCrudAction(String type) {
         Customer.actionCrud = type;
+    }
+
+    private ObservableList<CustomerTable> loadCustomers() {
+        final ObservableList<CustomerTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.customerDao.load();
+        for (CustomerModel model : list) {
+            observableArrayList.add(
+                    new CustomerTable(
+                            model.getIdCustomer(),
+                            model.getPeople().getIdPeople(),
+                            model.getPeople().getName(),
+                            model.getPeople().getLastname(),
+                            model.getPeople().getMail(),
+                            model.getPeople().getDni(),
+                            model.getPeople().getPhone(),
+                            model.getUserName()
+                    )
+            );
+        }
+
+        return observableArrayList;
+    }
+
+    private ObservableList<CustomerTable> findCustomers(String dni, String userName) {
+        final ObservableList<CustomerTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.customerDao.findValue(
+                new CustomerModel(userName, new PeopleModel(dni))
+        );
+
+        for (CustomerModel model : list) {
+            observableArrayList.add(
+                    new CustomerTable(
+                            model.getIdCustomer(),
+                            model.getPeople().getIdPeople(),
+                            model.getPeople().getName(),
+                            model.getPeople().getLastname(),
+                            model.getPeople().getMail(),
+                            model.getPeople().getDni(),
+                            model.getPeople().getPhone(),
+                            model.getUserName()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

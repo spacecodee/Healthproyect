@@ -115,7 +115,7 @@ public class Address implements Initializable {
         if (id != 0) {
             this.listCities = this.cityDao.listOfCities(id);
         } else {
-            this.listCities = this.cityDao.listOfCities();
+            this.listCities = this.cityDao.load();
         }
         this.cbxCity.getItems().clear();
         this.cbxCity.getItems().addAll(this.listCities);
@@ -123,7 +123,7 @@ public class Address implements Initializable {
     }
 
     private void loadCountries() {
-        this.listCountries = this.countryDao.listOfCountries();
+        this.listCountries = this.countryDao.load();
         this.cbxCountry.getItems().clear();
         this.cbxCountry.getItems().addAll(this.listCountries);
         this.cbxCountry.setConverter(new CountryConverter());
@@ -133,7 +133,7 @@ public class Address implements Initializable {
         if (id != 0) {
             this.listDistrict = this.districtDao.listOfDistrict(id);
         } else {
-            this.listDistrict = this.districtDao.listOfDistrict();
+            this.listDistrict = this.districtDao.load();
         }
         this.cbxDistrict.getItems().clear();
         this.cbxDistrict.getItems().addAll(this.listDistrict);

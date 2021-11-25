@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class AddressDaoImpl implements IAddressDao {
 
@@ -34,12 +35,11 @@ public class AddressDaoImpl implements IAddressDao {
     private static final String SQL_MAX_ADDRESS_ID = "SELECT MAX(id_address) AS id FROM address";
 
     @Override
-    public ObservableList<AddressModel> load() {
+    public ArrayList<AddressModel> load() {
         return null;
     }
 
-    @Override
-    public ObservableList<AddressModel> findByName(String name) {
+    public ArrayList<AddressModel> findValue(AddressModel name) {
         return null;
     }
 

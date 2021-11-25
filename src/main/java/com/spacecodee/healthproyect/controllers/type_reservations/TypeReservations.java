@@ -6,6 +6,8 @@ import com.spacecodee.healthproyect.dao.type_reservations.TypeReservationsDaoImp
 import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -79,7 +81,7 @@ public class TypeReservations implements Initializable {
     }
 
     private void loadTable() {
-        this.tableTypeReservation.setItems(this.typeReservationsDao.load());
+        this.tableTypeReservation.setItems(this.loadTypeReservations());
     }
 
     @FXML
@@ -139,7 +141,7 @@ public class TypeReservations implements Initializable {
             if (name.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableTypeReservation.setItems(this.typeReservationsDao.findByName(name));
+                this.tableTypeReservation.setItems(this.findReservations(name));
             }
 
         }
@@ -223,5 +225,21 @@ public class TypeReservations implements Initializable {
     private void reloadTableAndForm() {
         AppUtils.clearText(this.txtPrice, this.txtNameReservation);
         this.loadTable();
+    }
+
+    private ObservableList<TypeReservationModel> loadTypeReservations() {
+        final ObservableList<TypeReservationModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.typeReservationsDao.load());
+
+        return observableArrayList;
+    }
+
+    private ObservableList<TypeReservationModel> findReservations(String name) {
+        final ObservableList<TypeReservationModel> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        observableArrayList.addAll(this.typeReservationsDao.findValue(new TypeReservationModel(name)));
+
+        return observableArrayList;
     }
 }

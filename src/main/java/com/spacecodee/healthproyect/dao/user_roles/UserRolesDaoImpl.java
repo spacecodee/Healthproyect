@@ -1,11 +1,7 @@
 package com.spacecodee.healthproyect.dao.user_roles;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,18 +19,16 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             "WHERE role_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
-    public ObservableList<UserRolesModel> load() {
+    public ArrayList<UserRolesModel> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<UserRolesModel> roles = FXCollections.observableArrayList();
+        ArrayList<UserRolesModel> roles = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_LOAD_ROLES);
             rs = pst.executeQuery();
-
-            roles.clear();
 
             while (rs.next()) {
                 var rol = new UserRolesModel(
@@ -57,19 +51,17 @@ public class UserRolesDaoImpl implements IUserRolesDao {
     }
 
     @Override
-    public ObservableList<UserRolesModel> findByName(String name) {
+    public ArrayList<UserRolesModel> findValue(UserRolesModel value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<UserRolesModel> roles = FXCollections.observableArrayList();
+        ArrayList<UserRolesModel> roles = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserRolesDaoImpl.SQL_FIND_ROLES_BY_NAME);
-            pst.setString(1, name);
+            pst.setString(1, value.getRoleName());
             rs = pst.executeQuery();
-
-            roles.clear();
 
             while (rs.next()) {
                 var rol = new UserRolesModel(
@@ -158,37 +150,4 @@ public class UserRolesDaoImpl implements IUserRolesDao {
         }
     }
 
-    @Override
-    public ArrayList<UserRolesModel> listOfUserRoles() {
-        ArrayList<UserRolesModel> listCountries = new ArrayList<>();
-        UserRolesModel countryModel;
-
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(UserRolesDaoImpl.SQL_LOAD_ROLES);
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                countryModel = new UserRolesModel(
-                        rs.getInt("id_user_rol"),
-                        rs.getString("role_name")
-                );
-
-                listCountries.add(countryModel);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return listCountries;
-    }
 }

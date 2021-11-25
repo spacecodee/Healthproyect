@@ -1,6 +1,5 @@
 package com.spacecodee.healthproyect.controllers.districs;
 
-import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
 import com.spacecodee.healthproyect.dao.address.IAddressDao;
@@ -19,6 +18,8 @@ import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -109,11 +110,11 @@ public class Districts implements Initializable {
     }
 
     private void loadTable() {
-        this.tableDistricts.setItems(this.districtDao.loadTable());
+        this.tableDistricts.setItems(this.loadDistricts());
     }
 
     private void loadCountries() {
-        this.listCountries = this.countryDao.listOfCountries();
+        this.listCountries = this.countryDao.load();
         this.cbxCountries.getItems().clear();
         this.cbxCountries.getItems().addAll(this.listCountries);
         this.cbxCountries.setConverter(new CountryConverter());
@@ -123,7 +124,7 @@ public class Districts implements Initializable {
         if (id != 0) {
             this.listCities = this.cityDao.listOfCities(id);
         } else {
-            this.listCities = this.cityDao.listOfCities();
+            this.listCities = this.cityDao.load();
         }
         this.cbxCities.getItems().clear();
         this.cbxCities.getItems().addAll(this.listCities);
@@ -189,7 +190,7 @@ public class Districts implements Initializable {
             if (countryName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableDistricts.setItems(this.districtDao.findByNameTable(countryName));
+                this.tableDistricts.setItems(this.findByNameDistricts(countryName));
             }
         }
     }
@@ -217,14 +218,14 @@ public class Districts implements Initializable {
     private void loadComboCountries() {
         if (this.cbxCountry != null) {
             this.cbxCountry.getItems().clear();
-            this.cbxCountry.getItems().addAll(this.countryDao.listOfCountries());
+            this.cbxCountry.getItems().addAll(this.countryDao.load());
             this.cbxCountry.setConverter(new CountryConverter());
         }
     }
 
     private void loadComboCities() {
         this.cbxCity.getItems().clear();
-        this.cbxCity.getItems().addAll(this.cityDao.listOfCities());
+        this.cbxCity.getItems().addAll(this.cityDao.load());
         this.cbxCity.setConverter(new CityConverter());
     }
 
@@ -345,5 +346,43 @@ public class Districts implements Initializable {
         Districts.actionCrud = "add";
         this.changedCrudAction();
         this.reloadTableAndForm();
+    }
+
+    private ObservableList<DistrictTable> loadDistricts() {
+        final ObservableList<DistrictTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.districtDao.load();
+        for (DistrictModel model : list) {
+            observableArrayList.add(
+                    new DistrictTable(
+                            model.getIdDistrict(),
+                            model.getDistrictName(),
+                            model.getCityModel().getCityName(),
+                            model.getCityModel().getCountryModel().getCountryName()
+                    )
+            );
+        }
+
+        return observableArrayList;
+    }
+
+    private ObservableList<DistrictTable> findByNameDistricts(String name) {
+        final ObservableList<DistrictTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.districtDao.findValue(new DistrictModel(name));
+        for (DistrictModel model : list) {
+            observableArrayList.add(
+                    new DistrictTable(
+                            model.getIdDistrict(),
+                            model.getDistrictName(),
+                            model.getCityModel().getCityName(),
+                            model.getCityModel().getCountryModel().getCountryName()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

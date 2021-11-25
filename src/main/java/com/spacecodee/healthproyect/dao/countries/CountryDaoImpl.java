@@ -2,8 +2,6 @@ package com.spacecodee.healthproyect.dao.countries;
 
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,11 +23,11 @@ public class CountryDaoImpl implements ICountryDao {
     private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
 
     @Override
-    public ObservableList<CountryModel> load() {
+    public ArrayList<CountryModel> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<CountryModel> countries = FXCollections.observableArrayList();
+        ArrayList<CountryModel> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -49,17 +47,16 @@ public class CountryDaoImpl implements ICountryDao {
         return countries;
     }
 
-    @Override
-    public ObservableList<CountryModel> findByName(String name) {
+    public ArrayList<CountryModel> findValue(CountryModel value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<CountryModel> countries = FXCollections.observableArrayList();
+        ArrayList<CountryModel> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CountryDaoImpl.SQL_FIND_COUNTRIES_BY_NAME);
-            pst.setString(1, name);
+            pst.setString(1, value.getCountryName());
             rs = pst.executeQuery();
 
             this.returnResults(rs, countries);
@@ -75,41 +72,7 @@ public class CountryDaoImpl implements ICountryDao {
         return countries;
     }
 
-    @Override
-    public ArrayList<CountryModel> listOfCountries() {
-        ArrayList<CountryModel> listCountries = new ArrayList<>();
-        CountryModel countryModel;
-
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(CountryDaoImpl.SQL_LOAD_COUNTRIES);
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                countryModel = new CountryModel(
-                        rs.getInt("id_country"),
-                        rs.getString("country_name")
-                );
-
-                listCountries.add(countryModel);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return listCountries;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<CountryModel> countries) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<CountryModel> countries) throws SQLException {
         countries.clear();
 
         while (rs.next()) {

@@ -7,8 +7,4 @@ import com.spacecodee.healthproyect.model.customers.CustomerModel;
 import javafx.collections.ObservableList;
 
 public interface ICustomerDao extends ICrudGeneric<CustomerModel> {
-
-    ObservableList<CustomerTable> loadTable();
-
-    ObservableList<CustomerTable> findByNameAndDniTable(CustomerTable customerTable);
 }

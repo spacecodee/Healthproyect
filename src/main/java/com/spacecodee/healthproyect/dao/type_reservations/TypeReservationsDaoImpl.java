@@ -2,8 +2,6 @@ package com.spacecodee.healthproyect.dao.type_reservations;
 
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,18 +27,16 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
             "WHERE id_type_reservation = ?";
 
     @Override
-    public ObservableList<TypeReservationModel> load() {
+    public ArrayList<TypeReservationModel> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<TypeReservationModel> typeReservationList = FXCollections.observableArrayList();
+        ArrayList<TypeReservationModel> typeReservationList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(TypeReservationsDaoImpl.SQL_LOAD_TYPE_RESERVATION_AP);
             rs = pst.executeQuery();
-
-            typeReservationList.clear();
 
             returnResults(rs, typeReservationList);
         } catch (SQLException ex) {
@@ -55,20 +51,17 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
         return typeReservationList;
     }
 
-    @Override
-    public ObservableList<TypeReservationModel> findByName(String name) {
+    public ArrayList<TypeReservationModel> findValue(TypeReservationModel value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<TypeReservationModel> typeReservationList = FXCollections.observableArrayList();
+        ArrayList<TypeReservationModel> typeReservationList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(TypeReservationsDaoImpl.SQL_FIND_TYPE_RESERVATION_AP);
-            pst.setString(1, name);
+            pst.setString(1, value.getNameReservation());
             rs = pst.executeQuery();
-
-            typeReservationList.clear();
 
             returnResults(rs, typeReservationList);
         } catch (SQLException ex) {
@@ -152,42 +145,7 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
         }
     }
 
-    @Override
-    public ArrayList<TypeReservationModel> listOfTypeReservations() {
-        ArrayList<TypeReservationModel> listTypeReservations = new ArrayList<>();
-        TypeReservationModel typeReservationModel;
-
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(TypeReservationsDaoImpl.SQL_LOAD_TYPE_RESERVATION_AP);
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                typeReservationModel = new TypeReservationModel(
-                        rs.getInt("id_type_reservation"),
-                        rs.getString("name"),
-                        rs.getDouble("price")
-                );
-
-                listTypeReservations.add(typeReservationModel);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return listTypeReservations;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<TypeReservationModel> typeReservationList) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<TypeReservationModel> typeReservationList) throws SQLException {
         while (rs.next()) {
             var typeReservationModel = new TypeReservationModel(
                     rs.getInt("id_type_reservation"),

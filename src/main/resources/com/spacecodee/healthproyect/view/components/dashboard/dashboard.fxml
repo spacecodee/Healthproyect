@@ -101,7 +101,8 @@
                 </Button>
                 <Button fx:id="btnReservationAppoiments" alignment="TOP_LEFT" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" text="Reservas de citas" VBox.vgrow="ALWAYS">
+                        mnemonicParsing="false" onAction="#reservationOnAction" text="Reservas de citas"
+                        VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

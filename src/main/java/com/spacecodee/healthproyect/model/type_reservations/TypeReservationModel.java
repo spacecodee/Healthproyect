@@ -17,4 +17,17 @@ public class TypeReservationModel implements Serializable {
     @Getter
     @Setter
     private double priceReservation;
+
+    public TypeReservationModel(int idTypeReservation) {
+        this.idTypeReservation = idTypeReservation;
+    }
+
+    public TypeReservationModel(String nameReservation) {
+        this.nameReservation = nameReservation;
+    }
+
+    public TypeReservationModel(String nameReservation, double priceReservation) {
+        this.nameReservation = nameReservation;
+        this.priceReservation = priceReservation;
+    }
 }

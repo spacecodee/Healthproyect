@@ -13,38 +13,38 @@ import java.sql.SQLException;
 
 public class CustomerDaoImpl implements ICustomerDao {
 
-    private static final String SQL_LOAD_CUSTOMERS = "SELECT c.id_customer,\n" +
-            "       c.id_people,\n" +
-            "       c.user_name,\n" +
-            "       p.name,\n" +
-            "       p.last_name,\n" +
-            "       p.mail,\n" +
-            "       p.dni,\n" +
-            "       p.phone,\n" +
-            "       c.user_name\n" +
-            "FROM customers c\n" +
+    private static final String SQL_LOAD_CUSTOMERS = "SELECT c.id_customer, " +
+            "       c.id_people, " +
+            "       c.user_name, " +
+            "       p.name, " +
+            "       p.last_name, " +
+            "       p.mail, " +
+            "       p.dni, " +
+            "       p.phone, " +
+            "       c.user_name " +
+            "FROM customers c " +
             "         INNER JOIN peoples p on c.id_people = p.id_people";
-    private static final String SQL_ADD_CUSTOMER = "INSERT INTO customers (user_name, id_people)\n" +
-            "VALUES (?, ?);";
-    private static final String SQL_UPDATE_CUSTOMER = "UPDATE customers\n" +
-            "SET user_name = ?,\n" +
-            "    id_people = ?\n" +
-            "WHERE id_customer = ?;";
-    private static final String SQL_DELETE_CUSTOMER = "DELETE\n" +
-            "FROM customers\n" +
-            "WHERE id_customer = ?;";
-    private static final String SQL_FIND_CUSTOMER = "SELECT c.id_customer,\n" +
-            "       c.id_people,\n" +
-            "       c.user_name,\n" +
-            "       p.name,\n" +
-            "       p.last_name,\n" +
-            "       p.mail,\n" +
-            "       p.dni,\n" +
-            "       p.phone,\n" +
-            "       c.user_name\n" +
-            "FROM customers c\n" +
+    private static final String SQL_ADD_CUSTOMER = "INSERT INTO customers (user_name, id_people) " +
+            "VALUES (?, ?)";
+    private static final String SQL_UPDATE_CUSTOMER = "UPDATE customers " +
+            "SET user_name = ?, " +
+            "    id_people = ? " +
+            "WHERE id_customer = ?";
+    private static final String SQL_DELETE_CUSTOMER = "DELETE " +
+            "FROM customers " +
+            "WHERE id_customer = ?";
+    private static final String SQL_FIND_CUSTOMER = "SELECT c.id_customer, " +
+            "       c.id_people, " +
+            "       c.user_name, " +
+            "       p.name, " +
+            "       p.last_name, " +
+            "       p.mail, " +
+            "       p.dni, " +
+            "       p.phone, " +
+            "       c.user_name " +
+            "FROM customers c " +
             "         INNER JOIN peoples p on c.id_people = p.id_people " +
-            "WHERE p.dni LIKE CONCAT('%', ?, '%')\n" +
+            "WHERE p.dni LIKE CONCAT('%', ?, '%') " +
             "   AND c.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override

@@ -18,8 +18,12 @@ module com.spacecodee.healthproyect {
     opens com.spacecodee.healthproyect.controllers.users to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.add_modal to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.customers to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.reservation_appointments to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.type_reservations to javafx.fxml;
     opens com.spacecodee.healthproyect.model.users_roles to javafx.base;
     opens com.spacecodee.healthproyect.model.countries to javafx.base;
+    opens com.spacecodee.healthproyect.model.reservation_appointments to javafx.base;
+    opens com.spacecodee.healthproyect.model.type_reservations to javafx.base;
     opens com.spacecodee.healthproyect.dto.country to javafx.base;
     opens com.spacecodee.healthproyect.dto.address to javafx.base;
     opens com.spacecodee.healthproyect.dto.city to javafx.base;
@@ -34,4 +38,6 @@ module com.spacecodee.healthproyect {
     exports com.spacecodee.healthproyect.controllers.countries to javafx.fxml;
     exports com.spacecodee.healthproyect.controllers.cities to javafx.fxml;
     exports com.spacecodee.healthproyect.controllers.districs to javafx.fxml;
+    exports com.spacecodee.healthproyect.controllers.reservation_appointments to javafx.fxml;
+    exports com.spacecodee.healthproyect.controllers.type_reservations to javafx.fxml;
 }

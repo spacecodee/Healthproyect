@@ -159,6 +159,26 @@ public class Dashboard implements Initializable {
         }
     }
 
+    @FXML
+    private void reservationOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnReservationAppoiments)) {
+            this.bpContainer.setCenter(null);
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            BorderPane borderPane;
+
+            try {
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS
+                        + "reservation_appointments/reservation_appointments.fxml"));
+                borderPane = fxmlLoader.load();
+
+                this.bpContainer.setCenter(borderPane);
+            } catch (IOException e) {
+                e.printStackTrace(System.out);
+            }
+        }
+    }
+
     private void loadIcons() {
         ImageView[] imageViews = {
                 this.iconDashboard, this.iconUsers, this.iconUserRoles,

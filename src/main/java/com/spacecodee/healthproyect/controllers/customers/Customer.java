@@ -1,16 +1,11 @@
 package com.spacecodee.healthproyect.controllers.customers;
 
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
-import com.spacecodee.healthproyect.controllers.users.Users;
-import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
-import com.spacecodee.healthproyect.dao.address.IAddressDao;
 import com.spacecodee.healthproyect.dao.customers.CustomerDaoImpl;
 import com.spacecodee.healthproyect.dao.customers.ICustomerDao;
 import com.spacecodee.healthproyect.dao.peoples.IPeopleDao;
 import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
 import com.spacecodee.healthproyect.dto.customer.CustomerTable;
-import com.spacecodee.healthproyect.dto.user.UserTable;
-import com.spacecodee.healthproyect.model.customers.CustomerModel;
 import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;

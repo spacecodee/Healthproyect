@@ -6,8 +6,8 @@ import com.spacecodee.healthproyect.controllers.countries.Countries;
 import com.spacecodee.healthproyect.controllers.districs.Districts;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
+import com.spacecodee.healthproyect.controllers.reservation_appointments.ReservationApModal;
 import com.spacecodee.healthproyect.controllers.type_reservations.TypeReservations;
-import com.spacecodee.healthproyect.controllers.users.Users;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import javafx.event.ActionEvent;
@@ -177,6 +177,15 @@ public class AppUtils {
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "type_reservations/type-reservations.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 400);
+        return fxmlLoader.getController();
+    }
+
+    public static ReservationApModal loadReservationsApModal(Stage stage, final String TITLE) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS
+                + "reservation_appointments/reservation-ap-modal.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 830);
         return fxmlLoader.getController();
     }
 

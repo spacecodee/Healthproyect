@@ -19,6 +19,8 @@ import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.model.districts.DistrictModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -151,7 +153,7 @@ public class Address implements Initializable {
     }
 
     private void loadTable() {
-        this.tableAddress.setItems(this.addressDao.loadTable());
+        this.tableAddress.setItems(this.loadAddress());
     }
 
     @FXML
@@ -241,11 +243,10 @@ public class Address implements Initializable {
             var cityName = this.txtFindByCity.getText().trim();
             var districtName = this.txtFindByDistrict.getText().trim();
 
-            var AddressModel = new AddressTable(cityName, districtName);
             if (cityName.isEmpty()) {
                 this.loadTable();
             } else {
-                this.tableAddress.setItems(this.addressDao.findByNameTable(AddressModel));
+                this.tableAddress.setItems(this.findAddress(districtName, cityName));
             }
         }
     }
@@ -439,5 +440,45 @@ public class Address implements Initializable {
         }
 
         return 0;
+    }
+
+    private ObservableList<AddressTable> loadAddress() {
+        final ObservableList<AddressTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.addressDao.load();
+        for (AddressModel model : list) {
+            observableArrayList.add(
+                    new AddressTable(
+                            model.getIdAddress(),
+                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
+                            model.getDistrictModel().getCityModel().getCityName(),
+                            model.getDistrictModel().getDistrictName(),
+                            model.getAddressName()
+                    )
+            );
+        }
+
+        return observableArrayList;
+    }
+
+    private ObservableList<AddressTable> findAddress(String districtName, String cityName) {
+        final ObservableList<AddressTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+        var address = new AddressModel(new DistrictModel(districtName, new CityModel(cityName)));
+        var list = this.addressDao.findValue(address);
+        for (AddressModel model : list) {
+            observableArrayList.add(
+                    new AddressTable(
+                            model.getIdAddress(),
+                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
+                            model.getDistrictModel().getCityModel().getCityName(),
+                            model.getDistrictModel().getDistrictName(),
+                            model.getAddressName()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

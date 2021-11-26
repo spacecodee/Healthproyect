@@ -34,9 +34,4 @@ public class UserTable {
     @Getter
     @Setter
     private String userRoleName;
-
-    public UserTable(String dni, String userName) {
-        this.dni = dni;
-        this.userName = userName;
-    }
 }

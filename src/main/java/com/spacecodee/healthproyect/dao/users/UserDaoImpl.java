@@ -1,10 +1,9 @@
 package com.spacecodee.healthproyect.dao.users;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dto.user.UserTable;
+import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.model.users.UserModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,11 +47,53 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public ArrayList<UserModel> load() {
-        return null;
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<UserModel> cities = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_LOAD_USERS);
+            rs = pst.executeQuery();
+
+            this.returnResults(rs, cities);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return cities;
     }
 
     public ArrayList<UserModel> findValue(UserModel value) {
-        return null;
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<UserModel> cities = new ArrayList<>();
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_FIND_USERS);
+            pst.setString(1, value.getPeople().getDni());
+            pst.setString(2, value.getUserName());
+            rs = pst.executeQuery();
+
+            this.returnResults(rs, cities);
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return cities;
     }
 
     @Override
@@ -100,13 +141,6 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
-    private void addValues(UserModel value, PreparedStatement pst) throws SQLException {
-        pst.setString(1, value.getUserName());
-        pst.setString(2, value.getPassword());
-        pst.setInt(3, value.getPeople().getIdPeople());
-        pst.setInt(4, value.getUserRolesModel().getIdRolUser());
-    }
-
     @Override
     public boolean delete(UserModel value) {
         Connection conn = null;
@@ -129,77 +163,26 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
-    @Override
-    public ObservableList<UserTable> loadTable() {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<UserTable> cities = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(UserDaoImpl.SQL_LOAD_USERS);
-            rs = pst.executeQuery();
-
-            cities.clear();
-
-            this.returnResults(rs, cities);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return cities;
-    }
-
-    @Override
-    public ObservableList<UserTable> findByNameAndDniTable(UserTable userModel) {
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        ObservableList<UserTable> cities = FXCollections.observableArrayList();
-
-        try {
-            conn = Connexion.getConnection();
-            pst = conn.prepareStatement(UserDaoImpl.SQL_FIND_USERS);
-            pst.setString(1, userModel.getDni());
-            pst.setString(2, userModel.getUserName());
-            rs = pst.executeQuery();
-
-            cities.clear();
-
-            this.returnResults(rs, cities);
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-        } finally {
-            assert rs != null;
-            Connexion.close(rs);
-            Connexion.close(pst);
-            Connexion.close(conn);
-        }
-
-        return cities;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<UserTable> userTables) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<UserModel> users) throws SQLException {
         while (rs.next()) {
-            var people = new UserTable(
-                    rs.getInt("id_user"),
-                    rs.getInt("id_people"),
-                    rs.getString("name"),
-                    rs.getString("last_name"),
-                    rs.getString("mail"),
-                    rs.getString("dni"),
-                    rs.getString("phone"),
-                    rs.getString("user_name"),
-                    rs.getString("role_name")
+            var user = new UserModel(
+                    rs.getInt("id_user"), rs.getString("user_name"),
+                    new PeopleModel(
+                            rs.getInt("id_people"), rs.getString("dni"),
+                            rs.getString("name"), rs.getString("last_name"),
+                            rs.getString("mail"), rs.getString("phone")
+                    ),
+                    new UserRolesModel(rs.getString("role_name"))
             );
 
-            userTables.add(people);
+            users.add(user);
         }
+    }
+
+    private void addValues(UserModel value, PreparedStatement pst) throws SQLException {
+        pst.setString(1, value.getUserName());
+        pst.setString(2, value.getPassword());
+        pst.setInt(3, value.getPeople().getIdPeople());
+        pst.setInt(4, value.getUserRolesModel().getIdRolUser());
     }
 }

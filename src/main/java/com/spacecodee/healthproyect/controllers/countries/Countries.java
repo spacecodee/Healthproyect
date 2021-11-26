@@ -7,6 +7,7 @@ import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
 import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.dto.country.CountryConverter;
+import com.spacecodee.healthproyect.model.address.AddressModel;
 import com.spacecodee.healthproyect.model.countries.CountryModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
@@ -157,7 +158,7 @@ public class Countries implements Initializable {
 
     private void loadTableAddress() {
         if (this.tableAddress != null)
-            this.tableAddress.setItems(this.addressDao.loadTable());
+            this.tableAddress.setItems(this.loadAddress());
     }
 
     private void changedCrudAction() {
@@ -255,6 +256,26 @@ public class Countries implements Initializable {
         final ObservableList<CountryModel> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
         observableArrayList.addAll(this.countryDao.findValue(new CountryModel(name)));
+
+        return observableArrayList;
+    }
+
+    private ObservableList<AddressTable> loadAddress() {
+        final ObservableList<AddressTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.addressDao.load();
+        for (AddressModel model : list) {
+            observableArrayList.add(
+                    new AddressTable(
+                            model.getIdAddress(),
+                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
+                            model.getDistrictModel().getCityModel().getCityName(),
+                            model.getDistrictModel().getDistrictName(),
+                            model.getAddressName()
+                    )
+            );
+        }
 
         return observableArrayList;
     }

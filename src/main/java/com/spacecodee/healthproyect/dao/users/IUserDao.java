@@ -7,8 +7,4 @@ import com.spacecodee.healthproyect.model.users.UserModel;
 import javafx.collections.ObservableList;
 
 public interface IUserDao extends ICrudGeneric<UserModel> {
-
-    ObservableList<UserTable> loadTable();
-
-    ObservableList<UserTable> findByNameAndDniTable(UserTable userModel);
 }

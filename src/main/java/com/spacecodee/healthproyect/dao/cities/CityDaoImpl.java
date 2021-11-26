@@ -161,7 +161,16 @@ public class CityDaoImpl implements ICityDao {
             pst.setInt(1, id);
             rs = pst.executeQuery();
 
-            this.returnResults(rs, listCities);
+            while (rs.next()) {
+                var cityModel = new CityModel(
+                        rs.getInt("id_city"),
+                        rs.getString("city_name"),
+                        new CountryModel(rs.getInt("id_country"))
+                );
+
+                listCities.add(cityModel);
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {

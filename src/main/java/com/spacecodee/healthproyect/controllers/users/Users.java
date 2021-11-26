@@ -12,6 +12,8 @@ import com.spacecodee.healthproyect.model.peoples.PeopleModel;
 import com.spacecodee.healthproyect.model.users.UserModel;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Users implements Initializable {
@@ -102,7 +105,7 @@ public class Users implements Initializable {
     }
 
     private void loadTable() {
-        this.tableUsers.setItems(this.userDao.loadTable());
+        this.tableUsers.setItems(this.loadUsers());
     }
 
     @FXML
@@ -114,7 +117,7 @@ public class Users implements Initializable {
                 addModalController.getLblTitle().setText("Agregar Usuario".toUpperCase());
                 addModalController.getBtnSave().setOnAction(actionEvent -> {
                     if (!addModalController.validateTextFieldsUser()) {
-                        if (addModalController.validateLengthPassword()) {
+                        if (!addModalController.validateLengthPassword()) {
                             var userModel = addModalController.returnUser();
                             this.add(userModel);
                             AppUtils.closeModal(actionEvent);
@@ -265,8 +268,7 @@ public class Users implements Initializable {
             if (dni.isEmpty() || userName.isEmpty()) {
                 this.loadTable();
             } else {
-                var userTable = new UserTable(dni, userName);
-                this.tableUsers.setItems(this.userDao.findByNameAndDniTable(userTable));
+                this.tableUsers.setItems(this.findUsers(dni, userName));
             }
 
         }
@@ -287,5 +289,43 @@ public class Users implements Initializable {
     private void changedCrudAction(String type) {
         Users.actionCrud = type;
         this.btnAddUsers.setText(type.equalsIgnoreCase("Edit") ? "Editar" : "Agregar");
+    }
+
+    private ObservableList<UserTable> loadUsers() {
+        final ObservableList<UserTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var list = this.userDao.load();
+        return getUserTables(observableArrayList, list);
+    }
+
+    private ObservableList<UserTable> findUsers(String dni, String userName) {
+        final ObservableList<UserTable> observableArrayList = FXCollections.observableArrayList();
+        observableArrayList.clear();
+
+        var user = new UserModel(userName, new PeopleModel(dni));
+
+        var list = this.userDao.findValue(user);
+        return getUserTables(observableArrayList, list);
+    }
+
+    private ObservableList<UserTable> getUserTables(ObservableList<UserTable> observableArrayList, ArrayList<UserModel> list) {
+        for (UserModel model : list) {
+            observableArrayList.add(
+                    new UserTable(
+                            model.getIdUser(),
+                            model.getPeople().getIdPeople(),
+                            model.getPeople().getName(),
+                            model.getPeople().getLastname(),
+                            model.getPeople().getMail(),
+                            model.getPeople().getDni(),
+                            model.getPeople().getPhone(),
+                            model.getUserName(),
+                            model.getUserRolesModel().getRoleName()
+                    )
+            );
+        }
+
+        return observableArrayList;
     }
 }

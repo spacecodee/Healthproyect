@@ -26,4 +26,8 @@ public class AddressModel {
         this.addressName = addressName;
         this.districtModel = districtModel;
     }
+
+    public AddressModel(DistrictModel districtModel) {
+        this.districtModel = districtModel;
+    }
 }

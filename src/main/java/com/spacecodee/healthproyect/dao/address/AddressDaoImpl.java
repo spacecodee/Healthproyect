@@ -1,10 +1,10 @@
 package com.spacecodee.healthproyect.dao.address;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dto.address.AddressTable;
 import com.spacecodee.healthproyect.model.address.AddressModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.spacecodee.healthproyect.model.cities.CityModel;
+import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.model.districts.DistrictModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,19 +36,10 @@ public class AddressDaoImpl implements IAddressDao {
 
     @Override
     public ArrayList<AddressModel> load() {
-        return null;
-    }
-
-    public ArrayList<AddressModel> findValue(AddressModel name) {
-        return null;
-    }
-
-    @Override
-    public ObservableList<AddressTable> loadTable() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<AddressTable> countries = FXCollections.observableArrayList();
+        ArrayList<AddressModel> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -68,18 +59,17 @@ public class AddressDaoImpl implements IAddressDao {
         return countries;
     }
 
-    @Override
-    public ObservableList<AddressTable> findByNameTable(AddressTable addressModel) {
+    public ArrayList<AddressModel> findValue(AddressModel value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ObservableList<AddressTable> countries = FXCollections.observableArrayList();
+        ArrayList<AddressModel> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_FIND_ADDRESS_BY_CITY_NAME);
-            pst.setString(1, addressModel.getCityName());
-            pst.setString(2, addressModel.getDistrictName());
+            pst.setString(1, value.getDistrictModel().getCityModel().getCityName());
+            pst.setString(2, value.getDistrictModel().getDistrictName());
             rs = pst.executeQuery();
 
             this.returnResults(rs, countries);
@@ -121,22 +111,6 @@ public class AddressDaoImpl implements IAddressDao {
         }
 
         return idAddress;
-    }
-
-    private void returnResults(ResultSet rs, ObservableList<AddressTable> address) throws SQLException {
-        address.clear();
-
-        while (rs.next()) {
-            var addressTable = new AddressTable(
-                    rs.getInt("id_address"),
-                    rs.getString("country_name"),
-                    rs.getString("city_name"),
-                    rs.getString("district_name"),
-                    rs.getString("address")
-            );
-
-            address.add(addressTable);
-        }
     }
 
     @Override
@@ -205,6 +179,21 @@ public class AddressDaoImpl implements IAddressDao {
             assert pst != null;
             Connexion.close(pst);
             Connexion.close(conn);
+        }
+    }
+
+    private void returnResults(ResultSet rs, ArrayList<AddressModel> address) throws SQLException {
+        address.clear();
+
+        while (rs.next()) {
+            var addressM = new AddressModel(
+                    rs.getInt("id_address"), rs.getString("address"),
+                    new DistrictModel(rs.getString("district_name"),
+                            new CityModel(rs.getString("city_name"),
+                                    new CountryModel(rs.getString("country_name"))))
+            );
+
+            address.add(addressM);
         }
     }
 }

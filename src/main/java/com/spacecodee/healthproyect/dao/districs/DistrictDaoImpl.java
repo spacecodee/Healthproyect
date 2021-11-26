@@ -164,7 +164,14 @@ public class DistrictDaoImpl implements IDistrictDao {
             pst.setInt(1, id);
             rs = pst.executeQuery();
 
-            this.returnResults(rs, listDistricts);
+            while (rs.next()) {
+                var districtModel = new DistrictModel(
+                        rs.getInt("id_district"),
+                        rs.getString("district_name"),
+                        new CityModel(rs.getInt("id_city")));
+
+                listDistricts.add(districtModel);
+            }
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -175,19 +182,6 @@ public class DistrictDaoImpl implements IDistrictDao {
         }
 
         return listDistricts;
-    }
-
-    private void returnResults(ResultSet rs, ArrayList<DistrictModel> districts) throws SQLException {
-        while (rs.next()) {
-            var districtModel = new DistrictModel(
-                    rs.getInt("id_district"),
-                    rs.getString("district_name"),
-                    new CityModel(rs.getInt("id_city"), rs.getString("city_name"),
-                            new CountryModel(rs.getInt("id_country"), rs.getString("country_name"))
-                    ));
-
-            districts.add(districtModel);
-        }
     }
 
     @Override
@@ -215,5 +209,18 @@ public class DistrictDaoImpl implements IDistrictDao {
         }
 
         return id;
+    }
+
+    private void returnResults(ResultSet rs, ArrayList<DistrictModel> districts) throws SQLException {
+        while (rs.next()) {
+            var districtModel = new DistrictModel(
+                    rs.getInt("id_district"),
+                    rs.getString("district_name"),
+                    new CityModel(rs.getInt("id_city"), rs.getString("city_name"),
+                            new CountryModel(rs.getInt("id_country"), rs.getString("country_name"))
+                    ));
+
+            districts.add(districtModel);
+        }
     }
 }

@@ -96,7 +96,11 @@ public class ReservationAp implements Initializable {
 
     @FXML
     private void actionOnAction(ActionEvent event) {
-
+        if (event.getSource().equals(this.btnAction)) {
+            Stage stage = new Stage();
+            var typeReservation = AppUtils.loadReservationsApModal(stage, "Reservaciones");
+            stage.show();
+        }
     }
 
     @FXML

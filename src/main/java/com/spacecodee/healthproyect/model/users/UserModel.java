@@ -29,4 +29,16 @@ public class UserModel {
         this.userName = userName;
         this.people = people;
     }
+
+    public UserModel(int idUser, String userName, PeopleModel people, UserRolesModel userRolesModel) {
+        this.idUser = idUser;
+        this.userName = userName;
+        this.people = people;
+        this.userRolesModel = userRolesModel;
+    }
+
+    public UserModel(String userName, PeopleModel people) {
+        this.userName = userName;
+        this.people = people;
+    }
 }

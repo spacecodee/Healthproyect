@@ -7,13 +7,13 @@ import com.spacecodee.healthproyect.dao.cities.CityDaoImpl;
 import com.spacecodee.healthproyect.dao.cities.ICityDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
-import com.spacecodee.healthproyect.dto.address.AddressTable;
-import com.spacecodee.healthproyect.dto.city.CityConverter;
-import com.spacecodee.healthproyect.dto.city.CityTable;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.converters.address.AddressTable;
+import com.spacecodee.healthproyect.converters.city.CityConverter;
+import com.spacecodee.healthproyect.converters.city.CityTable;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -44,7 +44,7 @@ public class Cities implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private ComboBox<CountryModel> cbxCountries;
+    private ComboBox<CountryDto> cbxCountries;
 
     @FXML
     private TableView<CityTable> tableCities;
@@ -72,12 +72,12 @@ public class Cities implements Initializable {
     private final IAddressDao addressDao = new AddressDaoImpl();
 
     @Setter
-    private ComboBox<CityModel> cbxCity;
+    private ComboBox<CityDto> cbxCity;
     @Setter
     private TableView<AddressTable> tableAddress;
 
     private CityTable cityModel;
-    private ArrayList<CountryModel> listCountries;
+    private ArrayList<CountryDto> listCountries;
 
     private static String actionCrud = "add";
 
@@ -180,7 +180,7 @@ public class Cities implements Initializable {
                 this.changedCrudAction();
                 this.txtCity.setText(this.cityModel.getCityName());
 
-                var country = new CountryModel(this.cityModel.getCountryName());
+                var country = new CountryDto(this.cityModel.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
                 this.cbxCountries.getSelectionModel().select(positionCountry);
             }
@@ -232,7 +232,7 @@ public class Cities implements Initializable {
     private void add() {
         var cityName = this.txtCity.getText().trim();
         var countryId = this.cbxCountries.getSelectionModel().getSelectedItem().getIdCountry();
-        var cityModel = new CityModel(cityName, new CountryModel(countryId));
+        var cityModel = new CityDto(cityName, new CountryDto(countryId));
 
         if (this.cityDao.add(cityModel)) {
             AppUtils.loadModalMessage("Ciudad Agregada", "success");
@@ -246,7 +246,7 @@ public class Cities implements Initializable {
         var cityId = this.cityModel.getIdCity();
         var cityName = this.txtCity.getText().trim();
         var countryId = this.cbxCountries.getSelectionModel().getSelectedItem().getIdCountry();
-        var cityModel = new CityModel(cityId, cityName, new CountryModel(countryId));
+        var cityModel = new CityDto(cityId, cityName, new CountryDto(countryId));
 
         if (this.cityDao.update(cityModel)) {
             AppUtils.loadModalMessage("País actualizado", "success");
@@ -261,7 +261,7 @@ public class Cities implements Initializable {
     }
 
     private void delete(ActionEvent actionEvent) {
-        var cityModel = new CityModel(this.cityModel.getIdCity());
+        var cityModel = new CityDto(this.cityModel.getIdCity());
         if (this.cityDao.delete(cityModel)) {
             AppUtils.loadModalMessage("Ciudad " + cityModel.getCityName()
                     + " eliminada con exito", "success");
@@ -275,13 +275,13 @@ public class Cities implements Initializable {
         this.reloadTableAndForm();
     }
 
-    private boolean validateCombo(ComboBox<CountryModel> cbxCity) {
+    private boolean validateCombo(ComboBox<CountryDto> cbxCity) {
         return cbxCity.getSelectionModel().isEmpty();
     }
 
-    private int getPositionCountry(ArrayList<CountryModel> listCountries, CountryModel countryModel) {
+    private int getPositionCountry(ArrayList<CountryDto> listCountries, CountryDto countryDto) {
         for (int i = 0; i < listCountries.size(); i++) {
-            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryModel.getCountryName())) {
+            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryDto.getCountryName())) {
                 return i;
             }
         }
@@ -294,12 +294,12 @@ public class Cities implements Initializable {
         observableArrayList.clear();
 
         var list = this.cityDao.load();
-        for (CityModel model : list) {
+        for (CityDto model : list) {
             observableArrayList.add(
                     new CityTable(
                             model.getIdCity(),
                             model.getCityName(),
-                            model.getCountryModel().getCountryName()
+                            model.getCountryDto().getCountryName()
                     )
             );
         }
@@ -311,14 +311,14 @@ public class Cities implements Initializable {
         final ObservableList<CityTable> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
 
-        var list = this.cityDao.findValue(new CityModel(name));
+        var list = this.cityDao.findValue(new CityDto(name));
 
-        for (CityModel model : list) {
+        for (CityDto model : list) {
             observableArrayList.add(
                     new CityTable(
                             model.getIdCity(),
                             model.getCityName(),
-                            model.getCountryModel().getCountryName()
+                            model.getCountryDto().getCountryName()
                     )
             );
         }
@@ -332,13 +332,13 @@ public class Cities implements Initializable {
         observableArrayList.clear();
 
         var list = this.addressDao.load();
-        for (AddressModel model : list) {
+        for (AddressDto model : list) {
             observableArrayList.add(
                     new AddressTable(
                             model.getIdAddress(),
-                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
-                            model.getDistrictModel().getCityModel().getCityName(),
-                            model.getDistrictModel().getDistrictName(),
+                            model.getDistrictDto().getCityDto().getCountryDto().getCountryName(),
+                            model.getDistrictDto().getCityDto().getCityName(),
+                            model.getDistrictDto().getDistrictName(),
                             model.getAddressName()
                     )
             );

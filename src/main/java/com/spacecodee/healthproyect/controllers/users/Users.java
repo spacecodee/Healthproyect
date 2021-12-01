@@ -7,9 +7,9 @@ import com.spacecodee.healthproyect.dao.peoples.IPeopleDao;
 import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
 import com.spacecodee.healthproyect.dao.users.IUserDao;
 import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
-import com.spacecodee.healthproyect.dto.user.UserTable;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
-import com.spacecodee.healthproyect.model.users.UserModel;
+import com.spacecodee.healthproyect.converters.user.UserTable;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
+import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -161,17 +161,17 @@ public class Users implements Initializable {
         }
     }
 
-    private void add(UserModel userModel) {
-        if (this.addressDao.add(userModel.getPeople().getAddressModel())) {
+    private void add(UserDto userDto) {
+        if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
             var idAddress = this.addressDao.returnMaxId();
             if (idAddress != 0) {
-                userModel.getPeople().getAddressModel().setIdAddress(idAddress);
-                if (this.peopleDao.add(userModel.getPeople())) {
+                userDto.getPeople().getAddressDto().setIdAddress(idAddress);
+                if (this.peopleDao.add(userDto.getPeople())) {
                     var idPeople = this.peopleDao.returnMaxId();
                     if (idPeople != 0) {
-                        userModel.getPeople().setIdPeople(idPeople);
+                        userDto.getPeople().setIdPeople(idPeople);
 
-                        if (this.userDao.add(userModel)) {
+                        if (this.userDao.add(userDto)) {
                             AppUtils.loadModalMessage("Usuario Agregado", "success");
                         } else {
                             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
@@ -184,7 +184,6 @@ public class Users implements Initializable {
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
         }
-
     }
 
     @FXML
@@ -209,7 +208,7 @@ public class Users implements Initializable {
         }
     }
 
-    private void loadModalConfirmation(String message, ActionEvent actionEvent2, PeopleModel peopleModel) {
+    private void loadModalConfirmation(String message, ActionEvent actionEvent2, PeopleDto peopleDto) {
         var stage = new Stage();
         final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, message);
 
@@ -217,7 +216,7 @@ public class Users implements Initializable {
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
         modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
             if (Users.actionCrud.equalsIgnoreCase("edit")) {
-                this.edit(peopleModel, actionEvent, actionEvent2);
+                this.edit(peopleDto, actionEvent, actionEvent2);
             } else {
                 this.delete(actionEvent);
             }
@@ -232,7 +231,7 @@ public class Users implements Initializable {
 
     private void delete(ActionEvent actionEvent) {
         var idPeople = this.tableUsers.getSelectionModel().getSelectedItem().getIdPeople();
-        var peopleModel = new PeopleModel(idPeople);
+        var peopleModel = new PeopleDto(idPeople);
         if (this.peopleDao.delete(peopleModel)) {
             AppUtils.loadModalMessage("Usuario eliminado con exito", "success");
             AppUtils.closeModal(actionEvent);
@@ -244,8 +243,8 @@ public class Users implements Initializable {
         this.changedCrudAction("add");
     }
 
-    private void edit(PeopleModel peopleModel, ActionEvent... actionEvent) {
-        if (this.peopleDao.update(peopleModel)) {
+    private void edit(PeopleDto peopleDto, ActionEvent... actionEvent) {
+        if (this.peopleDao.update(peopleDto)) {
             AppUtils.loadModalMessage("Usuario Actualizado", "success");
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
@@ -303,14 +302,14 @@ public class Users implements Initializable {
         final ObservableList<UserTable> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
 
-        var user = new UserModel(userName, new PeopleModel(dni));
+        var user = new UserDto(userName, new PeopleDto(dni));
 
         var list = this.userDao.findValue(user);
         return getUserTables(observableArrayList, list);
     }
 
-    private ObservableList<UserTable> getUserTables(ObservableList<UserTable> observableArrayList, ArrayList<UserModel> list) {
-        for (UserModel model : list) {
+    private ObservableList<UserTable> getUserTables(ObservableList<UserTable> observableArrayList, ArrayList<UserDto> list) {
+        for (UserDto model : list) {
             observableArrayList.add(
                     new UserTable(
                             model.getIdUser(),
@@ -321,7 +320,7 @@ public class Users implements Initializable {
                             model.getPeople().getDni(),
                             model.getPeople().getPhone(),
                             model.getUserName(),
-                            model.getUserRolesModel().getRoleName()
+                            model.getUserRolesDto().getRoleName()
                     )
             );
         }

@@ -8,18 +8,18 @@ import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
 import com.spacecodee.healthproyect.dao.user_roles.IUserRolesDao;
 import com.spacecodee.healthproyect.dao.user_roles.UserRolesDaoImpl;
-import com.spacecodee.healthproyect.dto.city.CityConverter;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.dto.customer.CustomerTable;
-import com.spacecodee.healthproyect.dto.district.DistrictConverter;
-import com.spacecodee.healthproyect.dto.user.UserTable;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
-import com.spacecodee.healthproyect.model.users.UserModel;
-import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
+import com.spacecodee.healthproyect.converters.city.CityConverter;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.converters.customer.CustomerTable;
+import com.spacecodee.healthproyect.converters.district.DistrictConverter;
+import com.spacecodee.healthproyect.converters.user.UserTable;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
+import com.spacecodee.healthproyect.dto.users.UserDto;
+import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
@@ -43,19 +43,19 @@ public class AddModal implements Initializable {
 
     @Getter
     @FXML
-    private ComboBox<CityModel> cbxCity;
+    private ComboBox<CityDto> cbxCity;
 
     @Getter
     @FXML
-    private ComboBox<CountryModel> cbxCountry;
+    private ComboBox<CountryDto> cbxCountry;
 
     @Getter
     @FXML
-    private ComboBox<DistrictModel> cbxDistrict;
+    private ComboBox<DistrictDto> cbxDistrict;
 
     @Getter
     @FXML
-    private ComboBox<UserRolesModel> cbxRol;
+    private ComboBox<UserRolesDto> cbxRol;
 
     @Getter
     @FXML
@@ -124,14 +124,14 @@ public class AddModal implements Initializable {
     }
 
     private void loadCountries() {
-        ArrayList<CountryModel> listCountries = this.countryDao.load();
+        ArrayList<CountryDto> listCountries = this.countryDao.load();
         this.cbxCountry.getItems().clear();
         this.cbxCountry.getItems().addAll(listCountries);
         this.cbxCountry.setConverter(new CountryConverter());
     }
 
     private void loadCities(int id) {
-        ArrayList<CityModel> listCities;
+        ArrayList<CityDto> listCities;
         if (id != 0) {
             listCities = this.cityDao.listOfCities(id);
         } else {
@@ -143,7 +143,7 @@ public class AddModal implements Initializable {
     }
 
     private void loadDistricts(int id) {
-        ArrayList<DistrictModel> listDistrict;
+        ArrayList<DistrictDto> listDistrict;
         if (id != 0) {
             listDistrict = this.districtDao.listOfDistrict(id);
         } else {
@@ -155,7 +155,7 @@ public class AddModal implements Initializable {
     }
 
     private void loadUserRoles() {
-        ArrayList<UserRolesModel> listUserRoles = this.userRolesDao.load();
+        ArrayList<UserRolesDto> listUserRoles = this.userRolesDao.load();
         this.cbxRol.getItems().clear();
         this.cbxRol.getItems().addAll(listUserRoles);
     }
@@ -199,22 +199,22 @@ public class AddModal implements Initializable {
                 || this.txtPhone.getText().trim().isEmpty();
     }
 
-    private AddressModel returnAddress() {
+    private AddressDto returnAddress() {
         var addressName = this.txtAddress.getText().trim();
         var idDistrict = (this.cbxDistrict.getSelectionModel().getSelectedItem() != null)
                 ? this.cbxDistrict.getSelectionModel().getSelectedItem().getIdDistrict()
                 : 0;
-        return new AddressModel(addressName, new DistrictModel(idDistrict));
+        return new AddressDto(addressName, new DistrictDto(idDistrict));
     }
 
-    private UserRolesModel returnUserRol() {
+    private UserRolesDto returnUserRol() {
         var idUserRol = (this.cbxRol.getSelectionModel().getSelectedItem() != null)
                 ? this.cbxRol.getSelectionModel().getSelectedItem().getIdRolUser()
                 : 0;
-        return new UserRolesModel(idUserRol);
+        return new UserRolesDto(idUserRol);
     }
 
-    private PeopleModel returnPeople() {
+    private PeopleDto returnPeople() {
         var id = 0;
         if (this.userTable != null) {
             id = this.userTable.getIdPeople();
@@ -227,19 +227,19 @@ public class AddModal implements Initializable {
         var phone = this.txtPhone.getText().trim();
         var birthDate = (this.dtBirthDate.getValue() != null) ? this.dtBirthDate.getValue().toString() : "";
 
-        return new PeopleModel(
+        return new PeopleDto(
                 id, dni, name, lastName, mail, phone, birthDate, this.returnAddress()
         );
     }
 
-    public UserModel returnUser() {
+    public UserDto returnUser() {
         var id = 0;
         if (this.userTable != null) {
             id = this.userTable.getIdUser();
         }
         var userName = this.txtUserName.getText().trim();
         var password = this.txtPassword.getText().trim();
-        return new UserModel(id, userName, password, this.returnPeople(), this.returnUserRol());
+        return new UserDto(id, userName, password, this.returnPeople(), this.returnUserRol());
     }
 
     public void disableSections(boolean disable) {

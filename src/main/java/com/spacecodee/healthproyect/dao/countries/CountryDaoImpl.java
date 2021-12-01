@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.dao.countries;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,11 +23,11 @@ public class CountryDaoImpl implements ICountryDao {
     private static final String SQL_MAX_COUNTRY_ID = "SELECT MAX(id_country) AS id FROM countries";
 
     @Override
-    public ArrayList<CountryModel> load() {
+    public ArrayList<CountryDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<CountryModel> countries = new ArrayList<>();
+        ArrayList<CountryDto> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -47,11 +47,11 @@ public class CountryDaoImpl implements ICountryDao {
         return countries;
     }
 
-    public ArrayList<CountryModel> findValue(CountryModel value) {
+    public ArrayList<CountryDto> findValue(CountryDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<CountryModel> countries = new ArrayList<>();
+        ArrayList<CountryDto> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -72,11 +72,11 @@ public class CountryDaoImpl implements ICountryDao {
         return countries;
     }
 
-    private void returnResults(ResultSet rs, ArrayList<CountryModel> countries) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<CountryDto> countries) throws SQLException {
         countries.clear();
 
         while (rs.next()) {
-            var countryModel = new CountryModel(
+            var countryModel = new CountryDto(
                     rs.getInt("id_country"),
                     rs.getString("country_name")
             );
@@ -86,7 +86,7 @@ public class CountryDaoImpl implements ICountryDao {
     }
 
     @Override
-    public boolean add(CountryModel value) {
+    public boolean add(CountryDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -108,7 +108,7 @@ public class CountryDaoImpl implements ICountryDao {
     }
 
     @Override
-    public boolean update(CountryModel value) {
+    public boolean update(CountryDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -131,7 +131,7 @@ public class CountryDaoImpl implements ICountryDao {
     }
 
     @Override
-    public boolean delete(CountryModel value) {
+    public boolean delete(CountryDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 

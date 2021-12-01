@@ -5,9 +5,9 @@ import com.spacecodee.healthproyect.dao.customers.CustomerDaoImpl;
 import com.spacecodee.healthproyect.dao.customers.ICustomerDao;
 import com.spacecodee.healthproyect.dao.peoples.IPeopleDao;
 import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
-import com.spacecodee.healthproyect.dto.customer.CustomerTable;
-import com.spacecodee.healthproyect.model.customers.CustomerModel;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
+import com.spacecodee.healthproyect.converters.customer.CustomerTable;
+import com.spacecodee.healthproyect.dto.customers.CustomerDto;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -159,7 +159,7 @@ public class Customer implements Initializable {
         }
     }
 
-    private void loadModalConfirmation(String message, ActionEvent actionEvent2, PeopleModel peopleModel) {
+    private void loadModalConfirmation(String message, ActionEvent actionEvent2, PeopleDto peopleDto) {
         var stage = new Stage();
         final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, message);
 
@@ -167,7 +167,7 @@ public class Customer implements Initializable {
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
         modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
             if (Customer.actionCrud.equalsIgnoreCase("edit")) {
-                this.edit(peopleModel, actionEvent, actionEvent2);
+                this.edit(peopleDto, actionEvent, actionEvent2);
             } else {
                 this.delete(actionEvent);
             }
@@ -182,7 +182,7 @@ public class Customer implements Initializable {
 
     private void delete(ActionEvent actionEvent) {
         var idCustomer = this.tableCustomers.getSelectionModel().getSelectedItem().getIdPeople();
-        var peopleModel = new PeopleModel(idCustomer);
+        var peopleModel = new PeopleDto(idCustomer);
         if (this.peopleDao.delete(peopleModel)) {
             AppUtils.loadModalMessage("Cliente eliminado con exito", "success");
             AppUtils.closeModal(actionEvent);
@@ -194,8 +194,8 @@ public class Customer implements Initializable {
         this.changedCrudAction("add");
     }
 
-    private void edit(PeopleModel peopleModel, ActionEvent... actionEvent) {
-        if (this.peopleDao.update(peopleModel)) {
+    private void edit(PeopleDto peopleDto, ActionEvent... actionEvent) {
+        if (this.peopleDao.update(peopleDto)) {
             AppUtils.loadModalMessage("Cliente Actualizado", "success");
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
@@ -245,7 +245,7 @@ public class Customer implements Initializable {
         observableArrayList.clear();
 
         var list = this.customerDao.load();
-        for (CustomerModel model : list) {
+        for (CustomerDto model : list) {
             observableArrayList.add(
                     new CustomerTable(
                             model.getIdCustomer(),
@@ -268,10 +268,10 @@ public class Customer implements Initializable {
         observableArrayList.clear();
 
         var list = this.customerDao.findValue(
-                new CustomerModel(userName, new PeopleModel(dni))
+                new CustomerDto(userName, new PeopleDto(dni))
         );
 
-        for (CustomerModel model : list) {
+        for (CustomerDto model : list) {
             observableArrayList.add(
                     new CustomerTable(
                             model.getIdCustomer(),

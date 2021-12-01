@@ -5,10 +5,10 @@ import com.spacecodee.healthproyect.dao.address.AddressDaoImpl;
 import com.spacecodee.healthproyect.dao.address.IAddressDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
-import com.spacecodee.healthproyect.dto.address.AddressTable;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.converters.address.AddressTable;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -38,13 +38,13 @@ public class Countries implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private TableView<CountryModel> tableCountries;
+    private TableView<CountryDto> tableCountries;
 
     @FXML
-    private TableColumn<CountryModel, Integer> idCountry;
+    private TableColumn<CountryDto, Integer> idCountry;
 
     @FXML
-    private TableColumn<CountryModel, String> country;
+    private TableColumn<CountryDto, String> country;
 
     @FXML
     private Label lblTitleForm;
@@ -59,11 +59,11 @@ public class Countries implements Initializable {
     private final ICountryDao countryDao = new CountryDaoImpl();
 
     @Setter
-    private ComboBox<CountryModel> cbxCountry;
+    private ComboBox<CountryDto> cbxCountry;
     @Setter
     private TableView<AddressTable> tableAddress;
 
-    private CountryModel countryModel;
+    private CountryDto countryDto;
     private static String actionCrud = "add";
 
     @Override
@@ -141,9 +141,9 @@ public class Countries implements Initializable {
         if (event.getSource().equals(this.tableCountries)) {
             if (this.validateSelectedAddress()) {
                 Countries.actionCrud = "edit";
-                this.countryModel = this.tableCountries.getSelectionModel().getSelectedItem();
+                this.countryDto = this.tableCountries.getSelectionModel().getSelectedItem();
                 this.changedCrudAction();
-                this.txtCountry.setText(this.countryModel.getCountryName());
+                this.txtCountry.setText(this.countryDto.getCountryName());
             }
         }
     }
@@ -204,7 +204,7 @@ public class Countries implements Initializable {
 
     private void add() {
         var countryName = this.txtCountry.getText().trim();
-        var countryModel = new CountryModel(countryName);
+        var countryModel = new CountryDto(countryName);
 
         if (this.countryDao.add(countryModel)) {
             AppUtils.loadModalMessage("Pais Agregado", "success");
@@ -216,7 +216,7 @@ public class Countries implements Initializable {
 
     private void edit(ActionEvent actionEvent) {
         var countryName = this.txtCountry.getText().trim();
-        var countryModel = new CountryModel(this.countryModel.getIdCountry(), countryName);
+        var countryModel = new CountryDto(this.countryDto.getIdCountry(), countryName);
 
         if (this.countryDao.update(countryModel)) {
             AppUtils.loadModalMessage("País actualizado", "success");
@@ -231,8 +231,8 @@ public class Countries implements Initializable {
     }
 
     private void delete(ActionEvent actionEvent) {
-        if (this.countryDao.delete(this.countryModel)) {
-            AppUtils.loadModalMessage("País " + this.countryModel.getCountryName()
+        if (this.countryDao.delete(this.countryDto)) {
+            AppUtils.loadModalMessage("País " + this.countryDto.getCountryName()
                     + " eliminado con exito", "success");
             AppUtils.closeModal(actionEvent);
         } else {
@@ -244,18 +244,18 @@ public class Countries implements Initializable {
         this.reloadTableAndForm();
     }
 
-    private ObservableList<CountryModel> loadCountries() {
-        final ObservableList<CountryModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<CountryDto> loadCountries() {
+        final ObservableList<CountryDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
         observableArrayList.addAll(this.countryDao.load());
 
         return observableArrayList;
     }
 
-    private ObservableList<CountryModel> findCountries(String name) {
-        final ObservableList<CountryModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<CountryDto> findCountries(String name) {
+        final ObservableList<CountryDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
-        observableArrayList.addAll(this.countryDao.findValue(new CountryModel(name)));
+        observableArrayList.addAll(this.countryDao.findValue(new CountryDto(name)));
 
         return observableArrayList;
     }
@@ -265,13 +265,13 @@ public class Countries implements Initializable {
         observableArrayList.clear();
 
         var list = this.addressDao.load();
-        for (AddressModel model : list) {
+        for (AddressDto model : list) {
             observableArrayList.add(
                     new AddressTable(
                             model.getIdAddress(),
-                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
-                            model.getDistrictModel().getCityModel().getCityName(),
-                            model.getDistrictModel().getDistrictName(),
+                            model.getDistrictDto().getCityDto().getCountryDto().getCountryName(),
+                            model.getDistrictDto().getCityDto().getCityName(),
+                            model.getDistrictDto().getDistrictName(),
                             model.getAddressName()
                     )
             );

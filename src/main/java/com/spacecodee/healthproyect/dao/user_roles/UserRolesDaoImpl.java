@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.dao.user_roles;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
+import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,11 +19,11 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             "WHERE role_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
-    public ArrayList<UserRolesModel> load() {
+    public ArrayList<UserRolesDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<UserRolesModel> roles = new ArrayList<>();
+        ArrayList<UserRolesDto> roles = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -31,7 +31,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             rs = pst.executeQuery();
 
             while (rs.next()) {
-                var rol = new UserRolesModel(
+                var rol = new UserRolesDto(
                         rs.getInt("id_user_rol"),
                         rs.getString("role_name")
                 );
@@ -51,11 +51,11 @@ public class UserRolesDaoImpl implements IUserRolesDao {
     }
 
     @Override
-    public ArrayList<UserRolesModel> findValue(UserRolesModel value) {
+    public ArrayList<UserRolesDto> findValue(UserRolesDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<UserRolesModel> roles = new ArrayList<>();
+        ArrayList<UserRolesDto> roles = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -64,7 +64,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
             rs = pst.executeQuery();
 
             while (rs.next()) {
-                var rol = new UserRolesModel(
+                var rol = new UserRolesDto(
                         rs.getInt("id_user_rol"),
                         rs.getString("role_name")
                 );
@@ -84,7 +84,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
     }
 
     @Override
-    public boolean add(UserRolesModel value) {
+    public boolean add(UserRolesDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -106,7 +106,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
     }
 
     @Override
-    public boolean update(UserRolesModel value) {
+    public boolean update(UserRolesDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -129,7 +129,7 @@ public class UserRolesDaoImpl implements IUserRolesDao {
     }
 
     @Override
-    public boolean delete(UserRolesModel value) {
+    public boolean delete(UserRolesDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 

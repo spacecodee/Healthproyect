@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.dao.type_reservations;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
+import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,13 +25,14 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
     private static final String SQL_DELETE_TYPE_RESERVATION_AP = "DELETE " +
             "FROM type_reservations " +
             "WHERE id_type_reservation = ?";
+    private static final String SQL_MAX_TYPE_RESERVATIONS_ID = "SELECT MAX(id_type_reservation) AS id FROM type_reservations";
 
     @Override
-    public ArrayList<TypeReservationModel> load() {
+    public ArrayList<TypeReservationDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<TypeReservationModel> typeReservationList = new ArrayList<>();
+        ArrayList<TypeReservationDto> typeReservationList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -51,11 +52,11 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
         return typeReservationList;
     }
 
-    public ArrayList<TypeReservationModel> findValue(TypeReservationModel value) {
+    public ArrayList<TypeReservationDto> findValue(TypeReservationDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<TypeReservationModel> typeReservationList = new ArrayList<>();
+        ArrayList<TypeReservationDto> typeReservationList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -77,7 +78,7 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
     }
 
     @Override
-    public boolean add(TypeReservationModel value) {
+    public boolean add(TypeReservationDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -100,7 +101,7 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
     }
 
     @Override
-    public boolean update(TypeReservationModel value) {
+    public boolean update(TypeReservationDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -124,7 +125,7 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
     }
 
     @Override
-    public boolean delete(TypeReservationModel value) {
+    public boolean delete(TypeReservationDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -145,9 +146,9 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
         }
     }
 
-    private void returnResults(ResultSet rs, ArrayList<TypeReservationModel> typeReservationList) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<TypeReservationDto> typeReservationList) throws SQLException {
         while (rs.next()) {
-            var typeReservationModel = new TypeReservationModel(
+            var typeReservationModel = new TypeReservationDto(
                     rs.getInt("id_type_reservation"),
                     rs.getString("name"),
                     rs.getDouble("price")
@@ -155,5 +156,34 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
 
             typeReservationList.add(typeReservationModel);
         }
+    }
+
+    @Override
+    public int returnMaxId() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var idPeople = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(TypeReservationsDaoImpl.SQL_MAX_TYPE_RESERVATIONS_ID);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                idPeople = rs.getInt("id");
+            }
+
+            return idPeople;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return idPeople;
     }
 }

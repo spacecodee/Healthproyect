@@ -1,8 +1,9 @@
 package com.spacecodee.healthproyect.dao.customers;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.customers.CustomerModel;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
+import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
+import com.spacecodee.healthproyect.dto.customers.CustomerDto;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,13 +46,14 @@ public class CustomerDaoImpl implements ICustomerDao {
             "         INNER JOIN peoples p on c.id_people = p.id_people " +
             "WHERE p.dni LIKE CONCAT('%', ?, '%') " +
             "   AND c.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_MAX_CUSTOMER_ID = "SELECT MAX(id_customer) AS id FROM customers";
 
     @Override
-    public ArrayList<CustomerModel> load() {
+    public ArrayList<CustomerDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<CustomerModel> customerList = new ArrayList<>();
+        ArrayList<CustomerDto> customerList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -72,11 +74,11 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
-    public ArrayList<CustomerModel> findValue(CustomerModel value) {
+    public ArrayList<CustomerDto> findValue(CustomerDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<CustomerModel> customerList = new ArrayList<>();
+        ArrayList<CustomerDto> customerList = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -99,7 +101,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
-    public boolean add(CustomerModel value) {
+    public boolean add(CustomerDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -107,7 +109,7 @@ public class CustomerDaoImpl implements ICustomerDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CustomerDaoImpl.SQL_ADD_CUSTOMER);
             pst.setString(1, value.getUserName());
-            pst.setInt(2, value.getIdCustomer());
+            pst.setInt(2, value.getPeople().getIdPeople());
             pst.executeUpdate();
 
             return true;
@@ -122,7 +124,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
-    public boolean update(CustomerModel value) {
+    public boolean update(CustomerDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -146,7 +148,7 @@ public class CustomerDaoImpl implements ICustomerDao {
     }
 
     @Override
-    public boolean delete(CustomerModel value) {
+    public boolean delete(CustomerDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -167,11 +169,11 @@ public class CustomerDaoImpl implements ICustomerDao {
         }
     }
 
-    private void returnResults(ResultSet rs, ArrayList<CustomerModel> customers) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<CustomerDto> customers) throws SQLException {
         while (rs.next()) {
-            var customer = new CustomerModel(
+            var customer = new CustomerDto(
                     rs.getInt("id_customer"), rs.getString("user_name"),
-                    new PeopleModel(
+                    new PeopleDto(
                             rs.getInt("id_people"), rs.getString("dni"),
                             rs.getString("name"), rs.getString("last_name"),
                             rs.getString("mail"), rs.getString("phone")
@@ -180,5 +182,34 @@ public class CustomerDaoImpl implements ICustomerDao {
 
             customers.add(customer);
         }
+    }
+
+    @Override
+    public int returnMaxId() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var idPeople = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CustomerDaoImpl.SQL_MAX_CUSTOMER_ID);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                idPeople = rs.getInt("id");
+            }
+
+            return idPeople;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return idPeople;
     }
 }

@@ -1,7 +1,7 @@
 package com.spacecodee.healthproyect.dao.reservation_appointments;
 
 import com.spacecodee.healthproyect.dao.ICrudGeneric;
-import com.spacecodee.healthproyect.model.reservation_appointments.ReservationApModel;
+import com.spacecodee.healthproyect.dto.reservation_appointments.ReservationApDto;
 
-public interface IReservationApDao extends ICrudGeneric<ReservationApModel> {
+public interface IReservationApDao extends ICrudGeneric<ReservationApDto> {
 }

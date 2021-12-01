@@ -3,7 +3,7 @@ package com.spacecodee.healthproyect.controllers.type_reservations;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.type_reservations.ITypeReservationsDao;
 import com.spacecodee.healthproyect.dao.type_reservations.TypeReservationsDaoImpl;
-import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
+import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -37,16 +37,16 @@ public class TypeReservations implements Initializable {
     private Label lblTitle;
 
     @FXML
-    private TableView<TypeReservationModel> tableTypeReservation;
+    private TableView<TypeReservationDto> tableTypeReservation;
 
     @FXML
-    private TableColumn<TypeReservationModel, Integer> idTypeReservation;
+    private TableColumn<TypeReservationDto, Integer> idTypeReservation;
 
     @FXML
-    private TableColumn<TypeReservationModel, String> typeReservation;
+    private TableColumn<TypeReservationDto, String> typeReservation;
 
     @FXML
-    private TableColumn<TypeReservationModel, Double> price;
+    private TableColumn<TypeReservationDto, Double> price;
 
     @FXML
     private TextField txtNameReservation;
@@ -61,7 +61,7 @@ public class TypeReservations implements Initializable {
 
     @Getter
     @Setter
-    private TypeReservationModel typeReservationModel;
+    private TypeReservationDto typeReservationDto;
 
     private static String actionCrud = "add";
 
@@ -92,7 +92,7 @@ public class TypeReservations implements Initializable {
                     var nameReservation = this.txtNameReservation.getText().trim();
                     var priceReservation = Double.parseDouble(this.txtPrice.getText().trim());
 
-                    var typeReservationModel = new TypeReservationModel(nameReservation, priceReservation);
+                    var typeReservationModel = new TypeReservationDto(nameReservation, priceReservation);
                     if (this.typeReservationsDao.add(typeReservationModel)) {
                         this.reloadTableAndForm();
                         AppUtils.loadModalMessage("Tipo de reserva agregada", "success");
@@ -151,9 +151,9 @@ public class TypeReservations implements Initializable {
     private void tblTypeReservationOnClick(MouseEvent event) {
         if (event.getSource().equals(this.tableTypeReservation)) {
             if (this.validateSelectedUserTable()) {
-                this.setTypeReservationModel(this.tableTypeReservation.getSelectionModel().getSelectedItem());
-                this.txtNameReservation.setText(this.typeReservationModel.getNameReservation());
-                this.txtPrice.setText(String.valueOf(this.typeReservationModel.getPriceReservation()));
+                this.setTypeReservationDto(this.tableTypeReservation.getSelectionModel().getSelectedItem());
+                this.txtNameReservation.setText(this.typeReservationDto.getNameReservation());
+                this.txtPrice.setText(String.valueOf(this.typeReservationDto.getPriceReservation()));
                 this.changedCrudAction("edit");
             }
         }
@@ -184,10 +184,10 @@ public class TypeReservations implements Initializable {
     private void edit(ActionEvent actionEvent) {
         var typeReservationName = this.txtNameReservation.getText().trim();
         var typeReservationPrice = Double.parseDouble(this.txtPrice.getText().trim());
-        this.typeReservationModel.setNameReservation(typeReservationName);
-        this.typeReservationModel.setPriceReservation(typeReservationPrice);
+        this.typeReservationDto.setNameReservation(typeReservationName);
+        this.typeReservationDto.setPriceReservation(typeReservationPrice);
 
-        if (this.typeReservationsDao.update(this.typeReservationModel)) {
+        if (this.typeReservationsDao.update(this.typeReservationDto)) {
             AppUtils.loadModalMessage("Tipo de reserva Actualizado", "success");
         } else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
@@ -200,7 +200,7 @@ public class TypeReservations implements Initializable {
     }
 
     private void delete(ActionEvent actionEvent) {
-        var typeReservation = new TypeReservationModel(this.typeReservationModel.getIdTypeReservation());
+        var typeReservation = new TypeReservationDto(this.typeReservationDto.getIdTypeReservation());
 
         if (this.typeReservationsDao.delete(typeReservation)) {
             AppUtils.loadModalMessage("Tipo de reservación eliminada con exito", "success");
@@ -227,18 +227,18 @@ public class TypeReservations implements Initializable {
         this.loadTable();
     }
 
-    private ObservableList<TypeReservationModel> loadTypeReservations() {
-        final ObservableList<TypeReservationModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<TypeReservationDto> loadTypeReservations() {
+        final ObservableList<TypeReservationDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
         observableArrayList.addAll(this.typeReservationsDao.load());
 
         return observableArrayList;
     }
 
-    private ObservableList<TypeReservationModel> findReservations(String name) {
-        final ObservableList<TypeReservationModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<TypeReservationDto> findReservations(String name) {
+        final ObservableList<TypeReservationDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
-        observableArrayList.addAll(this.typeReservationsDao.findValue(new TypeReservationModel(name)));
+        observableArrayList.addAll(this.typeReservationsDao.findValue(new TypeReservationDto(name)));
 
         return observableArrayList;
     }

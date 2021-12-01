@@ -8,8 +8,8 @@ import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import com.spacecodee.healthproyect.controllers.reservation_appointments.ReservationApModal;
 import com.spacecodee.healthproyect.controllers.type_reservations.TypeReservations;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -185,11 +185,11 @@ public class AppUtils {
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS
                 + "reservation_appointments/reservation-ap-modal.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 830);
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 630);
         return fxmlLoader.getController();
     }
 
-    public static int loadCities(ComboBox<CountryModel> cbxCountry) {
+    public static int loadCities(ComboBox<CountryDto> cbxCountry) {
         if (!cbxCountry.getSelectionModel().isEmpty()) {
             return cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
         }
@@ -197,7 +197,7 @@ public class AppUtils {
         return 0;
     }
 
-    public static int loadDistricts(ComboBox<DistrictModel> cbxDistricts) {
+    public static int loadDistricts(ComboBox<DistrictDto> cbxDistricts) {
         if (!cbxDistricts.getSelectionModel().isEmpty()) {
             return cbxDistricts.getSelectionModel().getSelectedItem().getIdDistrict();
         }

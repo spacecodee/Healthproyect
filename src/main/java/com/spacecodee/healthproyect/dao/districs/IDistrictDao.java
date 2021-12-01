@@ -1,13 +1,13 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.ICrudGeneric;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 
 import java.util.ArrayList;
 
-public interface IDistrictDao extends ICrudGeneric<DistrictModel> {
+public interface IDistrictDao extends ICrudGeneric<DistrictDto> {
 
-    ArrayList<DistrictModel> listOfDistrict(int id);
+    ArrayList<DistrictDto> listOfDistrict(int id);
 
     int getMaxId();
 }

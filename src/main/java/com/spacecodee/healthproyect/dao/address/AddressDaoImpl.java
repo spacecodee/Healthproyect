@@ -1,10 +1,10 @@
 package com.spacecodee.healthproyect.dao.address;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,11 +35,11 @@ public class AddressDaoImpl implements IAddressDao {
     private static final String SQL_MAX_ADDRESS_ID = "SELECT MAX(id_address) AS id FROM address";
 
     @Override
-    public ArrayList<AddressModel> load() {
+    public ArrayList<AddressDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<AddressModel> countries = new ArrayList<>();
+        ArrayList<AddressDto> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -59,17 +59,17 @@ public class AddressDaoImpl implements IAddressDao {
         return countries;
     }
 
-    public ArrayList<AddressModel> findValue(AddressModel value) {
+    public ArrayList<AddressDto> findValue(AddressDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<AddressModel> countries = new ArrayList<>();
+        ArrayList<AddressDto> countries = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_FIND_ADDRESS_BY_CITY_NAME);
-            pst.setString(1, value.getDistrictModel().getCityModel().getCityName());
-            pst.setString(2, value.getDistrictModel().getDistrictName());
+            pst.setString(1, value.getDistrictDto().getCityDto().getCityName());
+            pst.setString(2, value.getDistrictDto().getDistrictName());
             rs = pst.executeQuery();
 
             this.returnResults(rs, countries);
@@ -114,7 +114,7 @@ public class AddressDaoImpl implements IAddressDao {
     }
 
     @Override
-    public boolean add(AddressModel value) {
+    public boolean add(AddressDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -122,7 +122,7 @@ public class AddressDaoImpl implements IAddressDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_ADD_ADDRESS);
             pst.setString(1, value.getAddressName());
-            pst.setInt(2, value.getDistrictModel().getIdDistrict());
+            pst.setInt(2, value.getDistrictDto().getIdDistrict());
             pst.executeUpdate();
 
             return true;
@@ -137,7 +137,7 @@ public class AddressDaoImpl implements IAddressDao {
     }
 
     @Override
-    public boolean update(AddressModel value) {
+    public boolean update(AddressDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -145,7 +145,7 @@ public class AddressDaoImpl implements IAddressDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(AddressDaoImpl.SQL_UPDATE_ADDRESS);
             pst.setString(1, value.getAddressName());
-            pst.setInt(2, value.getDistrictModel().getIdDistrict());
+            pst.setInt(2, value.getDistrictDto().getIdDistrict());
             pst.setInt(3, value.getIdAddress());
             pst.executeUpdate();
 
@@ -161,7 +161,7 @@ public class AddressDaoImpl implements IAddressDao {
     }
 
     @Override
-    public boolean delete(AddressModel value) {
+    public boolean delete(AddressDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -182,15 +182,15 @@ public class AddressDaoImpl implements IAddressDao {
         }
     }
 
-    private void returnResults(ResultSet rs, ArrayList<AddressModel> address) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<AddressDto> address) throws SQLException {
         address.clear();
 
         while (rs.next()) {
-            var addressM = new AddressModel(
+            var addressM = new AddressDto(
                     rs.getInt("id_address"), rs.getString("address"),
-                    new DistrictModel(rs.getString("district_name"),
-                            new CityModel(rs.getString("city_name"),
-                                    new CountryModel(rs.getString("country_name"))))
+                    new DistrictDto(rs.getString("district_name"),
+                            new CityDto(rs.getString("city_name"),
+                                    new CountryDto(rs.getString("country_name"))))
             );
 
             address.add(addressM);

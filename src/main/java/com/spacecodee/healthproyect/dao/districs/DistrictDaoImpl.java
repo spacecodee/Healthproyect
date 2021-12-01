@@ -1,9 +1,9 @@
 package com.spacecodee.healthproyect.dao.districs;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,11 +32,11 @@ public class DistrictDaoImpl implements IDistrictDao {
     private static final String SQL_MAX_DISTRICT_ID = "SELECT MAX(id_district) AS id FROM districts";
 
     @Override
-    public ArrayList<DistrictModel> load() {
+    public ArrayList<DistrictDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+        ArrayList<DistrictDto> listDistricts = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -56,11 +56,11 @@ public class DistrictDaoImpl implements IDistrictDao {
         return listDistricts;
     }
 
-    public ArrayList<DistrictModel> findValue(DistrictModel value) {
+    public ArrayList<DistrictDto> findValue(DistrictDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+        ArrayList<DistrictDto> listDistricts = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -82,7 +82,7 @@ public class DistrictDaoImpl implements IDistrictDao {
     }
 
     @Override
-    public boolean add(DistrictModel value) {
+    public boolean add(DistrictDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -90,7 +90,7 @@ public class DistrictDaoImpl implements IDistrictDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_ADD_DISTRICT);
             pst.setString(1, value.getDistrictName());
-            pst.setInt(2, value.getCityModel().getIdCity());
+            pst.setInt(2, value.getCityDto().getIdCity());
             pst.executeUpdate();
 
             return true;
@@ -105,7 +105,7 @@ public class DistrictDaoImpl implements IDistrictDao {
     }
 
     @Override
-    public boolean update(DistrictModel value) {
+    public boolean update(DistrictDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -113,7 +113,7 @@ public class DistrictDaoImpl implements IDistrictDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(DistrictDaoImpl.SQL_UPDATE_DISTRICT);
             pst.setString(1, value.getDistrictName());
-            pst.setInt(2, value.getCityModel().getIdCity());
+            pst.setInt(2, value.getCityDto().getIdCity());
             pst.setInt(3, value.getIdDistrict());
             pst.executeUpdate();
 
@@ -129,7 +129,7 @@ public class DistrictDaoImpl implements IDistrictDao {
     }
 
     @Override
-    public boolean delete(DistrictModel value) {
+    public boolean delete(DistrictDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -151,8 +151,8 @@ public class DistrictDaoImpl implements IDistrictDao {
     }
 
     @Override
-    public ArrayList<DistrictModel> listOfDistrict(int id) {
-        ArrayList<DistrictModel> listDistricts = new ArrayList<>();
+    public ArrayList<DistrictDto> listOfDistrict(int id) {
+        ArrayList<DistrictDto> listDistricts = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pst = null;
@@ -165,10 +165,10 @@ public class DistrictDaoImpl implements IDistrictDao {
             rs = pst.executeQuery();
 
             while (rs.next()) {
-                var districtModel = new DistrictModel(
+                var districtModel = new DistrictDto(
                         rs.getInt("id_district"),
                         rs.getString("district_name"),
-                        new CityModel(rs.getInt("id_city")));
+                        new CityDto(rs.getInt("id_city")));
 
                 listDistricts.add(districtModel);
             }
@@ -211,13 +211,13 @@ public class DistrictDaoImpl implements IDistrictDao {
         return id;
     }
 
-    private void returnResults(ResultSet rs, ArrayList<DistrictModel> districts) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<DistrictDto> districts) throws SQLException {
         while (rs.next()) {
-            var districtModel = new DistrictModel(
+            var districtModel = new DistrictDto(
                     rs.getInt("id_district"),
                     rs.getString("district_name"),
-                    new CityModel(rs.getInt("id_city"), rs.getString("city_name"),
-                            new CountryModel(rs.getInt("id_country"), rs.getString("country_name"))
+                    new CityDto(rs.getInt("id_city"), rs.getString("city_name"),
+                            new CountryDto(rs.getInt("id_country"), rs.getString("country_name"))
                     ));
 
             districts.add(districtModel);

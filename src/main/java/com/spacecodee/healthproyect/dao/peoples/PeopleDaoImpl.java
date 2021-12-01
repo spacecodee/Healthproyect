@@ -1,8 +1,8 @@
 package com.spacecodee.healthproyect.dao.peoples;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,11 +39,11 @@ public class PeopleDaoImpl implements IPeopleDao {
     private static final String SQL_MAX_PEOPLE_ID = "SELECT MAX(id_people) AS id FROM peoples";
 
     @Override
-    public ArrayList<PeopleModel> load() {
+    public ArrayList<PeopleDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<PeopleModel> cities = new ArrayList<>();
+        ArrayList<PeopleDto> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -64,11 +64,11 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public ArrayList<PeopleModel> findValue(PeopleModel value) {
+    public ArrayList<PeopleDto> findValue(PeopleDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<PeopleModel> cities = new ArrayList<>();
+        ArrayList<PeopleDto> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -90,7 +90,7 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public boolean add(PeopleModel value) {
+    public boolean add(PeopleDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -100,7 +100,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             this.addValues(value, pst);
             pst.setString(6, value.getUrlImgProfile());
             pst.setString(7, value.getBirthDate());
-            pst.setInt(8, value.getAddressModel().getIdAddress());
+            pst.setInt(8, value.getAddressDto().getIdAddress());
             pst.executeUpdate();
 
             return true;
@@ -115,7 +115,7 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public boolean update(PeopleModel value) {
+    public boolean update(PeopleDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -138,7 +138,7 @@ public class PeopleDaoImpl implements IPeopleDao {
     }
 
     @Override
-    public boolean delete(PeopleModel value) {
+    public boolean delete(PeopleDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -188,13 +188,13 @@ public class PeopleDaoImpl implements IPeopleDao {
         return idPeople;
     }
 
-    private void returnResults(ResultSet rs, ArrayList<PeopleModel> peoples) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<PeopleDto> peoples) throws SQLException {
         while (rs.next()) {
-            var address = new AddressModel(
+            var address = new AddressDto(
                     rs.getInt("city_name")
             );
 
-            var people = new PeopleModel(
+            var people = new PeopleDto(
                     rs.getInt("id_people"),
                     rs.getString("dni"),
                     rs.getString("name"),
@@ -208,7 +208,7 @@ public class PeopleDaoImpl implements IPeopleDao {
         }
     }
 
-    private void addValues(PeopleModel value, PreparedStatement pst) throws SQLException {
+    private void addValues(PeopleDto value, PreparedStatement pst) throws SQLException {
         pst.setString(1, value.getDni());
         pst.setString(2, value.getName());
         pst.setString(3, value.getLastname());

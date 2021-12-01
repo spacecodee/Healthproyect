@@ -1,9 +1,9 @@
 package com.spacecodee.healthproyect.dao.users;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
-import com.spacecodee.healthproyect.model.users.UserModel;
-import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
+import com.spacecodee.healthproyect.dto.users.UserDto;
+import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,11 +46,11 @@ public class UserDaoImpl implements IUserDao {
             "   AND u.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
 
     @Override
-    public ArrayList<UserModel> load() {
+    public ArrayList<UserDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<UserModel> cities = new ArrayList<>();
+        ArrayList<UserDto> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -70,11 +70,11 @@ public class UserDaoImpl implements IUserDao {
         return cities;
     }
 
-    public ArrayList<UserModel> findValue(UserModel value) {
+    public ArrayList<UserDto> findValue(UserDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<UserModel> cities = new ArrayList<>();
+        ArrayList<UserDto> cities = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
@@ -97,7 +97,7 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public boolean add(UserModel value) {
+    public boolean add(UserDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -119,7 +119,7 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public boolean update(UserModel value) {
+    public boolean update(UserDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -142,7 +142,7 @@ public class UserDaoImpl implements IUserDao {
     }
 
     @Override
-    public boolean delete(UserModel value) {
+    public boolean delete(UserDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -163,26 +163,26 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
-    private void returnResults(ResultSet rs, ArrayList<UserModel> users) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<UserDto> users) throws SQLException {
         while (rs.next()) {
-            var user = new UserModel(
+            var user = new UserDto(
                     rs.getInt("id_user"), rs.getString("user_name"),
-                    new PeopleModel(
+                    new PeopleDto(
                             rs.getInt("id_people"), rs.getString("dni"),
                             rs.getString("name"), rs.getString("last_name"),
                             rs.getString("mail"), rs.getString("phone")
                     ),
-                    new UserRolesModel(rs.getString("role_name"))
+                    new UserRolesDto(rs.getString("role_name"))
             );
 
             users.add(user);
         }
     }
 
-    private void addValues(UserModel value, PreparedStatement pst) throws SQLException {
+    private void addValues(UserDto value, PreparedStatement pst) throws SQLException {
         pst.setString(1, value.getUserName());
         pst.setString(2, value.getPassword());
         pst.setInt(3, value.getPeople().getIdPeople());
-        pst.setInt(4, value.getUserRolesModel().getIdRolUser());
+        pst.setInt(4, value.getUserRolesDto().getIdRolUser());
     }
 }

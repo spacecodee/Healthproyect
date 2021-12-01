@@ -9,14 +9,14 @@ import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
 import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
-import com.spacecodee.healthproyect.dto.city.CityConverter;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.dto.district.DistrictConverter;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.dto.address.AddressTable;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.converters.city.CityConverter;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.converters.district.DistrictConverter;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.converters.address.AddressTable;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -58,13 +58,13 @@ public class Address implements Initializable {
     private Label lblAddEdit;
 
     @FXML
-    private ComboBox<CityModel> cbxCity;
+    private ComboBox<CityDto> cbxCity;
 
     @FXML
-    private ComboBox<CountryModel> cbxCountry;
+    private ComboBox<CountryDto> cbxCountry;
 
     @FXML
-    private ComboBox<DistrictModel> cbxDistrict;
+    private ComboBox<DistrictDto> cbxDistrict;
 
     @FXML
     private TableView<AddressTable> tableAddress;
@@ -99,9 +99,9 @@ public class Address implements Initializable {
     private final IDistrictDao districtDao = new DistrictDaoImpl();
 
     private AddressTable addressTable;
-    private ArrayList<CityModel> listCities;
-    private ArrayList<CountryModel> listCountries;
-    private ArrayList<DistrictModel> listDistrict;
+    private ArrayList<CityDto> listCities;
+    private ArrayList<CountryDto> listCountries;
+    private ArrayList<DistrictDto> listDistrict;
 
     private static String actionCrud = "add";
 
@@ -258,15 +258,15 @@ public class Address implements Initializable {
             this.addressTable = this.tableAddress.getSelectionModel().getSelectedItem();
             if (this.addressTable != null) {
                 this.changedCrudAction();
-                var city = new CityModel(this.addressTable.getCityName());
+                var city = new CityDto(this.addressTable.getCityName());
                 var positionCity = this.getPositionCity(this.listCities, city);
                 this.cbxCity.getSelectionModel().select(positionCity);
 
-                var country = new CountryModel(this.addressTable.getCountryName());
+                var country = new CountryDto(this.addressTable.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
                 this.cbxCountry.getSelectionModel().select(positionCountry);
 
-                var district = new DistrictModel(this.addressTable.getDistrictName());
+                var district = new DistrictDto(this.addressTable.getDistrictName());
                 var positionDistrict = this.getPositionDistrict(this.listDistrict, district);
                 this.cbxDistrict.getSelectionModel().select(positionDistrict);
 
@@ -277,13 +277,13 @@ public class Address implements Initializable {
     }
 
     private void add() {
-        AddressModel address = returnAddress();
+        AddressDto address = returnAddress();
         var validation = false;
         var addressList = this.tableAddress.getItems();
 
         for (AddressTable table : addressList) {
             if (table.getAddressName().equalsIgnoreCase(address.getAddressName())
-                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictModel().getDistrictName())) {
+                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictDto().getDistrictName())) {
                 validation = true;
                 break;
             }
@@ -303,14 +303,14 @@ public class Address implements Initializable {
     }
 
     private void edit(ActionEvent actionEvent) {
-        AddressModel address = returnAddress();
+        AddressDto address = returnAddress();
         var validation = false;
         var addressList = this.tableAddress.getItems();
 
         for (AddressTable table : addressList) {
             if (table.getAddressName().equalsIgnoreCase(address.getAddressName())
                     && table.getIdAddress() != address.getIdAddress()
-                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictModel().getDistrictName())) {
+                    && table.getDistrictName().equalsIgnoreCase(address.getDistrictDto().getDistrictName())) {
                 validation = true;
                 break;
             }
@@ -332,7 +332,7 @@ public class Address implements Initializable {
         AppUtils.closeModal(actionEvent);
     }
 
-    private AddressModel returnAddress() {
+    private AddressDto returnAddress() {
         var idAddress = 0;
         if (this.validateSelectedAddress()) {
             idAddress = this.tableAddress.getSelectionModel().getSelectedItem().getIdAddress();
@@ -341,15 +341,15 @@ public class Address implements Initializable {
         var idDistrict = this.cbxDistrict.getSelectionModel().getSelectedItem().getIdDistrict();
         var districtName = this.cbxDistrict.getSelectionModel().getSelectedItem().getDistrictName();
 
-        return new AddressModel(
+        return new AddressDto(
                 idAddress,
                 addressName,
-                new DistrictModel(idDistrict, districtName)
+                new DistrictDto(idDistrict, districtName)
         );
     }
 
     private void delete(ActionEvent actionEvent) {
-        var address = new AddressModel(this.addressTable.getIdAddress());
+        var address = new AddressDto(this.addressTable.getIdAddress());
 
         if (this.addressDao.delete(address)) {
             AppUtils.loadModalMessage("Dirección eliminada con exito", "success");
@@ -404,17 +404,17 @@ public class Address implements Initializable {
         this.cbxDistrict.getSelectionModel().select(0);
     }
 
-    private boolean validateCombo(ComboBox<CityModel> cbxCity,
-                                  ComboBox<CountryModel> cbxCountry,
-                                  ComboBox<DistrictModel> cbxDistrict) {
+    private boolean validateCombo(ComboBox<CityDto> cbxCity,
+                                  ComboBox<CountryDto> cbxCountry,
+                                  ComboBox<DistrictDto> cbxDistrict) {
         return cbxCity.getSelectionModel().isEmpty()
                 || cbxCountry.getSelectionModel().isEmpty()
                 || cbxDistrict.getSelectionModel().isEmpty();
     }
 
-    private int getPositionCity(ArrayList<CityModel> listCities, CityModel cityModel) {
+    private int getPositionCity(ArrayList<CityDto> listCities, CityDto cityDto) {
         for (int i = 0; i < listCities.size(); i++) {
-            if (listCities.get(i).getCityName().equalsIgnoreCase(cityModel.getCityName())) {
+            if (listCities.get(i).getCityName().equalsIgnoreCase(cityDto.getCityName())) {
                 return i;
             }
         }
@@ -422,9 +422,9 @@ public class Address implements Initializable {
         return 0;
     }
 
-    private int getPositionCountry(ArrayList<CountryModel> listCountries, CountryModel countryModel) {
+    private int getPositionCountry(ArrayList<CountryDto> listCountries, CountryDto countryDto) {
         for (int i = 0; i < listCountries.size(); i++) {
-            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryModel.getCountryName())) {
+            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryDto.getCountryName())) {
                 return i;
             }
         }
@@ -432,9 +432,9 @@ public class Address implements Initializable {
         return 0;
     }
 
-    private int getPositionDistrict(ArrayList<DistrictModel> listDistrict, DistrictModel districtModel) {
+    private int getPositionDistrict(ArrayList<DistrictDto> listDistrict, DistrictDto districtDto) {
         for (int i = 0; i < listDistrict.size(); i++) {
-            if (listDistrict.get(i).getDistrictName().equalsIgnoreCase(districtModel.getDistrictName())) {
+            if (listDistrict.get(i).getDistrictName().equalsIgnoreCase(districtDto.getDistrictName())) {
                 return i;
             }
         }
@@ -447,13 +447,13 @@ public class Address implements Initializable {
         observableArrayList.clear();
 
         var list = this.addressDao.load();
-        for (AddressModel model : list) {
+        for (AddressDto model : list) {
             observableArrayList.add(
                     new AddressTable(
                             model.getIdAddress(),
-                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
-                            model.getDistrictModel().getCityModel().getCityName(),
-                            model.getDistrictModel().getDistrictName(),
+                            model.getDistrictDto().getCityDto().getCountryDto().getCountryName(),
+                            model.getDistrictDto().getCityDto().getCityName(),
+                            model.getDistrictDto().getDistrictName(),
                             model.getAddressName()
                     )
             );
@@ -465,15 +465,15 @@ public class Address implements Initializable {
     private ObservableList<AddressTable> findAddress(String districtName, String cityName) {
         final ObservableList<AddressTable> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
-        var address = new AddressModel(new DistrictModel(districtName, new CityModel(cityName)));
+        var address = new AddressDto(new DistrictDto(districtName, new CityDto(cityName)));
         var list = this.addressDao.findValue(address);
-        for (AddressModel model : list) {
+        for (AddressDto model : list) {
             observableArrayList.add(
                     new AddressTable(
                             model.getIdAddress(),
-                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
-                            model.getDistrictModel().getCityModel().getCityName(),
-                            model.getDistrictModel().getDistrictName(),
+                            model.getDistrictDto().getCityDto().getCountryDto().getCountryName(),
+                            model.getDistrictDto().getCityDto().getCityName(),
+                            model.getDistrictDto().getDistrictName(),
                             model.getAddressName()
                     )
             );

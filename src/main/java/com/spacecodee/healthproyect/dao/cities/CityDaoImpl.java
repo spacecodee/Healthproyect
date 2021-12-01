@@ -1,8 +1,8 @@
 package com.spacecodee.healthproyect.dao.cities;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,8 +27,8 @@ public class CityDaoImpl implements ICityDao {
     private static final String SQL_MAX_CITY_ID = "SELECT MAX(id_city) AS id FROM cities";
 
     @Override
-    public ArrayList<CityModel> load() {
-        ArrayList<CityModel> listCities = new ArrayList<>();
+    public ArrayList<CityDto> load() {
+        ArrayList<CityDto> listCities = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pst = null;
@@ -52,8 +52,8 @@ public class CityDaoImpl implements ICityDao {
         return listCities;
     }
 
-    public ArrayList<CityModel> findValue(CityModel value) {
-        ArrayList<CityModel> listCities = new ArrayList<>();
+    public ArrayList<CityDto> findValue(CityDto value) {
+        ArrayList<CityDto> listCities = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pst = null;
@@ -79,7 +79,7 @@ public class CityDaoImpl implements ICityDao {
     }
 
     @Override
-    public boolean add(CityModel value) {
+    public boolean add(CityDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -87,7 +87,7 @@ public class CityDaoImpl implements ICityDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_ADD_CITY);
             pst.setString(1, value.getCityName());
-            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.setInt(2, value.getCountryDto().getIdCountry());
             pst.executeUpdate();
 
             return true;
@@ -102,7 +102,7 @@ public class CityDaoImpl implements ICityDao {
     }
 
     @Override
-    public boolean update(CityModel value) {
+    public boolean update(CityDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -110,7 +110,7 @@ public class CityDaoImpl implements ICityDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(CityDaoImpl.SQL_UPDATE_CITY);
             pst.setString(1, value.getCityName());
-            pst.setInt(2, value.getCountryModel().getIdCountry());
+            pst.setInt(2, value.getCountryDto().getIdCountry());
             pst.setInt(3, value.getIdCity());
             pst.executeUpdate();
 
@@ -126,7 +126,7 @@ public class CityDaoImpl implements ICityDao {
     }
 
     @Override
-    public boolean delete(CityModel value) {
+    public boolean delete(CityDto value) {
         Connection conn = null;
         PreparedStatement pst = null;
 
@@ -148,8 +148,8 @@ public class CityDaoImpl implements ICityDao {
     }
 
     @Override
-    public ArrayList<CityModel> listOfCities(int id) {
-        ArrayList<CityModel> listCities = new ArrayList<>();
+    public ArrayList<CityDto> listOfCities(int id) {
+        ArrayList<CityDto> listCities = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pst = null;
@@ -162,10 +162,10 @@ public class CityDaoImpl implements ICityDao {
             rs = pst.executeQuery();
 
             while (rs.next()) {
-                var cityModel = new CityModel(
+                var cityModel = new CityDto(
                         rs.getInt("id_city"),
                         rs.getString("city_name"),
-                        new CountryModel(rs.getInt("id_country"))
+                        new CountryDto(rs.getInt("id_country"))
                 );
 
                 listCities.add(cityModel);
@@ -183,12 +183,12 @@ public class CityDaoImpl implements ICityDao {
         return listCities;
     }
 
-    private void returnResults(ResultSet rs, ArrayList<CityModel> cities) throws SQLException {
+    private void returnResults(ResultSet rs, ArrayList<CityDto> cities) throws SQLException {
         while (rs.next()) {
-            var cityModel = new CityModel(
+            var cityModel = new CityDto(
                     rs.getInt("id_city"),
                     rs.getString("city_name"),
-                    new CountryModel(rs.getInt("id_country"), rs.getString("country_name"))
+                    new CountryDto(rs.getInt("id_country"), rs.getString("country_name"))
             );
 
             cities.add(cityModel);

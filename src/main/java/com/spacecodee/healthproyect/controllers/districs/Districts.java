@@ -9,14 +9,14 @@ import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
 import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
-import com.spacecodee.healthproyect.dto.address.AddressTable;
-import com.spacecodee.healthproyect.dto.city.CityConverter;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.dto.district.DistrictTable;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
+import com.spacecodee.healthproyect.converters.address.AddressTable;
+import com.spacecodee.healthproyect.converters.city.CityConverter;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.converters.district.DistrictTable;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -47,10 +47,10 @@ public class Districts implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private ComboBox<CityModel> cbxCities;
+    private ComboBox<CityDto> cbxCities;
 
     @FXML
-    private ComboBox<CountryModel> cbxCountries;
+    private ComboBox<CountryDto> cbxCountries;
 
     @FXML
     private TableView<DistrictTable> tableDistricts;
@@ -82,14 +82,14 @@ public class Districts implements Initializable {
     private final IDistrictDao districtDao = new DistrictDaoImpl();
 
     @Setter
-    private ComboBox<CityModel> cbxCity;
+    private ComboBox<CityDto> cbxCity;
     @Setter
-    private ComboBox<CountryModel> cbxCountry;
+    private ComboBox<CountryDto> cbxCountry;
     @Setter
     private TableView<AddressTable> tableAddress;
 
-    private ArrayList<CountryModel> listCountries;
-    private ArrayList<CityModel> listCities;
+    private ArrayList<CountryDto> listCountries;
+    private ArrayList<CityDto> listCities;
 
     private DistrictTable districtModel;
     private static String actionCrud = "add";
@@ -205,11 +205,11 @@ public class Districts implements Initializable {
                 this.changedCrudAction();
                 this.txtDistrict.setText(this.districtModel.getDistrictName());
 
-                var city = new CityModel(this.districtModel.getCityName());
+                var city = new CityDto(this.districtModel.getCityName());
                 var positionCity = this.getPositionCity(this.listCities, city);
                 this.cbxCities.getSelectionModel().select(positionCity);
 
-                var country = new CountryModel(this.districtModel.getCountryName());
+                var country = new CountryDto(this.districtModel.getCountryName());
                 var positionCountry = this.getPositionCountry(this.listCountries, country);
                 this.cbxCountries.getSelectionModel().select(positionCountry);
             }
@@ -253,15 +253,15 @@ public class Districts implements Initializable {
         this.loadComboCities();
     }
 
-    private boolean validateCombo(ComboBox<CityModel> cbxCity,
-                                  ComboBox<CountryModel> cbxCountry) {
+    private boolean validateCombo(ComboBox<CityDto> cbxCity,
+                                  ComboBox<CountryDto> cbxCountry) {
         return cbxCity.getSelectionModel().isEmpty()
                 || cbxCountry.getSelectionModel().isEmpty();
     }
 
-    private int getPositionCity(ArrayList<CityModel> listCities, CityModel cityModel) {
+    private int getPositionCity(ArrayList<CityDto> listCities, CityDto cityDto) {
         for (int i = 0; i < listCities.size(); i++) {
-            if (listCities.get(i).getCityName().equalsIgnoreCase(cityModel.getCityName())) {
+            if (listCities.get(i).getCityName().equalsIgnoreCase(cityDto.getCityName())) {
                 return i;
             }
         }
@@ -269,9 +269,9 @@ public class Districts implements Initializable {
         return 0;
     }
 
-    private int getPositionCountry(ArrayList<CountryModel> listCountries, CountryModel countryModel) {
+    private int getPositionCountry(ArrayList<CountryDto> listCountries, CountryDto countryDto) {
         for (int i = 0; i < listCountries.size(); i++) {
-            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryModel.getCountryName())) {
+            if (listCountries.get(i).getCountryName().equalsIgnoreCase(countryDto.getCountryName())) {
                 return i;
             }
         }
@@ -306,7 +306,7 @@ public class Districts implements Initializable {
     private void add() {
         var districtName = this.txtDistrict.getText().trim();
         var cityId = this.cbxCities.getSelectionModel().getSelectedItem().getIdCity();
-        var districtModel = new DistrictModel(districtName, new CityModel(cityId));
+        var districtModel = new DistrictDto(districtName, new CityDto(cityId));
 
         if (this.districtDao.add(districtModel)) {
             this.reloadTableAndForm();
@@ -320,7 +320,7 @@ public class Districts implements Initializable {
         var districtId = this.tableDistricts.getSelectionModel().getSelectedItem().getIdDistrict();
         var districtName = this.txtDistrict.getText().trim();
         var cityId = this.cbxCities.getSelectionModel().getSelectedItem().getIdCity();
-        var districtModel = new DistrictModel(districtId, districtName, new CityModel(cityId));
+        var districtModel = new DistrictDto(districtId, districtName, new CityDto(cityId));
 
         if (this.districtDao.update(districtModel)) {
             AppUtils.loadModalMessage("Distrito actualizado", "success");
@@ -335,7 +335,7 @@ public class Districts implements Initializable {
     }
 
     private void delete(ActionEvent actionEvent) {
-        var districtModel = new DistrictModel(this.districtModel.getIdDistrict());
+        var districtModel = new DistrictDto(this.districtModel.getIdDistrict());
         if (this.districtDao.delete(districtModel)) {
             AppUtils.loadModalMessage("Distrito " + districtModel.getDistrictName()
                     + " eliminado con exito", "success");
@@ -354,13 +354,13 @@ public class Districts implements Initializable {
         observableArrayList.clear();
 
         var list = this.districtDao.load();
-        for (DistrictModel model : list) {
+        for (DistrictDto model : list) {
             observableArrayList.add(
                     new DistrictTable(
                             model.getIdDistrict(),
                             model.getDistrictName(),
-                            model.getCityModel().getCityName(),
-                            model.getCityModel().getCountryModel().getCountryName()
+                            model.getCityDto().getCityName(),
+                            model.getCityDto().getCountryDto().getCountryName()
                     )
             );
         }
@@ -372,14 +372,14 @@ public class Districts implements Initializable {
         final ObservableList<DistrictTable> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
 
-        var list = this.districtDao.findValue(new DistrictModel(name));
-        for (DistrictModel model : list) {
+        var list = this.districtDao.findValue(new DistrictDto(name));
+        for (DistrictDto model : list) {
             observableArrayList.add(
                     new DistrictTable(
                             model.getIdDistrict(),
                             model.getDistrictName(),
-                            model.getCityModel().getCityName(),
-                            model.getCityModel().getCountryModel().getCountryName()
+                            model.getCityDto().getCityName(),
+                            model.getCityDto().getCountryDto().getCountryName()
                     )
             );
         }
@@ -392,13 +392,13 @@ public class Districts implements Initializable {
         observableArrayList.clear();
 
         var list = this.addressDao.load();
-        for (AddressModel model : list) {
+        for (AddressDto model : list) {
             observableArrayList.add(
                     new AddressTable(
                             model.getIdAddress(),
-                            model.getDistrictModel().getCityModel().getCountryModel().getCountryName(),
-                            model.getDistrictModel().getCityModel().getCityName(),
-                            model.getDistrictModel().getDistrictName(),
+                            model.getDistrictDto().getCityDto().getCountryDto().getCountryName(),
+                            model.getDistrictDto().getCityDto().getCityName(),
+                            model.getDistrictDto().getDistrictName(),
                             model.getAddressName()
                     )
             );

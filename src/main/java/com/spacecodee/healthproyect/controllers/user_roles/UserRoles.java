@@ -3,7 +3,7 @@ package com.spacecodee.healthproyect.controllers.user_roles;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.dao.ICrudGeneric;
 import com.spacecodee.healthproyect.dao.user_roles.UserRolesDaoImpl;
-import com.spacecodee.healthproyect.model.users_roles.UserRolesModel;
+import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.collections.FXCollections;
@@ -33,13 +33,13 @@ public class UserRoles implements Initializable {
     private Button btnDelete;
 
     @FXML
-    private TableView<UserRolesModel> tableRolUsers;
+    private TableView<UserRolesDto> tableRolUsers;
 
     @FXML
-    private TableColumn<UserRolesModel, Integer> idRolUser;
+    private TableColumn<UserRolesDto, Integer> idRolUser;
 
     @FXML
-    private TableColumn<UserRolesModel, String> rol;
+    private TableColumn<UserRolesDto, String> rol;
 
     @FXML
     private Label lblAddEditRol;
@@ -53,11 +53,11 @@ public class UserRoles implements Initializable {
     @FXML
     private BorderPane userRolSection;
 
-    private final ICrudGeneric<UserRolesModel> userRolesDao = new UserRolesDaoImpl();
+    private final ICrudGeneric<UserRolesDto> userRolesDao = new UserRolesDaoImpl();
 
     private static String actionCrud = "add";
 
-    private UserRolesModel userRolesModel;
+    private UserRolesDto userRolesDto;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -99,10 +99,10 @@ public class UserRoles implements Initializable {
     private void tblRolesUserOnClick(MouseEvent event) {
         if (event.getSource().equals(this.tableRolUsers)) {
             UserRoles.actionCrud = "edit";
-            this.userRolesModel = this.tableRolUsers.getSelectionModel().getSelectedItem();
-            if (this.userRolesModel != null) {
+            this.userRolesDto = this.tableRolUsers.getSelectionModel().getSelectedItem();
+            if (this.userRolesDto != null) {
                 this.changedCrudAction();
-                this.txtRol.setText(this.userRolesModel.getRoleName());
+                this.txtRol.setText(this.userRolesDto.getRoleName());
             }
         }
     }
@@ -181,7 +181,7 @@ public class UserRoles implements Initializable {
 
     private void add() {
         var roleName = this.txtRol.getText().trim().toUpperCase();
-        var userRol = new UserRolesModel(roleName);
+        var userRol = new UserRolesDto(roleName);
 
         if (this.userRolesDao.add(userRol)) {
             this.reloadTableAndForm();
@@ -193,9 +193,9 @@ public class UserRoles implements Initializable {
 
     private void edit(ActionEvent actionEvent) {
         var roleName = this.txtRol.getText().trim().toUpperCase();
-        this.userRolesModel.setRoleName(roleName);
+        this.userRolesDto.setRoleName(roleName);
 
-        if (this.userRolesDao.update(this.userRolesModel)) {
+        if (this.userRolesDao.update(this.userRolesDto)) {
             this.reloadTableAndForm();
             AppUtils.loadModalMessage("Rol de usuario actualizado", "success");
             AppUtils.closeModal(actionEvent);
@@ -208,9 +208,9 @@ public class UserRoles implements Initializable {
     }
 
     private void delete(ActionEvent actionEvent) {
-        if (this.userRolesDao.delete(this.userRolesModel)) {
+        if (this.userRolesDao.delete(this.userRolesDto)) {
             this.reloadTableAndForm();
-            AppUtils.loadModalMessage("Rol " + this.userRolesModel.getRoleName()
+            AppUtils.loadModalMessage("Rol " + this.userRolesDto.getRoleName()
                     + " eliminado con exito", "success");
             AppUtils.closeModal(actionEvent);
         } else {
@@ -221,18 +221,18 @@ public class UserRoles implements Initializable {
         this.changedCrudAction();
     }
 
-    private ObservableList<UserRolesModel> loadUserRoles() {
-        final ObservableList<UserRolesModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<UserRolesDto> loadUserRoles() {
+        final ObservableList<UserRolesDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
         observableArrayList.addAll(this.userRolesDao.load());
 
         return observableArrayList;
     }
 
-    private ObservableList<UserRolesModel> findUserRoles(String name) {
-        final ObservableList<UserRolesModel> observableArrayList = FXCollections.observableArrayList();
+    private ObservableList<UserRolesDto> findUserRoles(String name) {
+        final ObservableList<UserRolesDto> observableArrayList = FXCollections.observableArrayList();
         observableArrayList.clear();
-        observableArrayList.addAll(this.userRolesDao.findValue(new UserRolesModel(name)));
+        observableArrayList.addAll(this.userRolesDao.findValue(new UserRolesDto(name)));
 
         return observableArrayList;
     }

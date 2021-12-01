@@ -1,22 +1,28 @@
 package com.spacecodee.healthproyect.controllers.reservation_appointments;
 
+import com.spacecodee.healthproyect.converters.reservation_appointments.ReservationTable;
+import com.spacecodee.healthproyect.dao.ICrudGeneric;
 import com.spacecodee.healthproyect.dao.cities.CityDaoImpl;
 import com.spacecodee.healthproyect.dao.cities.ICityDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
 import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
-import com.spacecodee.healthproyect.dto.city.CityConverter;
-import com.spacecodee.healthproyect.dto.country.CountryConverter;
-import com.spacecodee.healthproyect.dto.customer.CustomerTable;
-import com.spacecodee.healthproyect.dto.district.DistrictConverter;
-import com.spacecodee.healthproyect.model.address.AddressModel;
-import com.spacecodee.healthproyect.model.cities.CityModel;
-import com.spacecodee.healthproyect.model.countries.CountryModel;
-import com.spacecodee.healthproyect.model.customers.CustomerModel;
-import com.spacecodee.healthproyect.model.districts.DistrictModel;
-import com.spacecodee.healthproyect.model.peoples.PeopleModel;
-import com.spacecodee.healthproyect.model.type_reservations.TypeReservationModel;
+import com.spacecodee.healthproyect.dao.type_reservations.TypeReservationsDaoImpl;
+import com.spacecodee.healthproyect.converters.city.CityConverter;
+import com.spacecodee.healthproyect.converters.country.CountryConverter;
+import com.spacecodee.healthproyect.converters.district.DistrictConverter;
+import com.spacecodee.healthproyect.converters.type_reservations.TypeReservationConverter;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.cities.CityDto;
+import com.spacecodee.healthproyect.dto.countries.CountryDto;
+import com.spacecodee.healthproyect.dto.customers.CustomerDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
+import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
+import com.spacecodee.healthproyect.dto.reservation_appointments.ReservationApDto;
+import com.spacecodee.healthproyect.dto.reserved_days.ReservedDaysDto;
+import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
+import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
@@ -29,25 +35,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ReservationApModal implements Initializable {
 
+    @Getter
     @FXML
     private Button btnSave;
 
     @FXML
-    private Button btnSearchUser;
+    private ComboBox<CityDto> cbxCity;
 
     @FXML
-    private ComboBox<CityModel> cbxCity;
+    private ComboBox<CountryDto> cbxCountry;
 
     @FXML
-    private ComboBox<CountryModel> cbxCountry;
-
-    @FXML
-    private ComboBox<DistrictModel> cbxDistrict;
+    private ComboBox<DistrictDto> cbxDistrict;
 
     @FXML
     private ComboBox<String> cbxHours;
@@ -56,7 +63,7 @@ public class ReservationApModal implements Initializable {
     private ComboBox<String> cbxMinutes;
 
     @FXML
-    private ComboBox<TypeReservationModel> cbxTypeReservation;
+    private ComboBox<TypeReservationDto> cbxTypeReservation;
 
     @FXML
     private DatePicker dtBirthDate;
@@ -68,19 +75,10 @@ public class ReservationApModal implements Initializable {
     private ImageView iconSave;
 
     @FXML
-    private ImageView iconSearch;
-
-    @FXML
-    private Label lblTitle;
-
-    @FXML
     private TextField txtAddress;
 
     @FXML
     private TextField txtDni;
-
-    @FXML
-    private TextField txtDniUser;
 
     @FXML
     private TextField txtEmail;
@@ -98,23 +96,27 @@ public class ReservationApModal implements Initializable {
     private TextField txtUserName;
 
     private final ICountryDao countryDao = new CountryDaoImpl();
+    private final ICrudGeneric<TypeReservationDto> typeReservationsDao = new TypeReservationsDaoImpl();
     private final ICityDao cityDao = new CityDaoImpl();
     private final IDistrictDao districtDao = new DistrictDaoImpl();
 
     @Getter
     @Setter
-    private CustomerTable customerTable;
+    private ReservationTable reservationTable;
+
+    ArrayList<TypeReservationDto> listTypeReservations;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.txtDni.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(8));
-        this.txtDniUser.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(8));
         this.txtPhone.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(9));
         Images.addImg("icons/save.png", this.iconSave);
-        Images.addImg("icons/search.png", this.iconSearch);
         this.loadCountries();
         this.loadCities(0);
         this.loadDistricts(0);
+        this.loadTypeReservations();
+        this.loadHours();
+        this.loadMinutes();
     }
 
     @FXML
@@ -133,14 +135,14 @@ public class ReservationApModal implements Initializable {
     }
 
     private void loadCountries() {
-        ArrayList<CountryModel> listCountries = this.countryDao.load();
+        List<CountryDto> listCountries = this.countryDao.load();
         this.cbxCountry.getItems().clear();
         this.cbxCountry.getItems().addAll(listCountries);
         this.cbxCountry.setConverter(new CountryConverter());
     }
 
     private void loadCities(int id) {
-        ArrayList<CityModel> listCities;
+        List<CityDto> listCities;
         if (id != 0) {
             listCities = this.cityDao.listOfCities(id);
         } else {
@@ -152,7 +154,7 @@ public class ReservationApModal implements Initializable {
     }
 
     private void loadDistricts(int id) {
-        ArrayList<DistrictModel> listDistrict;
+        ArrayList<DistrictDto> listDistrict;
         if (id != 0) {
             listDistrict = this.districtDao.listOfDistrict(id);
         } else {
@@ -163,6 +165,51 @@ public class ReservationApModal implements Initializable {
         this.cbxDistrict.setConverter(new DistrictConverter());
     }
 
+    private void loadTypeReservations() {
+        this.listTypeReservations = this.typeReservationsDao.load();
+        this.cbxTypeReservation.getItems().clear();
+        this.cbxTypeReservation.getItems().addAll(listTypeReservations);
+        this.cbxTypeReservation.setConverter(new TypeReservationConverter());
+    }
+
+    private void loadMinutes() {
+        final List<String> listMinutes = new ArrayList<>() {
+            {
+                add("00");
+                add("10");
+                add("20");
+                add("30");
+                add("40");
+                add("50");
+            }
+        };
+        this.cbxMinutes.getItems().addAll(listMinutes);
+    }
+
+    private void loadHours() {
+        final List<String> listHours = new ArrayList<>() {
+            {
+                add("07");
+                add("08");
+                add("09");
+                add("10");
+                add("11");
+                add("12");
+                add("13");
+                add("14");
+                add("15");
+                add("16");
+                add("17");
+                add("18");
+                add("19");
+                add("20");
+                add("21");
+                add("22");
+            }
+        };
+        this.cbxHours.getItems().addAll(listHours);
+    }
+
     public boolean validateText() {
         return this.validateTextEdit() || this.dtBirthDate.getValue() == null
                 || this.cbxCountry.getSelectionModel().isEmpty() || this.cbxCity.getSelectionModel().isEmpty()
@@ -171,25 +218,24 @@ public class ReservationApModal implements Initializable {
     }
 
     public boolean validateTextEdit() {
-        return this.txtDni.getText().trim().isEmpty()
-                || this.txtName.getText().trim().isEmpty()
-                || this.txtLastName.getText().trim().isEmpty()
-                || this.txtEmail.getText().trim().isEmpty()
-                || this.txtPhone.getText().trim().isEmpty();
+        return this.cbxTypeReservation.getSelectionModel().isEmpty()
+                || this.dtDateReservation.getValue() == null
+                || this.cbxHours.getSelectionModel().isEmpty()
+                || this.cbxMinutes.getSelectionModel().isEmpty();
     }
 
-    private AddressModel returnAddress() {
+    private AddressDto returnAddress() {
         var addressName = this.txtAddress.getText().trim();
         var idDistrict = (this.cbxDistrict.getSelectionModel().getSelectedItem() != null)
                 ? this.cbxDistrict.getSelectionModel().getSelectedItem().getIdDistrict()
                 : 0;
-        return new AddressModel(addressName, new DistrictModel(idDistrict));
+        return new AddressDto(addressName, new DistrictDto(idDistrict));
     }
 
-    private PeopleModel returnPeople() {
+    private PeopleDto returnPeople() {
         var id = 0;
-        if (this.customerTable != null) {
-            id = this.customerTable.getIdPeople();
+        if (this.reservationTable != null) {
+            id = this.reservationTable.getIdPeople();
         }
 
         var dni = this.txtDni.getText().trim();
@@ -199,18 +245,97 @@ public class ReservationApModal implements Initializable {
         var phone = this.txtPhone.getText().trim();
         var birthDate = (this.dtBirthDate.getValue() != null) ? this.dtBirthDate.getValue().toString() : "";
 
-        return new PeopleModel(
+        return new PeopleDto(
                 id, dni, name, lastName, mail, phone, birthDate, this.returnAddress()
         );
     }
 
-    public CustomerModel returnCustomer() {
+    private CustomerDto returnCustomer() {
         var id = 0;
-        if (this.customerTable != null) {
-            id = this.customerTable.getIdCustomer();
+        if (this.reservationTable != null) {
+            id = this.reservationTable.getIdCustomer();
         }
         var userName = this.txtUserName.getText().trim();
-        return new CustomerModel(id, userName, this.returnPeople());
+        return new CustomerDto(id, userName, this.returnPeople());
     }
 
+    private TypeReservationDto returnTypeReservation() {
+        var idTypeReservation = this.cbxTypeReservation.getSelectionModel().getSelectedItem().getIdTypeReservation();
+        return new TypeReservationDto(idTypeReservation);
+    }
+
+    private ReservedDaysDto returnReservedDays() {
+        var id = 0;
+        if (this.reservationTable != null) {
+            id = this.reservationTable.getIdReservationDate();
+        }
+        var dateReservation = this.dtDateReservation.getValue().toString();
+        var hours = this.cbxHours.getSelectionModel().getSelectedItem();
+        var minutes = this.cbxMinutes.getSelectionModel().getSelectedItem();
+
+        var dayReserved = dateReservation + " " + hours + ":" + minutes + ":00";
+        return new ReservedDaysDto(id, dayReserved);
+    }
+
+    public ReservationApDto returnReservationAp() {
+        var id = 0;
+        if (this.reservationTable != null) {
+            id = this.reservationTable.getIdReservationAppointment();
+        }
+        return new ReservationApDto(id, this.returnCustomer(), new UserDto(9),
+                this.returnTypeReservation(), this.returnReservedDays());
+    }
+
+    public void disableSections(boolean disable) {
+        this.txtDni.setDisable(disable);
+        this.txtName.setDisable(disable);
+        this.txtLastName.setDisable(disable);
+        this.txtEmail.setDisable(disable);
+        this.txtPhone.setDisable(disable);
+        this.dtBirthDate.setDisable(disable);
+        this.txtUserName.setDisable(disable);
+        this.cbxCountry.setDisable(disable);
+        this.cbxCity.setDisable(disable);
+        this.cbxDistrict.setDisable(disable);
+        this.txtAddress.setDisable(disable);
+    }
+
+    public void sendData() {
+        //customer
+        this.txtDni.setText(this.reservationTable.getCustomerDni());
+        this.txtName.setText(this.reservationTable.getCustomerName());
+        this.txtLastName.setText(this.reservationTable.getCustomerLastName());
+
+        //reservation date
+        var date = this.reservationTable.getDateReservation();
+        var partsDate = date.split(" ");
+
+        var partsTime = partsDate[1].split(":");
+        var hours = partsTime[0];
+        var minutes = partsTime[1];
+
+        this.dtDateReservation.setValue(ReservationApModal.LOCAL_DATE(partsDate[0]));
+        this.cbxHours.getSelectionModel().select(hours);
+        this.cbxMinutes.getSelectionModel().select(minutes);
+
+        //type reservation
+        var idTypeReservation = this.getPositionDistrict(this.listTypeReservations,
+                new TypeReservationDto(this.reservationTable.getIdTypeReservation()));
+        this.cbxTypeReservation.getSelectionModel().select(idTypeReservation);
+    }
+
+    public static LocalDate LOCAL_DATE(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(dateString, formatter);
+    }
+
+    private int getPositionDistrict(ArrayList<TypeReservationDto> list, TypeReservationDto typeReservationDto) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getIdTypeReservation() == typeReservationDto.getIdTypeReservation()) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
 }

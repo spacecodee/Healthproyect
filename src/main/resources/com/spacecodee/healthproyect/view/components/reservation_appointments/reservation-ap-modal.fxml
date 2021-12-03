@@ -11,10 +11,39 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0"
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0"
       prefWidth="750.0" spacing="15.0" styleClass="modal" stylesheets="@../../../assets/style/style.css"
       xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.spacecodee.healthproyect.controllers.reservation_appointments.ReservationApModal">
+    <HBox fx:id="hbSectionCustomer" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+          minWidth="-Infinity" spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+        <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+              minWidth="-Infinity" spacing="10.0" HBox.hgrow="ALWAYS">
+            <TextField fx:id="txtDniCustomer" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
+                       minHeight="-Infinity" minWidth="-Infinity" promptText="DNI CLiente" VBox.vgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="font-bold"/>
+                    <String fx:value="h4"/>
+                </styleClass>
+            </TextField>
+            <Button fx:id="btnSearch" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity"
+                    minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                    onAction="#onSearchOnAction" text="Buscar" VBox.vgrow="ALWAYS">
+                <styleClass>
+                    <String fx:value="font-bold"/>
+                    <String fx:value="h4"/>
+                    <String fx:value="btn"/>
+                    <String fx:value="btn__dark"/>
+                </styleClass>
+                <graphic>
+                    <ImageView fx:id="iconSearch" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                               preserveRatio="true">
+                        <Image url="@../../../assets/icons/search.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+    </HBox>
     <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
           spacing="10.0" VBox.vgrow="ALWAYS">
         <VBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
@@ -249,8 +278,8 @@
           minWidth="-Infinity" spacing="10.0" styleClass="card">
         <VBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
               spacing="10.0" HBox.hgrow="ALWAYS">
-            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                   minWidth="-Infinity" text="Selecciona la fecha" VBox.vgrow="ALWAYS">
+            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                   text="Selecciona la fecha" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
@@ -267,16 +296,15 @@
         </VBox>
         <VBox layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
               minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" HBox.hgrow="ALWAYS">
-            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                   minWidth="-Infinity" text="Selecciona la hora" VBox.vgrow="ALWAYS">
+            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                   text="Selecciona la hora" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
                 </styleClass>
             </Label>
-            <ComboBox fx:id="cbxHours" maxHeight="-Infinity" maxWidth="320.0" minHeight="-Infinity"
-                      minWidth="-Infinity" promptText="Selecciona"
-                      stylesheets="@../../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
+            <ComboBox fx:id="cbxHours" maxHeight="-Infinity" maxWidth="320.0" minHeight="-Infinity" minWidth="-Infinity"
+                      promptText="Selecciona" stylesheets="@../../../assets/style/combobox.css" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
@@ -285,16 +313,15 @@
         </VBox>
         <VBox layoutX="478.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
               minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" HBox.hgrow="ALWAYS">
-            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                   minWidth="-Infinity" text="Selecciona los minutos" VBox.vgrow="ALWAYS">
+            <Label maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
+                   text="Selecciona los minutos" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>
                 </styleClass>
             </Label>
             <ComboBox fx:id="cbxMinutes" maxHeight="-Infinity" maxWidth="320.0" minHeight="-Infinity"
-                      minWidth="-Infinity" promptText="Selecciona"
-                      stylesheets="@../../../assets/style/combobox.css">
+                      minWidth="-Infinity" promptText="Selecciona" stylesheets="@../../../assets/style/combobox.css">
                 <styleClass>
                     <String fx:value="font-bold"/>
                     <String fx:value="h4"/>

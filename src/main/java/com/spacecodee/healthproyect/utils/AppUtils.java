@@ -185,7 +185,7 @@ public class AppUtils {
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS
                 + "reservation_appointments/reservation-ap-modal.fxml"));
 
-        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 630);
+        AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 780);
         return fxmlLoader.getController();
     }
 

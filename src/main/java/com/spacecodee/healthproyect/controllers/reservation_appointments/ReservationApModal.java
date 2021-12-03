@@ -6,6 +6,8 @@ import com.spacecodee.healthproyect.dao.cities.CityDaoImpl;
 import com.spacecodee.healthproyect.dao.cities.ICityDao;
 import com.spacecodee.healthproyect.dao.countries.CountryDaoImpl;
 import com.spacecodee.healthproyect.dao.countries.ICountryDao;
+import com.spacecodee.healthproyect.dao.customers.CustomerDaoImpl;
+import com.spacecodee.healthproyect.dao.customers.ICustomerDao;
 import com.spacecodee.healthproyect.dao.districs.DistrictDaoImpl;
 import com.spacecodee.healthproyect.dao.districs.IDistrictDao;
 import com.spacecodee.healthproyect.dao.type_reservations.TypeReservationsDaoImpl;
@@ -31,6 +33,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,9 +46,18 @@ import java.util.ResourceBundle;
 
 public class ReservationApModal implements Initializable {
 
+    @FXML
+    private ImageView iconSearch;
+
+    @FXML
+    private HBox hbSectionCustomer;
+
     @Getter
     @FXML
     private Button btnSave;
+
+    @FXML
+    private Button btnSearch;
 
     @FXML
     private ComboBox<CityDto> cbxCity;
@@ -81,6 +93,9 @@ public class ReservationApModal implements Initializable {
     private TextField txtDni;
 
     @FXML
+    private TextField txtDniCustomer;
+
+    @FXML
     private TextField txtEmail;
 
     @FXML
@@ -99,10 +114,13 @@ public class ReservationApModal implements Initializable {
     private final ICrudGeneric<TypeReservationDto> typeReservationsDao = new TypeReservationsDaoImpl();
     private final ICityDao cityDao = new CityDaoImpl();
     private final IDistrictDao districtDao = new DistrictDaoImpl();
+    private final ICustomerDao customerDao = new CustomerDaoImpl();
 
     @Getter
     @Setter
     private ReservationTable reservationTable;
+    @Getter
+    private CustomerDto customerDto = null;
 
     ArrayList<TypeReservationDto> listTypeReservations;
 
@@ -111,6 +129,7 @@ public class ReservationApModal implements Initializable {
         this.txtDni.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(8));
         this.txtPhone.addEventFilter(KeyEvent.KEY_TYPED, AppUtils.numericValidation(9));
         Images.addImg("icons/save.png", this.iconSave);
+        Images.addImg("icons/search.png", this.iconSearch);
         this.loadCountries();
         this.loadCities(0);
         this.loadDistricts(0);
@@ -130,6 +149,33 @@ public class ReservationApModal implements Initializable {
             if (!this.cbxCity.getSelectionModel().isEmpty()) {
                 var cityId = this.cbxCity.getSelectionModel().getSelectedItem().getIdCity();
                 this.loadDistricts(cityId);
+            }
+        }
+    }
+
+    @FXML
+    void onSearchOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnSearch)) {
+            var dni = this.txtDniCustomer.getText().trim();
+            if (!dni.isEmpty()) {
+                customerDto = this.customerDao.findCustomerByDni(dni);
+
+                if (customerDto != null) {
+                    AppUtils.loadModalMessage("Cliente encontrado", "success");
+                    this.txtDni.setText(customerDto.getPeople().getDni());
+                    this.txtName.setText(customerDto.getPeople().getName());
+                    this.txtLastName.setText(customerDto.getPeople().getLastname());
+                    this.txtEmail.setText(customerDto.getPeople().getMail());
+                    this.txtPhone.setText(customerDto.getPeople().getPhone());
+                    this.dtBirthDate.setValue(ReservationApModal.LOCAL_DATE(customerDto.getPeople().getBirthDate()));
+                    this.txtUserName.setText(customerDto.getUserName());
+                    this.hbSectionCustomer.setDisable(false);
+                    this.disableSections(true);
+                } else {
+                    AppUtils.loadModalMessage("No existe un cliente con ese DNI", "error");
+                }
+            } else {
+                AppUtils.loadModalMessage("Debes ingresar un DNI", "error");
             }
         }
     }
@@ -254,7 +300,11 @@ public class ReservationApModal implements Initializable {
         var id = 0;
         if (this.reservationTable != null) {
             id = this.reservationTable.getIdCustomer();
+        } else if (this.customerDto != null) {
+            id = this.customerDto.getIdCustomer();
         }
+
+
         var userName = this.txtUserName.getText().trim();
         return new CustomerDto(id, userName, this.returnPeople());
     }
@@ -298,6 +348,7 @@ public class ReservationApModal implements Initializable {
         this.cbxCity.setDisable(disable);
         this.cbxDistrict.setDisable(disable);
         this.txtAddress.setDisable(disable);
+        this.hbSectionCustomer.setDisable(disable);
     }
 
     public void sendData() {

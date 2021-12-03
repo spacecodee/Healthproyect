@@ -15,6 +15,7 @@ import com.spacecodee.healthproyect.dao.reserved_days.ReservedDaysDaoImpl;
 import com.spacecodee.healthproyect.dto.customers.CustomerDto;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 import com.spacecodee.healthproyect.dto.reservation_appointments.ReservationApDto;
+import com.spacecodee.healthproyect.dto.reserved_days.ReservedDaysDto;
 import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
@@ -129,12 +130,22 @@ public class ReservationAp implements Initializable {
             var reservationAp = AppUtils.loadReservationsApModal(stage, "Reservaciones");
             if (ReservationAp.actionCrud.equalsIgnoreCase("add")) {
                 reservationAp.getBtnSave().setOnAction(actionEvent -> {
-                    if (!reservationAp.validateText()) {
-                        var reservationApModel = reservationAp.returnReservationAp();
-                        this.add(reservationApModel);
-                        AppUtils.closeModal(actionEvent);
+                    if (reservationAp.getCustomerDto() != null) {
+                        if (!reservationAp.validateTextEdit()) {
+                            var reservationApModel = reservationAp.returnReservationAp();
+                            this.add(reservationApModel);
+                            AppUtils.closeModal(actionEvent);
+                        } else {
+                            AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
+                        }
                     } else {
-                        AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
+                        if (!reservationAp.validateText()) {
+                            var reservationApModel = reservationAp.returnReservationAp();
+                            this.add(reservationApModel);
+                            AppUtils.closeModal(actionEvent);
+                        } else {
+                            AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
+                        }
                     }
                 });
                 stage.show();
@@ -206,8 +217,10 @@ public class ReservationAp implements Initializable {
     @FXML
     private void tblUsersOnClick(MouseEvent event) {
         if (event.getSource().equals(this.tableReservations)) {
-            this.changedCrudAction("edit");
-            this.setReservationTable(this.tableReservations.getSelectionModel().getSelectedItem());
+            if (this.validateSelectedReservationApTable()) {
+                this.changedCrudAction("edit");
+                this.setReservationTable(this.tableReservations.getSelectionModel().getSelectedItem());
+            }
         }
     }
 
@@ -226,6 +239,7 @@ public class ReservationAp implements Initializable {
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
             this.changedCrudAction("Add");
+            this.loadTable();
             AppUtils.closeModal(actionEvent);
         });
 
@@ -242,49 +256,60 @@ public class ReservationAp implements Initializable {
     }
 
     private void add(ReservationApDto reservationApDto) {
-        if (this.addressDao.add(reservationApDto.getCustomer().getPeople().getAddressDto())) {
-            var idAddress = this.addressDao.returnMaxId();
-            if (idAddress != 0) {
-                reservationApDto.getCustomer().getPeople().getAddressDto().setIdAddress(idAddress);
+        if (reservationApDto.getCustomer().getIdCustomer() != 0) {
+            this.addReservation(reservationApDto);
+        } else {
+            if (this.addressDao.add(reservationApDto.getCustomer().getPeople().getAddressDto())) {
+                var idAddress = this.addressDao.returnMaxId();
+                if (idAddress != 0) {
+                    reservationApDto.getCustomer().getPeople().getAddressDto().setIdAddress(idAddress);
 
-                if (this.peopleDao.add(reservationApDto.getCustomer().getPeople())) {
-                    var idPeople = this.peopleDao.returnMaxId();
-                    if (idPeople != 0) {
-                        reservationApDto.getCustomer().getPeople().setIdPeople(idPeople);
-                        if (this.customerDao.add(reservationApDto.getCustomer())) {
-                            var idCustomer = this.customerDao.returnMaxId();
-                            if (idCustomer != 0) {
-                                reservationApDto.getCustomer().setIdCustomer(idCustomer);
+                    if (this.peopleDao.add(reservationApDto.getCustomer().getPeople())) {
+                        var idPeople = this.peopleDao.returnMaxId();
+                        if (idPeople != 0) {
+                            reservationApDto.getCustomer().getPeople().setIdPeople(idPeople);
+                            if (this.customerDao.add(reservationApDto.getCustomer())) {
+                                var idCustomer = this.customerDao.returnMaxId();
+                                if (idCustomer != 0) {
+                                    reservationApDto.getCustomer().setIdCustomer(idCustomer);
 
-                                if (this.reservedDaysDao.add(reservationApDto.getReservedDays())) {
-                                    var idReservedDays = this.reservedDaysDao.returnMaxId();
-
-                                    if (idReservedDays != 0) {
-                                        reservationApDto.getReservedDays().setIdReservedDay(idReservedDays);
-
-                                        if (this.reservationApDao.add(reservationApDto)) {
-                                            AppUtils.loadModalMessage("Reserva Agregada", "success");
-                                        } else {
-                                            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde",
-                                                    "error");
-                                        }
-                                        this.loadTable();
-                                    }
+                                    this.addReservation(reservationApDto);
                                 }
                             }
                         }
                     }
                 }
+            } else {
+                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
             }
-        } else {
-            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+        }
+
+    }
+
+    private void addReservation(ReservationApDto reservationApDto) {
+        if (this.reservedDaysDao.add(reservationApDto.getReservedDays())) {
+            var idReservedDays = this.reservedDaysDao.returnMaxId();
+
+            if (idReservedDays != 0) {
+                reservationApDto.getReservedDays().setIdReservedDay(idReservedDays);
+
+                if (this.reservationApDao.add(reservationApDto)) {
+                    AppUtils.loadModalMessage("Reserva Agregada", "success");
+                } else {
+                    AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde",
+                            "error");
+                }
+                this.loadTable();
+            }
         }
     }
 
     private void delete(ActionEvent actionEvent) {
-        var idPeople = this.tableReservations.getSelectionModel().getSelectedItem().getIdTypeReservation();
-        var reservationApDto = new ReservationApDto(idPeople);
-        if (this.reservationApDao.delete(reservationApDto)) {
+        var idReservationAp = this.tableReservations.getSelectionModel().getSelectedItem().getIdReservationAppointment();
+        var idReservedDays = this.tableReservations.getSelectionModel().getSelectedItem().getIdReservationDate();
+        var reservationApDto = new ReservationApDto(idReservationAp);
+        var reservedDays = new ReservedDaysDto(idReservedDays);
+        if (this.reservationApDao.delete(reservationApDto) && this.reservedDaysDao.delete(reservedDays)) {
             AppUtils.loadModalMessage("Reservación eliminada con exito", "success");
             AppUtils.closeModal(actionEvent);
         } else {

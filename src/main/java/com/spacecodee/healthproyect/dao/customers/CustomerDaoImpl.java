@@ -2,6 +2,7 @@ package com.spacecodee.healthproyect.dao.customers;
 
 import com.spacecodee.healthproyect.dao.Connexion;
 import com.spacecodee.healthproyect.dao.peoples.PeopleDaoImpl;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
 import com.spacecodee.healthproyect.dto.customers.CustomerDto;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 
@@ -46,6 +47,19 @@ public class CustomerDaoImpl implements ICustomerDao {
             "         INNER JOIN peoples p on c.id_people = p.id_people " +
             "WHERE p.dni LIKE CONCAT('%', ?, '%') " +
             "   AND c.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_CUSTOMER_BY_DNI = "SELECT c.id_customer, " +
+            "       c.id_people, " +
+            "       c.user_name, " +
+            "       p.name, " +
+            "       p.last_name, " +
+            "       p.mail, " +
+            "       p.dni, " +
+            "       p.phone, " +
+            "       p.birth_date, " +
+            "       c.user_name " +
+            "FROM customers c " +
+            "         INNER JOIN peoples p on c.id_people = p.id_people " +
+            "WHERE p.dni = ?";
     private static final String SQL_MAX_CUSTOMER_ID = "SELECT MAX(id_customer) AS id FROM customers";
 
     @Override
@@ -182,6 +196,44 @@ public class CustomerDaoImpl implements ICustomerDao {
 
             customers.add(customer);
         }
+    }
+
+    @Override
+    public CustomerDto findCustomerByDni(String dni) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        CustomerDto peopleDto = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CustomerDaoImpl.SQL_FIND_CUSTOMER_BY_DNI);
+            pst.setString(1, dni);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                peopleDto = new CustomerDto(
+                        rs.getInt("id_customer"), rs.getString("user_name"),
+                        new PeopleDto(
+                                rs.getInt("id_people"), rs.getString("dni"),
+                                rs.getString("name"), rs.getString("last_name"),
+                                rs.getString("mail"), rs.getString("phone"),
+                                rs.getString("birth_date")
+                        )
+                );
+            }
+
+            return peopleDto;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return peopleDto;
     }
 
     @Override

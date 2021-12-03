@@ -36,6 +36,17 @@ public class PeopleDaoImpl implements IPeopleDao {
             "         INNER JOIN countries c\n" +
             "                    on p.id_address = c.id_country" +
             " WHERE name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_FIND_PEOPLE_BY_DNI = "SELECT p.id_people," +
+            "       p.dni," +
+            "       p.name," +
+            "       p.last_name," +
+            "       p.mail," +
+            "       p.phone," +
+            "       c.country_name " +
+            "FROM peoples p" +
+            "         INNER JOIN countries c" +
+            "                    on p.id_address = c.id_country" +
+            " WHERE dni = ?";
     private static final String SQL_MAX_PEOPLE_ID = "SELECT MAX(id_people) AS id FROM peoples";
 
     @Override
@@ -157,6 +168,48 @@ public class PeopleDaoImpl implements IPeopleDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public PeopleDto findPeopleByDni(String dni) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        PeopleDto peopleDto = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(PeopleDaoImpl.SQL_FIND_PEOPLE_BY_DNI);
+            pst.setString(1, dni);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                var address = new AddressDto(
+                        rs.getInt("city_name")
+                );
+
+                peopleDto = new PeopleDto(
+                        rs.getInt("id_people"),
+                        rs.getString("dni"),
+                        rs.getString("name"),
+                        rs.getString("last_name"),
+                        rs.getString("mail"),
+                        rs.getString("phone"),
+                        address
+                );
+            }
+
+            return peopleDto;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return peopleDto;
     }
 
     @Override

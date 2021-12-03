@@ -76,6 +76,17 @@ public class PeopleDto implements Serializable {
         this.addressDto = addressDto;
     }
 
+    public PeopleDto(int idPeople, String dni, String name, String lastname, String mail, String phone,
+                     String birthDate) {
+        this.idPeople = idPeople;
+        this.dni = dni;
+        this.name = name;
+        this.lastname = lastname;
+        this.mail = mail;
+        this.phone = phone;
+        this.birthDate = birthDate;
+    }
+
     public PeopleDto(int idPeople, String dni, String name, String lastname, String mail, String phone) {
         this.idPeople = idPeople;
         this.dni = dni;

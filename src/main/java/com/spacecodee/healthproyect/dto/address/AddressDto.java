@@ -22,6 +22,10 @@ public class AddressDto {
         this.idAddress = idAddress;
     }
 
+    public AddressDto(String addressName) {
+        this.addressName = addressName;
+    }
+
     public AddressDto(String addressName, DistrictDto districtDto) {
         this.addressName = addressName;
         this.districtDto = districtDto;

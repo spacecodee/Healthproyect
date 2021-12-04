@@ -35,9 +35,6 @@ public class Customer implements Initializable {
     private Button btnCancel;
 
     @FXML
-    private Button btnDeleteUsers;
-
-    @FXML
     private Button btnUpdate;
 
     @FXML
@@ -112,20 +109,6 @@ public class Customer implements Initializable {
     }
 
     @FXML
-    private void btnDeleteOnAction(ActionEvent event) {
-        if (event.getSource().equals(this.btnDeleteUsers)) {
-            Customer.actionCrud = "delete";
-            this.changedCrudAction("Add");
-
-            if (this.validateSelectedUserTable()) {
-                this.loadModalConfirmation("¿Estas seguro(a) que quieres eliminar esta dirección", null, null);
-            } else {
-                AppUtils.loadModalMessage("Selecciona la fila a eliminar", "error");
-            }
-        }
-    }
-
-    @FXML
     private void btnUpdateOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnUpdate)) {
             Stage stage = new Stage();
@@ -135,7 +118,7 @@ public class Customer implements Initializable {
                     addModalController.getLblTitle().setText("Actualizar Cliente".toUpperCase());
                     ///edit data
                     addModalController.setCustomerTable(this.customerTable);
-                    addModalController.sendData();
+                    addModalController.sendDataCustomer();
 
                     ////////////////////////
                     addModalController.disableSections(true);
@@ -144,7 +127,7 @@ public class Customer implements Initializable {
                     addModalController.getBtnSave().setOnAction(actionEvent -> {
                         if (!addModalController.validateTextEdit()) {
                             var peopleModel = addModalController.returnUser().getPeople();
-                            this.loadModalConfirmation("¿Estas seguro(a) que quieres editar a este usuario?",
+                            this.loadModalConfirmation(
                                     actionEvent, peopleModel);
                         } else {
                             AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
@@ -159,17 +142,15 @@ public class Customer implements Initializable {
         }
     }
 
-    private void loadModalConfirmation(String message, ActionEvent actionEvent2, PeopleDto peopleDto) {
+    private void loadModalConfirmation(ActionEvent actionEvent2, PeopleDto peopleDto) {
         var stage = new Stage();
-        final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, message);
+        final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage, "¿Estas seguro(a) que quieres editar a este usuario?");
 
-        modalConfirmation.getLblMessage().setText(message.toUpperCase());
+        modalConfirmation.getLblMessage().setText("¿Estas seguro(a) que quieres editar a este usuario?".toUpperCase());
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
         modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
             if (Customer.actionCrud.equalsIgnoreCase("edit")) {
                 this.edit(peopleDto, actionEvent, actionEvent2);
-            } else {
-                this.delete(actionEvent);
             }
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
@@ -178,20 +159,6 @@ public class Customer implements Initializable {
         });
 
         stage.show();
-    }
-
-    private void delete(ActionEvent actionEvent) {
-        var idCustomer = this.tableCustomers.getSelectionModel().getSelectedItem().getIdPeople();
-        var peopleModel = new PeopleDto(idCustomer);
-        if (this.peopleDao.delete(peopleModel)) {
-            AppUtils.loadModalMessage("Cliente eliminado con exito", "success");
-            AppUtils.closeModal(actionEvent);
-        } else {
-            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
-        }
-
-        this.loadTable();
-        this.changedCrudAction("add");
     }
 
     private void edit(PeopleDto peopleDto, ActionEvent... actionEvent) {

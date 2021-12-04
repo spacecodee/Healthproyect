@@ -218,6 +218,8 @@ public class AddModal implements Initializable {
         var id = 0;
         if (this.userTable != null) {
             id = this.userTable.getIdPeople();
+        } else if (this.customerTable != null) {
+            id = this.customerTable.getIdPeople();
         }
 
         var dni = this.txtDni.getText().trim();
@@ -259,5 +261,13 @@ public class AddModal implements Initializable {
         this.txtLastName.setText(this.userTable.getLastName());
         this.txtEmail.setText(this.userTable.getEmail());
         this.txtPhone.setText(this.userTable.getPhone());
+    }
+
+    public void sendDataCustomer() {
+        this.txtDni.setText(this.customerTable.getDni());
+        this.txtName.setText(this.customerTable.getName());
+        this.txtLastName.setText(this.customerTable.getLastName());
+        this.txtEmail.setText(this.customerTable.getEmail());
+        this.txtPhone.setText(this.customerTable.getPhone());
     }
 }

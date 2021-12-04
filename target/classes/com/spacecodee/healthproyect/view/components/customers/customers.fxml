@@ -86,19 +86,6 @@
                         <Cursor fx:constant="HAND"/>
                     </cursor>
                 </Button>
-                <Button fx:id="btnDeleteUsers" layoutX="120.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnDeleteOnAction"
-                        text="Eliminar" HBox.hgrow="ALWAYS">
-                    <styleClass>
-                        <String fx:value="font-bold"/>
-                        <String fx:value="h4"/>
-                        <String fx:value="btn"/>
-                        <String fx:value="btn__danger"/>
-                    </styleClass>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
                 <Button fx:id="btnCancel" layoutX="113.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity"
                         minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelOnAction"
                         text="Cancelar">

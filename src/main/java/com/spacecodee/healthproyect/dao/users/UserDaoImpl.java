@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.users;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dao.customers.CustomerDaoImpl;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
@@ -44,6 +45,7 @@ public class UserDaoImpl implements IUserDao {
             "         INNER JOIN user_roles ur on u.id_user_rol = ur.id_user_rol\n" +
             "WHERE p.dni LIKE CONCAT('%', ?, '%')\n" +
             "   AND u.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
+    private static final String SQL_COUNT_USERS = "SELECT COUNT(id_user) AS total FROM users";
 
     @Override
     public ArrayList<UserDto> load() {
@@ -184,5 +186,34 @@ public class UserDaoImpl implements IUserDao {
         pst.setString(2, value.getPassword());
         pst.setInt(3, value.getPeople().getIdPeople());
         pst.setInt(4, value.getUserRolesDto().getIdRolUser());
+    }
+
+    @Override
+    public int total() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var total = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_COUNT_USERS);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+            return total;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return total;
     }
 }

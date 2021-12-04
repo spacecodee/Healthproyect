@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.type_reservations;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
 import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
 
 import java.sql.Connection;
@@ -26,6 +27,7 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
             "FROM type_reservations " +
             "WHERE id_type_reservation = ?";
     private static final String SQL_MAX_TYPE_RESERVATIONS_ID = "SELECT MAX(id_type_reservation) AS id FROM type_reservations";
+    private static final String SQL_COUNT_TYPE_RESERVATIONS = "SELECT COUNT(id_type_reservation) AS total FROM type_reservations";
 
     @Override
     public ArrayList<TypeReservationDto> load() {
@@ -156,6 +158,35 @@ public class TypeReservationsDaoImpl implements ITypeReservationsDao {
 
             typeReservationList.add(typeReservationModel);
         }
+    }
+
+    @Override
+    public int total() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var total = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(TypeReservationsDaoImpl.SQL_COUNT_TYPE_RESERVATIONS);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+            return total;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return total;
     }
 
     @Override

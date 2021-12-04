@@ -132,3 +132,10 @@
     -fx-background-radius: 15px;
     -fx-padding: 15px;
 }
+
+.card__circle {
+    -fx-text-fill: #efefef;
+    -fx-background-color: #333333;
+    -fx-background-radius: 100%;
+    -fx-padding: 20px;
+}

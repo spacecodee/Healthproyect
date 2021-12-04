@@ -24,7 +24,7 @@
                   minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
                 <Button fx:id="btnDashboard" alignment="TOP_LEFT" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" text="Dashboard" VBox.vgrow="ALWAYS">
+                        mnemonicParsing="false" onAction="#dashboardOnAction" text="Dashboard" VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>
@@ -118,7 +118,7 @@
                         <String fx:value="h3"/>
                     </styleClass>
                 </Button>
-                <Button fx:id="btnAddres" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+                <Button fx:id="btnAddress" alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
                         mnemonicParsing="false" onAction="#addressOnAction" text="Direcciones" VBox.vgrow="ALWAYS">
                     <cursor>
@@ -140,8 +140,8 @@
             <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                   minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" VBox.vgrow="ALWAYS">
                 <Button fx:id="btnSettings" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Configuración"
-                        VBox.vgrow="ALWAYS">
+                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#settingsOnAction"
+                        text="Configuración" VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>
@@ -159,7 +159,7 @@
                 </Button>
                 <Button fx:id="btnLogout" alignment="TOP_LEFT" layoutX="10.0" layoutY="418.0" maxHeight="-Infinity"
                         maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                        mnemonicParsing="false" text="Cerrar Sesión" VBox.vgrow="ALWAYS">
+                        mnemonicParsing="false" onAction="#logoutOnAction" text="Cerrar Sesión" VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND"/>
                     </cursor>

@@ -5,5 +5,7 @@ import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
 
 public interface ITypeReservationsDao extends ICrudGeneric<TypeReservationDto> {
 
+    int total();
+
     int returnMaxId();
 }

@@ -23,7 +23,7 @@ public class Dashboard implements Initializable {
     private BorderPane bpContainer;
 
     @FXML
-    private Button btnAddres;
+    private Button btnAddress;
 
     @FXML
     private Button btnDashboard;
@@ -70,6 +70,7 @@ public class Dashboard implements Initializable {
     @FXML
     private ImageView iconCustomer;
 
+    @Getter
     @FXML
     private VBox vbUsers;
 
@@ -81,6 +82,14 @@ public class Dashboard implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.loadIcons();
         this.loadTopBar();
+        this.loadDashboard();
+    }
+
+    @FXML
+    private void dashboardOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnDashboard)) {
+            this.loadDashboard();
+        }
     }
 
     @FXML
@@ -123,7 +132,7 @@ public class Dashboard implements Initializable {
 
     @FXML
     private void addressOnAction(ActionEvent event) {
-        if (event.getSource().equals(this.btnAddres)) {
+        if (event.getSource().equals(this.btnAddress)) {
             this.bpContainer.setCenter(null);
 
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -176,6 +185,36 @@ public class Dashboard implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace(System.out);
             }
+        }
+    }
+
+    @FXML
+    private void settingsOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnSettings)) {
+            System.out.println();
+        }
+    }
+
+    @FXML
+    private void logoutOnAction(ActionEvent event) {
+        if (event.getSource().equals(this.btnLogout)) {
+            System.out.println();
+        }
+    }
+
+    private void loadDashboard() {
+        this.bpContainer.setCenter(null);
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        BorderPane borderPane;
+
+        try {
+            fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "menu/menu.fxml"));
+            borderPane = fxmlLoader.load();
+
+            this.bpContainer.setCenter(borderPane);
+        } catch (IOException e) {
+            e.printStackTrace(System.out);
         }
     }
 

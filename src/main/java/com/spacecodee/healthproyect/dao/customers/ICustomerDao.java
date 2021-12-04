@@ -8,4 +8,6 @@ public interface ICustomerDao extends ICrudGeneric<CustomerDto> {
     CustomerDto findCustomerByDni(String dni);
 
     int returnMaxId();
+
+    int total();
 }

@@ -5,5 +5,7 @@ import com.spacecodee.healthproyect.dto.users.UserDto;
 
 public interface IUserDao extends ICrudGeneric<UserDto> {
 
+    UserDto login(UserDto user);
+
     int total();
 }

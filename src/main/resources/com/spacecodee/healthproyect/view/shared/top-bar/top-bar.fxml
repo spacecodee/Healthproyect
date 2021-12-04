@@ -49,7 +49,7 @@
                    HBox.hgrow="ALWAYS">
             <Image url="@../../../assets/img/profile.jpg"/>
         </ImageView>
-        <Label fx:id="lblNmeUser" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+        <Label fx:id="lblUsername" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
                text="SCARLETT JOHANSSON" HBox.hgrow="ALWAYS">
             <styleClass>
                 <String fx:value="font-bold"/>

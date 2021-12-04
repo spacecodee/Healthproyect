@@ -89,7 +89,8 @@
 
 .btn__danger,
 .btn__success,
-.btn__dark {
+.btn__dark,
+.btn__login {
     -fx-padding: 5px 10px;
     -fx-text-fill: #fcfcfd;
     -fx-background-color: #ec1313;
@@ -138,4 +139,35 @@
     -fx-background-color: #333333;
     -fx-background-radius: 100%;
     -fx-padding: 20px;
+}
+
+/*login*/
+.btn__login {
+    -fx-background-color: #4264d0;
+}
+
+.btn__login:hover {
+    -fx-background-color: #3a58b7;
+}
+
+.login,
+.text-field_login {
+    -fx-background-color: #f4f4f8;
+    -fx-padding: 10px;
+}
+
+.text-field_login {
+    -fx-border-color: rgba(66, 100, 208, 0.76);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 5px 10px;
+}
+
+.font-blue {
+    -fx-text-fill: #4264d0;
+}
+
+.login_right {
+    -fx-background-color: #4264d0;
 }

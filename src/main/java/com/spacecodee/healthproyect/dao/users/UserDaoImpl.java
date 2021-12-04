@@ -1,7 +1,6 @@
 package com.spacecodee.healthproyect.dao.users;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.customers.CustomerDaoImpl;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
@@ -46,20 +45,25 @@ public class UserDaoImpl implements IUserDao {
             "WHERE p.dni LIKE CONCAT('%', ?, '%')\n" +
             "   AND u.user_name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_COUNT_USERS = "SELECT COUNT(id_user) AS total FROM users";
+    private static final String SQL_LOGIN = "SELECT u.id_user, u.user_name, u.password, ur.role_name " +
+            "FROM users u" +
+            "         INNER JOIN peoples p on u.id_people = p.id_people" +
+            "         INNER JOIN user_roles ur on u.id_user_rol = ur.id_user_rol " +
+            "WHERE u.user_name = ?";
 
     @Override
     public ArrayList<UserDto> load() {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<UserDto> cities = new ArrayList<>();
+        ArrayList<UserDto> users = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserDaoImpl.SQL_LOAD_USERS);
             rs = pst.executeQuery();
 
-            this.returnResults(rs, cities);
+            this.returnResults(rs, users);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -69,7 +73,7 @@ public class UserDaoImpl implements IUserDao {
             Connexion.close(conn);
         }
 
-        return cities;
+        return users;
     }
 
     public ArrayList<UserDto> findValue(UserDto value) {
@@ -165,27 +169,35 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
-    private void returnResults(ResultSet rs, ArrayList<UserDto> users) throws SQLException {
-        while (rs.next()) {
-            var user = new UserDto(
-                    rs.getInt("id_user"), rs.getString("user_name"),
-                    new PeopleDto(
-                            rs.getInt("id_people"), rs.getString("dni"),
-                            rs.getString("name"), rs.getString("last_name"),
-                            rs.getString("mail"), rs.getString("phone")
-                    ),
-                    new UserRolesDto(rs.getString("role_name"))
-            );
+    @Override
+    public UserDto login(UserDto user) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        UserDto userDto = null;
 
-            users.add(user);
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_LOGIN);
+            pst.setString(1, user.getUserName());
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                userDto = new UserDto(
+                        rs.getInt("id_user"), rs.getString("user_name"),
+                        rs.getString("password"), new UserRolesDto(rs.getString("role_name"))
+                );
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
         }
-    }
 
-    private void addValues(UserDto value, PreparedStatement pst) throws SQLException {
-        pst.setString(1, value.getUserName());
-        pst.setString(2, value.getPassword());
-        pst.setInt(3, value.getPeople().getIdPeople());
-        pst.setInt(4, value.getUserRolesDto().getIdRolUser());
+        return userDto;
     }
 
     @Override
@@ -215,5 +227,28 @@ public class UserDaoImpl implements IUserDao {
         }
 
         return total;
+    }
+
+    private void returnResults(ResultSet rs, ArrayList<UserDto> users) throws SQLException {
+        while (rs.next()) {
+            var user = new UserDto(
+                    rs.getInt("id_user"), rs.getString("user_name"),
+                    new PeopleDto(
+                            rs.getInt("id_people"), rs.getString("dni"),
+                            rs.getString("name"), rs.getString("last_name"),
+                            rs.getString("mail"), rs.getString("phone")
+                    ),
+                    new UserRolesDto(rs.getString("role_name"))
+            );
+
+            users.add(user);
+        }
+    }
+
+    private void addValues(UserDto value, PreparedStatement pst) throws SQLException {
+        pst.setString(1, value.getUserName());
+        pst.setString(2, value.getPassword());
+        pst.setInt(3, value.getPeople().getIdPeople());
+        pst.setInt(4, value.getUserRolesDto().getIdRolUser());
     }
 }

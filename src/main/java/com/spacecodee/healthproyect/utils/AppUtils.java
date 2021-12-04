@@ -3,11 +3,11 @@ package com.spacecodee.healthproyect.utils;
 import com.spacecodee.healthproyect.controllers.add_modal.AddModal;
 import com.spacecodee.healthproyect.controllers.cities.Cities;
 import com.spacecodee.healthproyect.controllers.countries.Countries;
+import com.spacecodee.healthproyect.controllers.dashboard.Dashboard;
 import com.spacecodee.healthproyect.controllers.districs.Districts;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
 import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import com.spacecodee.healthproyect.controllers.reservation_appointments.ReservationApModal;
-import com.spacecodee.healthproyect.controllers.type_reservations.TypeReservations;
 import com.spacecodee.healthproyect.dto.countries.CountryDto;
 import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 import javafx.event.ActionEvent;
@@ -112,6 +112,32 @@ public class AppUtils {
         stage.show();
     }
 
+    private static void app(Stage stage, FXMLLoader fxmlLoader, int width, int height) {
+        try {
+            var scene = new Scene(fxmlLoader.load(), width, height);
+            stage.setTitle("Health Dashboard");
+            stage.setScene(scene);
+            stage.setScene(scene);
+            stage.getIcons().add(AppUtils.loadIconApp());
+        } catch (IOException e) {
+            e.printStackTrace(System.out);
+        }
+    }
+
+    public static Dashboard appDashboard(Stage stage) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "dashboard/dashboard.fxml"));
+        AppUtils.app(stage, fxmlLoader, 1200, 600);
+
+        return fxmlLoader.getController();
+    }
+
+    public static void appLogin(Stage stage) {
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "login/login.fxml"));
+        AppUtils.app(stage, fxmlLoader, 1000, 600);
+    }
+
     private static void globalModal(Stage stage, FXMLLoader fxmlLoader, String title, int width, int height) {
         try {
             var scene = new Scene(fxmlLoader.load(), width, height);
@@ -172,12 +198,12 @@ public class AppUtils {
         return fxmlLoader.getController();
     }
 
-    public static TypeReservations loadTypeReservation(Stage stage, final String TITLE) {
+    public static void loadTypeReservation(Stage stage, final String TITLE) {
         var fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL_COMPONENTS + "type_reservations/type-reservations.fxml"));
 
         AppUtils.globalModal(stage, fxmlLoader, TITLE, 750, 400);
-        return fxmlLoader.getController();
+        fxmlLoader.getController();
     }
 
     public static ReservationApModal loadReservationsApModal(Stage stage, final String TITLE) {

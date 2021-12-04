@@ -21,6 +21,7 @@ module com.spacecodee.healthproyect {
     opens com.spacecodee.healthproyect.controllers.reservation_appointments to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.type_reservations to javafx.fxml;
     opens com.spacecodee.healthproyect.controllers.menu to javafx.fxml;
+    opens com.spacecodee.healthproyect.controllers.login to javafx.fxml;
     opens com.spacecodee.healthproyect.dto.users_roles to javafx.base;
     opens com.spacecodee.healthproyect.dto.countries to javafx.base;
     opens com.spacecodee.healthproyect.dto.reservation_appointments to javafx.base;
@@ -45,4 +46,5 @@ module com.spacecodee.healthproyect {
     exports com.spacecodee.healthproyect.controllers.reservation_appointments to javafx.fxml;
     exports com.spacecodee.healthproyect.controllers.type_reservations to javafx.fxml;
     exports com.spacecodee.healthproyect.controllers.menu to javafx.fxml;
+    exports com.spacecodee.healthproyect.controllers.login to javafx.fxml;
 }

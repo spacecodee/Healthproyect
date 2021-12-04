@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TopBar implements Initializable {
+
     @FXML
     private ImageView imgProfile;
     @FXML
@@ -21,7 +22,7 @@ public class TopBar implements Initializable {
     @Getter
     @Setter
     @FXML
-    private Label lblNmeUser;
+    private Label lblUsername;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

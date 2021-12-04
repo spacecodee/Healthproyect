@@ -14,11 +14,9 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(MainApp.class.getResource(AppUtils.URL_COMPONENTS + "dashboard/dashboard.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
-
-        Dashboard dashboard = fxmlLoader.getController();
-        dashboard.setStage(stage);
+        fxmlLoader.setLocation(MainApp.class.getResource(AppUtils.URL + "login/login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        stage.setResizable(false);
 
         stage.getIcons().add(AppUtils.loadIconApp());
         stage.setTitle("Health Dashboard");

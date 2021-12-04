@@ -1,5 +1,9 @@
 package com.spacecodee.healthproyect.controllers.dashboard;
 
+import com.spacecodee.healthproyect.controllers.menu.Menu;
+import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
+import com.spacecodee.healthproyect.controllers.top_bar.TopBar;
+import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import com.spacecodee.healthproyect.utils.Images;
 import javafx.event.ActionEvent;
@@ -76,13 +80,11 @@ public class Dashboard implements Initializable {
 
     @Getter
     @Setter
-    private Stage stage;
+    private UserDto userDto;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.loadIcons();
-        this.loadTopBar();
-        this.loadDashboard();
     }
 
     @FXML
@@ -198,7 +200,7 @@ public class Dashboard implements Initializable {
     @FXML
     private void logoutOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnLogout)) {
-            System.out.println();
+            this.loadModalConfirmation(event);
         }
     }
 
@@ -211,6 +213,8 @@ public class Dashboard implements Initializable {
         try {
             fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "menu/menu.fxml"));
             borderPane = fxmlLoader.load();
+            Menu menu = fxmlLoader.getController();
+            menu.getLblTitle().setText(("Hola " + this.userDto.getUserName() + " ten un día productivo").toUpperCase());
 
             this.bpContainer.setCenter(borderPane);
         } catch (IOException e) {
@@ -242,15 +246,52 @@ public class Dashboard implements Initializable {
     }
 
     private void loadTopBar() {
-        var URL = "/com/spacecodee/healthproyect/view/shared/top-bar/top-bar.fxml";
+        var URL = AppUtils.URL_SHARED + "top-bar/top-bar.fxml";
         FXMLLoader fxmlLoader = new FXMLLoader();
-        HBox hBox = null;
+        HBox hBox;
         try {
             fxmlLoader.setLocation(this.getClass().getResource(URL));
             hBox = fxmlLoader.load();
+            TopBar topBar = fxmlLoader.getController();
+            topBar.getLblUsername().setText(this.userDto.getUserName().toUpperCase());
+
+            this.bpContainer.setTop(hBox);
         } catch (IOException e) {
             e.printStackTrace(System.out);
         }
-        this.bpContainer.setTop(hBox);
+    }
+
+    public void initDashboardLogin() {
+        this.loadTopBar();
+        this.loadDashboard();
+
+        if (this.userDto.getUserRolesDto().getRoleName().equalsIgnoreCase("usuario")) {
+            this.vbUsers.getChildren().remove(1);
+            this.vbUsers.getChildren().remove(1);
+        }
+    }
+
+    private void loadModalConfirmation(ActionEvent event) {
+        var stage = new Stage();
+        final ModalConfirmation modalConfirmation = AppUtils.loadModalConfirmation(stage,
+                "¿Estas seguro(a) que quieres cerrar sesión?");
+
+        modalConfirmation.getLblMessage().setText("¿Estas seguro(a) que quieres cerrar sesión?".toUpperCase());
+        Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
+        modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
+            this.loadLogin();
+            AppUtils.closeModal(event);
+            AppUtils.closeModal(actionEvent);
+        });
+        modalConfirmation.getBtnCancel().setOnAction(AppUtils::closeModal);
+
+        stage.show();
+    }
+
+    private void loadLogin() {
+        var stage = new Stage();
+        AppUtils.appLogin(stage);
+        this.userDto = null;
+        stage.show();
     }
 }

@@ -28,6 +28,17 @@ public class UserDto {
         this.idUser = idUser;
     }
 
+    public UserDto(String userName) {
+        this.userName = userName;
+    }
+
+    public UserDto(int idUser, String userName, String password, UserRolesDto userRolesDto) {
+        this.idUser = idUser;
+        this.userName = userName;
+        this.password = password;
+        this.userRolesDto = userRolesDto;
+    }
+
     public UserDto(int idUser, String userName, PeopleDto people) {
         this.idUser = idUser;
         this.userName = userName;

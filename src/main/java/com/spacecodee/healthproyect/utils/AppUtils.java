@@ -10,6 +10,7 @@ import com.spacecodee.healthproyect.controllers.modals.ModalMessage;
 import com.spacecodee.healthproyect.controllers.reservation_appointments.ReservationApModal;
 import com.spacecodee.healthproyect.dto.countries.CountryDto;
 import com.spacecodee.healthproyect.dto.districts.DistrictDto;
+import com.spacecodee.healthproyect.dto.users.UserDto;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,8 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class AppUtils {
     public static final String URL_COMPONENTS = "/com/spacecodee/healthproyect/view/components/";
@@ -110,6 +113,25 @@ public class AppUtils {
         Images.addImg((typeIcon.equalsIgnoreCase("success") ? urlSuccess : urlAlert), modalMessage.getIconType());
 
         stage.show();
+    }
+
+    public static ModalMessage loadMessageCloseSession(String message, String typeIcon) {
+        final String urlSuccess = "icons/modals/success.png";
+        final String urlAlert = "icons/modals/error.png";
+
+        var stage = new Stage();
+
+        var fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(AppUtils.class.getResource(AppUtils.URL + "modals/modal-message.fxml"));
+
+        AppUtils.globalModal(stage, fxmlLoader, "Health Dashboard", 650, 250);
+
+        final ModalMessage modalMessage = fxmlLoader.getController();
+        modalMessage.getLblMessage().setText(message.toUpperCase());
+        Images.addImg((typeIcon.equalsIgnoreCase("success") ? urlSuccess : urlAlert), modalMessage.getIconType());
+
+        stage.show();
+        return modalMessage;
     }
 
     private static void app(Stage stage, FXMLLoader fxmlLoader, int width, int height) {
@@ -215,6 +237,13 @@ public class AppUtils {
         return fxmlLoader.getController();
     }
 
+    public static void loadLogin(UserDto userDto) {
+        var stage = new Stage();
+        AppUtils.appLogin(stage);
+        userDto = null;
+        stage.show();
+    }
+
     public static int loadCities(ComboBox<CountryDto> cbxCountry) {
         if (!cbxCountry.getSelectionModel().isEmpty()) {
             return cbxCountry.getSelectionModel().getSelectedItem().getIdCountry();
@@ -229,5 +258,10 @@ public class AppUtils {
         }
 
         return 0;
+    }
+
+    public static LocalDate LOCAL_DATE(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(dateString, formatter);
     }
 }

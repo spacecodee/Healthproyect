@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="login"
             stylesheets="@../../assets/style/style.css" xmlns="http://javafx.com/javafx/11"
@@ -44,7 +43,7 @@
                 </padding>
                 <TextField fx:id="txtUserName" alignment="CENTER" maxHeight="-Infinity"
                            maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                           promptText="Ingresa tu usuario" VBox.vgrow="ALWAYS">
+                           onAction="#loginOnAction" promptText="Ingresa tu usuario" VBox.vgrow="ALWAYS">
                     <styleClass>
                         <String fx:value="font-bold"/>
                         <String fx:value="h2"/>
@@ -53,16 +52,16 @@
                 </TextField>
                 <PasswordField fx:id="txtPassword" alignment="CENTER" maxHeight="-Infinity"
                                maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                               promptText="Ingresa tu contraseña" VBox.vgrow="ALWAYS">
+                               onAction="#loginOnAction" promptText="Ingresa tu contraseña" VBox.vgrow="ALWAYS">
                     <styleClass>
                         <String fx:value="font-bold"/>
                         <String fx:value="h2"/>
                         <String fx:value="text-field_login"/>
                     </styleClass>
                 </PasswordField>
-                <Button fx:id="btnLogin" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                        onAction="#loginOnAction" text="Iniciar Sesión" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnLogin" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                        minWidth="-Infinity" mnemonicParsing="false" onAction="#loginOnAction" text="Iniciar Sesión"
+                        VBox.vgrow="ALWAYS">
                     <styleClass>
                         <String fx:value="btn"/>
                         <String fx:value="h2"/>
@@ -75,8 +74,8 @@
     <right>
         <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
               minHeight="-Infinity" minWidth="-Infinity" styleClass="login_right" BorderPane.alignment="CENTER">
-            <ImageView fx:id="imgDoctors" fitHeight="500.0" fitWidth="500.0" pickOnBounds="true"
-                       preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fx:id="imgDoctors" fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true"
+                       VBox.vgrow="ALWAYS">
                 <Image url="@../../assets/img/Doctors-rafiki.png"/>
             </ImageView>
         </VBox>

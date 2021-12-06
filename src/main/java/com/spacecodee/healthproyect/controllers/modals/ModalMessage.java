@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 
 public class ModalMessage implements Initializable {
 
+    @Getter
     @FXML
     private Button btnOk;
 

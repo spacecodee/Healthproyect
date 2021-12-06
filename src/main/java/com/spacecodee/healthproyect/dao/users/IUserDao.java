@@ -5,7 +5,13 @@ import com.spacecodee.healthproyect.dto.users.UserDto;
 
 public interface IUserDao extends ICrudGeneric<UserDto> {
 
+    boolean changedPassword(UserDto value);
+
     UserDto login(UserDto user);
+
+    UserDto profile(UserDto user);
+
+    int validateRepeatUsername(String username);
 
     int total();
 }

@@ -1,6 +1,8 @@
 package com.spacecodee.healthproyect.dao.users;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dto.address.AddressDto;
+import com.spacecodee.healthproyect.dto.districts.DistrictDto;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.dto.users_roles.UserRolesDto;
@@ -50,6 +52,27 @@ public class UserDaoImpl implements IUserDao {
             "         INNER JOIN peoples p on u.id_people = p.id_people" +
             "         INNER JOIN user_roles ur on u.id_user_rol = ur.id_user_rol " +
             "WHERE u.user_name = ?";
+    private static final String SQL_PROFILE = "SELECT u.id_user, " +
+            "       u.id_people," +
+            "       a.id_address," +
+            "       a.id_district," +
+            "       u.id_user_rol," +
+            "       p.name," +
+            "       p.last_name," +
+            "       p.mail," +
+            "       p.dni," +
+            "       p.phone," +
+            "       p.birth_date," +
+            "       u.user_name," +
+            "       u.password," +
+            "       a.address " +
+            "FROM users u" +
+            "         INNER JOIN peoples p on u.id_people = p.id_people" +
+            "         INNER JOIN address a on p.id_address = a.id_address " +
+            "WHERE u.user_name = ?";
+    private static final String SQL_CHANGED_PASSWORD = "UPDATE users SET password = ? " +
+            "WHERE id_user = ?";
+    private static final String SQL_VALIDATE_REPEAT_USERNAME = "SELECT COUNT(id_user) AS total FROM users WHERE user_name = ?";
 
     @Override
     public ArrayList<UserDto> load() {
@@ -132,8 +155,8 @@ public class UserDaoImpl implements IUserDao {
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserDaoImpl.SQL_UPDATE_USER);
-            pst.setInt(5, value.getIdUser());
             this.addValues(value, pst);
+            pst.setInt(5, value.getIdUser());
             pst.executeUpdate();
 
             return true;
@@ -156,6 +179,29 @@ public class UserDaoImpl implements IUserDao {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(UserDaoImpl.SQL_DELETE_USER);
             pst.setInt(1, value.getIdUser());
+            pst.executeUpdate();
+
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            return false;
+        } finally {
+            assert pst != null;
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+    }
+
+    @Override
+    public boolean changedPassword(UserDto value) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_CHANGED_PASSWORD);
+            pst.setString(1, value.getPassword());
+            pst.setInt(2, value.getIdUser());
             pst.executeUpdate();
 
             return true;
@@ -198,6 +244,77 @@ public class UserDaoImpl implements IUserDao {
         }
 
         return userDto;
+    }
+
+    @Override
+    public UserDto profile(UserDto user) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        UserDto userDto = null;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_PROFILE);
+            pst.setString(1, user.getUserName());
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                userDto = new UserDto(
+                        rs.getInt("id_user"), rs.getString("user_name"), rs.getString("password"),
+                        new PeopleDto(
+                                rs.getInt("id_people"), rs.getString("dni"),
+                                rs.getString("name"), rs.getString("last_name"),
+                                rs.getString("mail"), rs.getString("phone"),
+                                rs.getString("birth_date"),
+                                new AddressDto(
+                                        rs.getInt("id_address"), rs.getString("address"),
+                                        new DistrictDto(rs.getInt("id_district"))
+                                )
+                        ),
+                        new UserRolesDto(rs.getInt("id_user_rol"))
+                );
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return userDto;
+    }
+
+    @Override
+    public int validateRepeatUsername(String username) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var total = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(UserDaoImpl.SQL_VALIDATE_REPEAT_USERNAME);
+            pst.setString(1, username);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+            return total;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return total;
     }
 
     @Override

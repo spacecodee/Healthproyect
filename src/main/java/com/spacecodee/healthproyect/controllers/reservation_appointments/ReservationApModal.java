@@ -167,7 +167,7 @@ public class ReservationApModal implements Initializable {
                     this.txtLastName.setText(customerDto.getPeople().getLastname());
                     this.txtEmail.setText(customerDto.getPeople().getMail());
                     this.txtPhone.setText(customerDto.getPeople().getPhone());
-                    this.dtBirthDate.setValue(ReservationApModal.LOCAL_DATE(customerDto.getPeople().getBirthDate()));
+                    this.dtBirthDate.setValue(AppUtils.LOCAL_DATE(customerDto.getPeople().getBirthDate()));
                     this.txtUserName.setText(customerDto.getUserName());
                     this.hbSectionCustomer.setDisable(false);
                     this.disableSections(true);
@@ -365,7 +365,7 @@ public class ReservationApModal implements Initializable {
         var hours = partsTime[0];
         var minutes = partsTime[1];
 
-        this.dtDateReservation.setValue(ReservationApModal.LOCAL_DATE(partsDate[0]));
+        this.dtDateReservation.setValue(AppUtils.LOCAL_DATE(partsDate[0]));
         this.cbxHours.getSelectionModel().select(hours);
         this.cbxMinutes.getSelectionModel().select(minutes);
 
@@ -373,11 +373,6 @@ public class ReservationApModal implements Initializable {
         var idTypeReservation = this.getPositionDistrict(this.listTypeReservations,
                 new TypeReservationDto(this.reservationTable.getIdTypeReservation()));
         this.cbxTypeReservation.getSelectionModel().select(idTypeReservation);
-    }
-
-    public static LocalDate LOCAL_DATE(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateString, formatter);
     }
 
     private int getPositionDistrict(ArrayList<TypeReservationDto> list, TypeReservationDto typeReservationDto) {

@@ -45,11 +45,23 @@ public class UserDto {
         this.people = people;
     }
 
+    public UserDto(int idUser, String userName, String password, PeopleDto people) {
+        this.idUser = idUser;
+        this.userName = userName;
+        this.password = password;
+        this.people = people;
+    }
+
     public UserDto(int idUser, String userName, PeopleDto people, UserRolesDto userRolesDto) {
         this.idUser = idUser;
         this.userName = userName;
         this.people = people;
         this.userRolesDto = userRolesDto;
+    }
+
+    public UserDto(int idUser, String password) {
+        this.idUser = idUser;
+        this.password = password;
     }
 
     public UserDto(String userName, PeopleDto people) {

@@ -2,6 +2,7 @@ package com.spacecodee.healthproyect.controllers.dashboard;
 
 import com.spacecodee.healthproyect.controllers.menu.Menu;
 import com.spacecodee.healthproyect.controllers.modals.ModalConfirmation;
+import com.spacecodee.healthproyect.controllers.settings.Settings;
 import com.spacecodee.healthproyect.controllers.top_bar.TopBar;
 import com.spacecodee.healthproyect.dto.users.UserDto;
 import com.spacecodee.healthproyect.utils.AppUtils;
@@ -193,7 +194,22 @@ public class Dashboard implements Initializable {
     @FXML
     private void settingsOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnSettings)) {
-            System.out.println();
+            this.bpContainer.setCenter(null);
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            VBox vBox;
+
+            try {
+                fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "settings/settings.fxml"));
+                vBox = fxmlLoader.load();
+                Settings settings = fxmlLoader.getController();
+                settings.setUserDto(this.userDto);
+                settings.sendData();
+
+                this.bpContainer.setCenter(vBox);
+            } catch (IOException e) {
+                e.printStackTrace(System.out);
+            }
         }
     }
 
@@ -214,7 +230,7 @@ public class Dashboard implements Initializable {
             fxmlLoader.setLocation(this.getClass().getResource(AppUtils.URL_COMPONENTS + "menu/menu.fxml"));
             borderPane = fxmlLoader.load();
             Menu menu = fxmlLoader.getController();
-            menu.getLblTitle().setText(("Hola " + this.userDto.getUserName() + " ten un día productivo").toUpperCase());
+            menu.getLblTitle().setText(("Hola " + this.userDto.getUserName() + ", ten un día productivo").toUpperCase());
 
             this.bpContainer.setCenter(borderPane);
         } catch (IOException e) {
@@ -279,19 +295,12 @@ public class Dashboard implements Initializable {
         modalConfirmation.getLblMessage().setText("¿Estas seguro(a) que quieres cerrar sesión?".toUpperCase());
         Images.addImg(AppUtils.urlAlert, modalConfirmation.getIconType());
         modalConfirmation.getBtnOk().setOnAction(actionEvent -> {
-            this.loadLogin();
+            AppUtils.loadLogin(this.userDto);
             AppUtils.closeModal(event);
             AppUtils.closeModal(actionEvent);
         });
         modalConfirmation.getBtnCancel().setOnAction(AppUtils::closeModal);
 
-        stage.show();
-    }
-
-    private void loadLogin() {
-        var stage = new Stage();
-        AppUtils.appLogin(stage);
-        this.userDto = null;
         stage.show();
     }
 }

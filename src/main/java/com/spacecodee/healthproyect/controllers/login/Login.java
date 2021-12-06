@@ -39,7 +39,8 @@ public class Login implements Initializable {
 
     @FXML
     private void loginOnAction(ActionEvent event) {
-        if (event.getSource().equals(this.btnLogin)) {
+        if (event.getSource().equals(this.btnLogin) || event.getSource().equals(this.txtUserName)
+                || event.getSource().equals(this.txtPassword)) {
             var username = this.txtUserName.getText().trim();
             var password = this.txtPassword.getText().trim();
             if (!username.isEmpty() || !password.isEmpty()) {

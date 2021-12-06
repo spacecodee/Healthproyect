@@ -171,13 +171,17 @@ public class Users implements Initializable {
                     if (idPeople != 0) {
                         userDto.getPeople().setIdPeople(idPeople);
 
-                        if (this.userDao.add(userDto)) {
-                            AppUtils.loadModalMessage("Usuario Agregado", "success");
-                        } else {
-                            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
-                        }
+                        if (this.userDao.validateRepeatUsername(userDto.getUserName()) == 0) {
+                            if (this.userDao.add(userDto)) {
+                                AppUtils.loadModalMessage("Usuario Agregado", "success");
+                            } else {
+                                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+                            }
 
-                        this.loadTable();
+                            this.loadTable();
+                        } else {
+                            AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
+                        }
                     }
                 }
             }

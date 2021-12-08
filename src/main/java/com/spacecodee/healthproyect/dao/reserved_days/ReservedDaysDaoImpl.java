@@ -20,6 +20,8 @@ public class ReservedDaysDaoImpl implements IReservedDaysDao {
             "FROM reserved_days " +
             "WHERE id_reserved_day = ?";
     private static final String SQL_MAX_RESERVED_DAYS_ID = "SELECT MAX(id_reserved_day) AS id FROM reserved_days";
+    private static final String SQL_VALIDATE_REPEAT_RESERVED_DAY = "SELECT COUNT(id_reserved_day) AS total FROM reserved_days " +
+            "WHERE reservation_date = ?";
 
     @Override
     public ArrayList<ReservedDaysDto> load() {
@@ -96,6 +98,36 @@ public class ReservedDaysDaoImpl implements IReservedDaysDao {
             Connexion.close(pst);
             Connexion.close(conn);
         }
+    }
+
+    @Override
+    public int validateReservedDays(String value) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var total = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(ReservedDaysDaoImpl.SQL_VALIDATE_REPEAT_RESERVED_DAY);
+            pst.setString(1, value);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+            return total;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return total;
     }
 
     @Override

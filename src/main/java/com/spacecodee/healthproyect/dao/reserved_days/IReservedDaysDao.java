@@ -5,5 +5,7 @@ import com.spacecodee.healthproyect.dto.reserved_days.ReservedDaysDto;
 
 public interface IReservedDaysDao extends ICrudGeneric<ReservedDaysDto> {
 
+    int validateReservedDays(String value);
+
     int returnMaxId();
 }

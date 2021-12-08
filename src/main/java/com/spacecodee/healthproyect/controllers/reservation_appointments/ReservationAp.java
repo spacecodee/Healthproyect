@@ -141,8 +141,17 @@ public class ReservationAp implements Initializable {
                     } else {
                         if (!reservationAp.validateText()) {
                             var reservationApModel = reservationAp.returnReservationAp();
-                            this.add(reservationApModel);
-                            AppUtils.closeModal(actionEvent);
+                            if (this.customerDao.validateRepeatUsername(reservationApModel.getCustomer().getUserName()) == 0) {
+                                if (this.validateRepeatPhoneOrEmail(reservationApModel.getCustomer().getPeople().getPhone(),
+                                        reservationApModel.getCustomer().getPeople().getMail()) == 0) {
+                                    this.add(reservationApModel);
+                                    AppUtils.closeModal(actionEvent);
+                                } else {
+                                    AppUtils.loadModalMessage("Teléfono o Email ya existen", "error");
+                                }
+                            } else {
+                                AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
+                            }
                         } else {
                             AppUtils.loadModalMessage("Todos los datos son necesarios", "error");
                         }
@@ -256,7 +265,7 @@ public class ReservationAp implements Initializable {
     }
 
     private void add(ReservationApDto reservationApDto) {
-        if (this.customerDao.validateRepeatUsername(userDto.getUserName()) == 0) {
+        if (this.reservedDaysDao.validateReservedDays(reservationApDto.getReservedDays().getReservationDate()) == 0) {
             if (reservationApDto.getCustomer().getIdCustomer() != 0) {
                 this.addReservation(reservationApDto);
             } else {
@@ -285,7 +294,7 @@ public class ReservationAp implements Initializable {
                 }
             }
         } else {
-            AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
+            AppUtils.loadModalMessage("Ya hay una reserva en esa hora", "error");
         }
     }
 
@@ -354,6 +363,20 @@ public class ReservationAp implements Initializable {
 
         var list = this.reservationApDao.load();
         return getReservationTables(observableArrayList, list);
+    }
+
+    private int validateRepeatPhoneOrEmail(String phone, String email) {
+        var validation = 0;
+        var list = this.customerDao.load();
+
+        for (CustomerDto customerDto : list) {
+            if (customerDto.getPeople().getPhone().equalsIgnoreCase(phone) || customerDto.getPeople().getMail().equalsIgnoreCase(email)) {
+                validation = 1;
+                break;
+            }
+        }
+
+        return validation;
     }
 
     private ObservableList<ReservationTable> findReservations(String dni) {

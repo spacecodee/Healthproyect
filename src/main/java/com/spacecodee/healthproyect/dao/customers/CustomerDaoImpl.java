@@ -61,7 +61,7 @@ public class CustomerDaoImpl implements ICustomerDao {
             "WHERE p.dni = ?";
     private static final String SQL_MAX_CUSTOMER_ID = "SELECT MAX(id_customer) AS id FROM customers";
     private static final String SQL_COUNT_CUSTOMERS = "SELECT COUNT(id_customer) AS total FROM  customers";
-    private static final String SQL_VALIDATE_REPEAT_USERNAME = "SELECT COUNT(id_user) AS total FROM customers WHERE user_name = ?";
+    private static final String SQL_VALIDATE_REPEAT_USERNAME = "SELECT COUNT(id_customer) AS total FROM customers WHERE user_name = ?";
 
     @Override
     public ArrayList<CustomerDto> load() {

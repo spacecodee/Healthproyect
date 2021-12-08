@@ -163,25 +163,29 @@ public class Users implements Initializable {
 
     private void add(UserDto userDto) {
         if (this.userDao.validateRepeatUsername(userDto.getUserName()) == 0) {
-            if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
-                var idAddress = this.addressDao.returnMaxId();
-                if (idAddress != 0) {
-                    userDto.getPeople().getAddressDto().setIdAddress(idAddress);
-                    if (this.peopleDao.add(userDto.getPeople())) {
-                        var idPeople = this.peopleDao.returnMaxId();
-                        if (idPeople != 0) {
-                            userDto.getPeople().setIdPeople(idPeople);
-                            if (this.userDao.add(userDto)) {
-                                AppUtils.loadModalMessage("Usuario Agregado", "success");
-                            } else {
-                                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+            if (this.validateRepeatPhoneOrEmail(userDto.getPeople().getPhone(), userDto.getPeople().getMail()) == 0) {
+                if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
+                    var idAddress = this.addressDao.returnMaxId();
+                    if (idAddress != 0) {
+                        userDto.getPeople().getAddressDto().setIdAddress(idAddress);
+                        if (this.peopleDao.add(userDto.getPeople())) {
+                            var idPeople = this.peopleDao.returnMaxId();
+                            if (idPeople != 0) {
+                                userDto.getPeople().setIdPeople(idPeople);
+                                if (this.userDao.add(userDto)) {
+                                    AppUtils.loadModalMessage("Usuario Agregado", "success");
+                                } else {
+                                    AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+                                }
+                                this.loadTable();
                             }
-                            this.loadTable();
                         }
                     }
+                } else {
+                    AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
                 }
             } else {
-                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+                AppUtils.loadModalMessage("Teléfono o Email ya existen", "error");
             }
         } else {
             AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
@@ -290,6 +294,20 @@ public class Users implements Initializable {
     private void changedCrudAction(String type) {
         Users.actionCrud = type;
         this.btnAddUsers.setText(type.equalsIgnoreCase("Edit") ? "Editar" : "Agregar");
+    }
+
+    private int validateRepeatPhoneOrEmail(String phone, String email) {
+        var validation = 0;
+        var list = this.userDao.load();
+
+        for (UserDto userDto : list) {
+            if (userDto.getPeople().getPhone().equalsIgnoreCase(phone) || userDto.getPeople().getMail().equalsIgnoreCase(email)) {
+                validation = 1;
+                break;
+            }
+        }
+
+        return validation;
     }
 
     private ObservableList<UserTable> loadUsers() {

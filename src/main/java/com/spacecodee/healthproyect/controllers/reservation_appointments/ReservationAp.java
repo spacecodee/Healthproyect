@@ -256,34 +256,37 @@ public class ReservationAp implements Initializable {
     }
 
     private void add(ReservationApDto reservationApDto) {
-        if (reservationApDto.getCustomer().getIdCustomer() != 0) {
-            this.addReservation(reservationApDto);
-        } else {
-            if (this.addressDao.add(reservationApDto.getCustomer().getPeople().getAddressDto())) {
-                var idAddress = this.addressDao.returnMaxId();
-                if (idAddress != 0) {
-                    reservationApDto.getCustomer().getPeople().getAddressDto().setIdAddress(idAddress);
+        if (this.customerDao.validateRepeatUsername(userDto.getUserName()) == 0) {
+            if (reservationApDto.getCustomer().getIdCustomer() != 0) {
+                this.addReservation(reservationApDto);
+            } else {
+                if (this.addressDao.add(reservationApDto.getCustomer().getPeople().getAddressDto())) {
+                    var idAddress = this.addressDao.returnMaxId();
+                    if (idAddress != 0) {
+                        reservationApDto.getCustomer().getPeople().getAddressDto().setIdAddress(idAddress);
 
-                    if (this.peopleDao.add(reservationApDto.getCustomer().getPeople())) {
-                        var idPeople = this.peopleDao.returnMaxId();
-                        if (idPeople != 0) {
-                            reservationApDto.getCustomer().getPeople().setIdPeople(idPeople);
-                            if (this.customerDao.add(reservationApDto.getCustomer())) {
-                                var idCustomer = this.customerDao.returnMaxId();
-                                if (idCustomer != 0) {
-                                    reservationApDto.getCustomer().setIdCustomer(idCustomer);
+                        if (this.peopleDao.add(reservationApDto.getCustomer().getPeople())) {
+                            var idPeople = this.peopleDao.returnMaxId();
+                            if (idPeople != 0) {
+                                reservationApDto.getCustomer().getPeople().setIdPeople(idPeople);
+                                if (this.customerDao.add(reservationApDto.getCustomer())) {
+                                    var idCustomer = this.customerDao.returnMaxId();
+                                    if (idCustomer != 0) {
+                                        reservationApDto.getCustomer().setIdCustomer(idCustomer);
 
-                                    this.addReservation(reservationApDto);
+                                        this.addReservation(reservationApDto);
+                                    }
                                 }
                             }
                         }
                     }
+                } else {
+                    AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
                 }
-            } else {
-                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
             }
+        } else {
+            AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
         }
-
     }
 
     private void addReservation(ReservationApDto reservationApDto) {

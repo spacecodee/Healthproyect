@@ -162,31 +162,29 @@ public class Users implements Initializable {
     }
 
     private void add(UserDto userDto) {
-        if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
-            var idAddress = this.addressDao.returnMaxId();
-            if (idAddress != 0) {
-                userDto.getPeople().getAddressDto().setIdAddress(idAddress);
-                if (this.peopleDao.add(userDto.getPeople())) {
-                    var idPeople = this.peopleDao.returnMaxId();
-                    if (idPeople != 0) {
-                        userDto.getPeople().setIdPeople(idPeople);
-
-                        if (this.userDao.validateRepeatUsername(userDto.getUserName()) == 0) {
+        if (this.userDao.validateRepeatUsername(userDto.getUserName()) == 0) {
+            if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
+                var idAddress = this.addressDao.returnMaxId();
+                if (idAddress != 0) {
+                    userDto.getPeople().getAddressDto().setIdAddress(idAddress);
+                    if (this.peopleDao.add(userDto.getPeople())) {
+                        var idPeople = this.peopleDao.returnMaxId();
+                        if (idPeople != 0) {
+                            userDto.getPeople().setIdPeople(idPeople);
                             if (this.userDao.add(userDto)) {
                                 AppUtils.loadModalMessage("Usuario Agregado", "success");
                             } else {
                                 AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
                             }
-
                             this.loadTable();
-                        } else {
-                            AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
                         }
                     }
                 }
+            } else {
+                AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
             }
         } else {
-            AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
+            AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
         }
     }
 

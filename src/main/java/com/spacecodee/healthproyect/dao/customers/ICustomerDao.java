@@ -7,6 +7,8 @@ public interface ICustomerDao extends ICrudGeneric<CustomerDto> {
 
     CustomerDto findCustomerByDni(String dni);
 
+    int validateRepeatUsername(String username);
+
     int returnMaxId();
 
     int total();

@@ -19,8 +19,4 @@ public class ReservedDaysDto implements Serializable {
     public ReservedDaysDto(int idReservedDay) {
         this.idReservedDay = idReservedDay;
     }
-
-    public ReservedDaysDto(String reservationDate) {
-        this.reservationDate = reservationDate;
-    }
 }

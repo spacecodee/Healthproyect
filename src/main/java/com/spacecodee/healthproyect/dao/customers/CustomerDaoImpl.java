@@ -1,6 +1,7 @@
 package com.spacecodee.healthproyect.dao.customers;
 
 import com.spacecodee.healthproyect.dao.Connexion;
+import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
 import com.spacecodee.healthproyect.dto.customers.CustomerDto;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 
@@ -60,6 +61,7 @@ public class CustomerDaoImpl implements ICustomerDao {
             "WHERE p.dni = ?";
     private static final String SQL_MAX_CUSTOMER_ID = "SELECT MAX(id_customer) AS id FROM customers";
     private static final String SQL_COUNT_CUSTOMERS = "SELECT COUNT(id_customer) AS total FROM  customers";
+    private static final String SQL_VALIDATE_REPEAT_USERNAME = "SELECT COUNT(id_user) AS total FROM customers WHERE user_name = ?";
 
     @Override
     public ArrayList<CustomerDto> load() {
@@ -233,6 +235,36 @@ public class CustomerDaoImpl implements ICustomerDao {
         }
 
         return peopleDto;
+    }
+
+    @Override
+    public int validateRepeatUsername(String username) {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        var total = 0;
+
+        try {
+            conn = Connexion.getConnection();
+            pst = conn.prepareStatement(CustomerDaoImpl.SQL_VALIDATE_REPEAT_USERNAME);
+            pst.setString(1, username);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+            return total;
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            assert rs != null;
+            Connexion.close(rs);
+            Connexion.close(pst);
+            Connexion.close(conn);
+        }
+
+        return total;
     }
 
     @Override

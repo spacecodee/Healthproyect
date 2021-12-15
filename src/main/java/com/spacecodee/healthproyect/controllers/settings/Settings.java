@@ -117,7 +117,7 @@ public class Settings implements Initializable {
                 if (peopleDao.update(peopleDto)) {
                     var user = new UserDto(idUser, userName, password, peopleDto, new UserRolesDto(idRol));
 
-                    if (this.userDao.validateRepeatUsername(userName) == 0) {
+                    if (this.userDao.validateRepeatUsername(userName) <= 1) {
                         if (userDao.update(user)) {
                             if (userName.equalsIgnoreCase(this.userDto.getUserName())) {
                                 this.sendData();
@@ -152,8 +152,8 @@ public class Settings implements Initializable {
         var password = this.txtPassword.getText().trim();
         var newPassword = this.txtNewPassword.getText().trim();
 
-        if (newPassword.length() < 6) {
-            if (!this.userDto.getPassword().equalsIgnoreCase(password)) {
+        if (newPassword.length() >= 6) {
+            if (!this.userDto.getPassword().equalsIgnoreCase(newPassword)) {
                 if (!password.equalsIgnoreCase(newPassword)) {
                     var user = new UserDto(this.userDto.getIdUser(), newPassword);
 
@@ -181,6 +181,7 @@ public class Settings implements Initializable {
                 this.txtName.setText(this.userDto.getPeople().getName());
                 this.txtLastName.setText(this.userDto.getPeople().getLastname());
                 this.txtEmail.setText(this.userDto.getPeople().getMail());
+                this.txtPhone.setText(this.userDto.getPeople().getPhone());
                 this.txtUserName.setText(this.userDto.getUserName());
                 this.txtAddress.setText(this.userDto.getPeople().getAddressDto().getAddressName());
                 this.dtBirthDate.setValue(AppUtils.LOCAL_DATE(this.userDto.getPeople().getBirthDate()));

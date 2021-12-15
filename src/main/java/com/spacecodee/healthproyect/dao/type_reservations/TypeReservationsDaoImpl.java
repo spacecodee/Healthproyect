@@ -1,7 +1,6 @@
 package com.spacecodee.healthproyect.dao.type_reservations;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
 import com.spacecodee.healthproyect.dto.type_reservations.TypeReservationDto;
 
 import java.sql.Connection;

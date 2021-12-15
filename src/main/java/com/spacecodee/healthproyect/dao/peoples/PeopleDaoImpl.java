@@ -9,16 +9,16 @@ import java.util.ArrayList;
 
 public class PeopleDaoImpl implements IPeopleDao {
 
-    private static final String SQL_LOAD_PEOPLES = "SELECT p.id_people,\n" +
-            "       p.dni,\n" +
-            "       p.name,\n" +
-            "       p.last_name,\n" +
-            "       p.mail,\n" +
-            "       p.phone,\n" +
-            "       c.country_name \n" +
-            "FROM peoples p\n" +
-            "         INNER JOIN countries c\n" +
-            "                    on p.id_address = c.id_country";
+    private static final String SQL_LOAD_PEOPLES = "SELECT p.id_people," +
+            "       p.dni," +
+            "       p.name," +
+            "       p.last_name," +
+            "       p.mail," +
+            "       p.phone," +
+            "       a.address " +
+            "FROM peoples p" +
+            "         INNER JOIN address a" +
+            "                    on p.id_address = a.id_address";
     private static final String SQL_ADD_PEOPLE = "INSERT INTO peoples (dni, name, last_name, mail, phone, " +
             "url_img_profile, birth_date, id_address) \n" +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -31,10 +31,10 @@ public class PeopleDaoImpl implements IPeopleDao {
             "       p.last_name,\n" +
             "       p.mail,\n" +
             "       p.phone,\n" +
-            "       c.country_name \n" +
-            "FROM peoples p\n" +
-            "         INNER JOIN countries c\n" +
-            "                    on p.id_address = c.id_country" +
+            "       a.address \n" +
+            "FROM peoples p" +
+            "         INNER JOIN address a" +
+            "                    on p.id_address = a.id_address" +
             " WHERE name COLLATE UTF8_GENERAL_CI LIKE CONCAT('%', ?, '%')";
     private static final String SQL_FIND_PEOPLE_BY_DNI = "SELECT p.id_people," +
             "       p.dni," +
@@ -54,14 +54,14 @@ public class PeopleDaoImpl implements IPeopleDao {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-        ArrayList<PeopleDto> cities = new ArrayList<>();
+        ArrayList<PeopleDto> peoples = new ArrayList<>();
 
         try {
             conn = Connexion.getConnection();
             pst = conn.prepareStatement(PeopleDaoImpl.SQL_LOAD_PEOPLES);
             rs = pst.executeQuery();
 
-            this.returnResults(rs, cities);
+            this.returnResults(rs, peoples);
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally {
@@ -71,7 +71,7 @@ public class PeopleDaoImpl implements IPeopleDao {
             Connexion.close(conn);
         }
 
-        return cities;
+        return peoples;
     }
 
     @Override
@@ -185,7 +185,7 @@ public class PeopleDaoImpl implements IPeopleDao {
 
             while (rs.next()) {
                 var address = new AddressDto(
-                        rs.getInt("city_name")
+                        rs.getInt("address")
                 );
 
                 peopleDto = new PeopleDto(
@@ -244,7 +244,7 @@ public class PeopleDaoImpl implements IPeopleDao {
     private void returnResults(ResultSet rs, ArrayList<PeopleDto> peoples) throws SQLException {
         while (rs.next()) {
             var address = new AddressDto(
-                    rs.getInt("city_name")
+                    rs.getString("address")
             );
 
             var people = new PeopleDto(

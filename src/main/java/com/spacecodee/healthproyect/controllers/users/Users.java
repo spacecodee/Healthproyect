@@ -163,7 +163,7 @@ public class Users implements Initializable {
 
     private void add(UserDto userDto) {
         if (this.userDao.validateRepeatUsername(userDto.getUserName()) == 0) {
-            if (this.validateRepeatPhoneOrEmail(userDto.getPeople().getPhone(), userDto.getPeople().getMail()) == 0) {
+            if (this.validateRepeatDniPhoneOrEmail(userDto.getPeople()) == 0) {
                 if (this.addressDao.add(userDto.getPeople().getAddressDto())) {
                     var idAddress = this.addressDao.returnMaxId();
                     if (idAddress != 0) {
@@ -296,12 +296,14 @@ public class Users implements Initializable {
         this.btnAddUsers.setText(type.equalsIgnoreCase("Edit") ? "Editar" : "Agregar");
     }
 
-    private int validateRepeatPhoneOrEmail(String phone, String email) {
+    private int validateRepeatDniPhoneOrEmail(PeopleDto peopleDto) {
         var validation = 0;
-        var list = this.userDao.load();
+        var list = this.peopleDao.load();
 
-        for (UserDto userDto : list) {
-            if (userDto.getPeople().getPhone().equalsIgnoreCase(phone) || userDto.getPeople().getMail().equalsIgnoreCase(email)) {
+        for (PeopleDto dto : list) {
+            if (dto.getPhone().equalsIgnoreCase(peopleDto.getPhone())
+                    || dto.getMail().equalsIgnoreCase(peopleDto.getMail())
+                    || dto.getDni().equalsIgnoreCase(peopleDto.getDni())) {
                 validation = 1;
                 break;
             }

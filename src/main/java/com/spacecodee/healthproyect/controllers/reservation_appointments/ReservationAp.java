@@ -142,12 +142,11 @@ public class ReservationAp implements Initializable {
                         if (!reservationAp.validateText()) {
                             var reservationApModel = reservationAp.returnReservationAp();
                             if (this.customerDao.validateRepeatUsername(reservationApModel.getCustomer().getUserName()) == 0) {
-                                if (this.validateRepeatPhoneOrEmail(reservationApModel.getCustomer().getPeople().getPhone(),
-                                        reservationApModel.getCustomer().getPeople().getMail()) == 0) {
+                                if (this.validateRepeatPhoneOrEmail(reservationApModel.getCustomer().getPeople()) == 0) {
                                     this.add(reservationApModel);
                                     AppUtils.closeModal(actionEvent);
                                 } else {
-                                    AppUtils.loadModalMessage("Teléfono o Email ya existen", "error");
+                                    AppUtils.loadModalMessage("DNI, Teléfono o Email ya existen", "error");
                                 }
                             } else {
                                 AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
@@ -365,12 +364,14 @@ public class ReservationAp implements Initializable {
         return getReservationTables(observableArrayList, list);
     }
 
-    private int validateRepeatPhoneOrEmail(String phone, String email) {
+    private int validateRepeatPhoneOrEmail(PeopleDto peopleDto) {
         var validation = 0;
-        var list = this.customerDao.load();
+        var list = this.peopleDao.load();
 
-        for (CustomerDto customerDto : list) {
-            if (customerDto.getPeople().getPhone().equalsIgnoreCase(phone) || customerDto.getPeople().getMail().equalsIgnoreCase(email)) {
+        for (PeopleDto dto : list) {
+            if (dto.getPhone().equalsIgnoreCase(peopleDto.getPhone())
+                    || dto.getMail().equalsIgnoreCase(peopleDto.getMail())
+                    || dto.getDni().equalsIgnoreCase(peopleDto.getDni())) {
                 validation = 1;
                 break;
             }

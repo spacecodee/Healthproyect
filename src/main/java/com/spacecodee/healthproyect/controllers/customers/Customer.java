@@ -104,7 +104,7 @@ public class Customer implements Initializable {
     private void btnCancelOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnCancel)) {
             this.loadTable();
-            this.changedCrudAction("Add");
+            this.changedCrudAction("Edit");
         }
     }
 
@@ -154,7 +154,7 @@ public class Customer implements Initializable {
             }
         });
         modalConfirmation.getBtnCancel().setOnAction(actionEvent -> {
-            this.changedCrudAction("Add");
+            this.changedCrudAction("Edit");
             AppUtils.closeModal(actionEvent);
         });
 
@@ -173,7 +173,7 @@ public class Customer implements Initializable {
         }
 
         this.loadTable();
-        this.changedCrudAction("add");
+        this.changedCrudAction("Edit");
     }
 
     @FXML

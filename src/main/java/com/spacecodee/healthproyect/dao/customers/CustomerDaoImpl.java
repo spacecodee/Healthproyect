@@ -1,7 +1,6 @@
 package com.spacecodee.healthproyect.dao.customers;
 
 import com.spacecodee.healthproyect.dao.Connexion;
-import com.spacecodee.healthproyect.dao.users.UserDaoImpl;
 import com.spacecodee.healthproyect.dto.customers.CustomerDto;
 import com.spacecodee.healthproyect.dto.peoples.PeopleDto;
 

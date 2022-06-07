@@ -189,8 +189,8 @@ public class AddressDaoImpl implements IAddressDao {
             var addressM = new AddressDto(
                     rs.getInt("id_address"), rs.getString("address"),
                     new DistrictDto(rs.getString("district_name"),
-                            new CityDto(rs.getString("city_name"),
-                                    new CountryDto(rs.getString("country_name"))))
+                                    new CityDto(rs.getString("city_name"),
+                                                new CountryDto(rs.getString("country_name"))))
             );
 
             address.add(addressM);

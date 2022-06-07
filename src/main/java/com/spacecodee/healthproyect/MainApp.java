@@ -1,6 +1,5 @@
 package com.spacecodee.healthproyect;
 
-import com.spacecodee.healthproyect.controllers.dashboard.Dashboard;
 import com.spacecodee.healthproyect.utils.AppUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

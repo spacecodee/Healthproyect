@@ -84,7 +84,8 @@ public class Settings implements Initializable {
     void onSaveOnAction(ActionEvent event) {
         if (event.getSource().equals(this.btnSave)) {
             this.changeProfile(event);
-        } else if (event.getSource().equals(this.btnChangePassword)) {
+        }
+        else if (event.getSource().equals(this.btnChangePassword)) {
             this.changedPassword();
         }
     }
@@ -108,7 +109,7 @@ public class Settings implements Initializable {
         var address = this.txtAddress.getText().trim();
 
         if (!AppUtils.validateText(this.txtDni, this.txtName, this.txtLastName, this.txtEmail, this.txtPhone,
-                this.txtUserName, this.txtAddress)) {
+                                   this.txtUserName, this.txtAddress)) {
             var addressDto = new AddressDto(idAddress, address, new DistrictDto(idDistrict));
 
             if (addressDao.update(addressDto)) {
@@ -122,7 +123,8 @@ public class Settings implements Initializable {
                             if (userName.equalsIgnoreCase(this.userDto.getUserName())) {
                                 this.sendData();
                                 AppUtils.loadModalMessage("Datos actualizados", "success");
-                            } else {
+                            }
+                            else {
                                 var modal = AppUtils.loadMessageCloseSession("Serás redirigido al login", "success");
                                 AppUtils.closeModal(event);
                                 modal.getBtnOk().setOnAction(actionEvent -> {
@@ -130,20 +132,25 @@ public class Settings implements Initializable {
                                     AppUtils.loadLogin(this.userDto);
                                 });
                             }
-                        } else {
+                        }
+                        else {
                             AppUtils.loadModalMessage("Algunos datos fueron actualizados", "error");
                         }
-                    } else {
+                    }
+                    else {
                         AppUtils.loadModalMessage("Use nombre de usuario ya existe, intenta con otro", "error");
                     }
 
-                } else {
+                }
+                else {
                     AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
                 }
-            } else {
+            }
+            else {
                 AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
             }
-        } else {
+        }
+        else {
             AppUtils.loadModalMessage("Los datos son necesarios", "error");
         }
     }
@@ -159,16 +166,20 @@ public class Settings implements Initializable {
 
                     if (this.userDao.changedPassword(user)) {
                         AppUtils.loadModalMessage("Contraseñas actualizadas", "success");
-                    } else {
+                    }
+                    else {
                         AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
                     }
-                } else {
+                }
+                else {
                     AppUtils.loadModalMessage("Las contraseñas son identicas", "error");
                 }
-            } else {
+            }
+            else {
                 AppUtils.loadModalMessage("Las contraseñas son identicas a tu contraseña actual", "error");
             }
-        } else {
+        }
+        else {
             AppUtils.loadModalMessage("La nueva contraseña debe tener al menos 6 carácteres", "error");
         }
     }
@@ -185,10 +196,12 @@ public class Settings implements Initializable {
                 this.txtUserName.setText(this.userDto.getUserName());
                 this.txtAddress.setText(this.userDto.getPeople().getAddressDto().getAddressName());
                 this.dtBirthDate.setValue(AppUtils.LOCAL_DATE(this.userDto.getPeople().getBirthDate()));
-            } else {
+            }
+            else {
                 AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
             }
-        } else {
+        }
+        else {
             AppUtils.loadModalMessage("Al parecer ocurrio un error, intentalo mas tarde", "error");
         }
     }
